@@ -191,10 +191,16 @@ public class Accion {
     }
 
     public boolean caer(Jugador jugador, int tirada){
+        if(jugador.getAvatar().getCasilla().getNombre().contains("Suerte")){
+            
+        }
+        if(jugador.getAvatar().getCasilla().getNombre().contains("Caja")){
+
+        }
         //Cobrar impuesto casilla especial
         if (jugador.getAvatar().getCasilla().getPrecio() < 0)
             return this.pagarImpuesto(jugador);
-            //Cobrar alquileres
+        //Cobrar alquileres
         if(!jugador.getAvatar().getCasilla().getPropietario().equals(this.tablero.getBanca()) && !jugador.getAvatar().getCasilla().getPropietario().equals(jugador)) {
             return this.pagarAlquiler(jugador,tirada);
         }else

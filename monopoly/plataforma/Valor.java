@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import monopoly.contenido.Casilla;
-import monopoly.contenido.Grupo;
+import monopoly.contenido.*;
 
 public class Valor {
 
@@ -88,6 +87,19 @@ public class Valor {
             new Casilla("Barad-dûr",37),
             new Casilla("Impuesto2",38),
             new Casilla("Mt. Doom",39)
+    ));
+
+    public final static ArrayList<Carta> cartasSuerte = new ArrayList<>(Arrays.asList(
+            new CartaMovimiento(28,true,0,"Ve al " + " y coge un avión. Si pasas por la casilla de Salida, cobra "),
+            new CartaMovimiento(31,false,1,"Decides hacer un viaje de placer. Avanza hasta "),
+            new CartaPagar(5000,true,"Vendes tu billete de avión para Argonath en una subasta por Internet. Cobra 50000€."),
+            new CartaMovimiento(26,true,1,"Ve a Isengard Caverns. Si pasas por la casilla de Salida, cobra "),
+            new CartaMovimiento(30,false,0,"Los acreedores te persiguen por impago. Ve a la cárcel. Ve directamente sin pasar por la casilla de salida y sin cobrar"),
+            new CartaPagar(10000,true,"¡Has ganado el bote de la lotería! Recibe 1000000€.")
+    ));
+
+    public final static ArrayList<Carta> cartaCajaKomuna = new ArrayList<>(Arrays.asList(
+
     ));
 
     public static double PRECIO_G1 = 120;
