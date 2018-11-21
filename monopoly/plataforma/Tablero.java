@@ -78,6 +78,14 @@ public class Tablero {
 
     //No tiene sentido el setter de Banca, ya que este jugador no se ve modificado a lo largo del programa
 
+    public void cambiarModo(){
+        Iterator<Avatar> av_it = this.avatares.values().iterator();
+        while(av_it.hasNext()){
+            Avatar av = av_it.next();
+            av.switchMode();
+        }
+    }
+
     private void printBarraBaja(){
         System.out.printf("_");
         for(int i = 0; i < 11; i++){

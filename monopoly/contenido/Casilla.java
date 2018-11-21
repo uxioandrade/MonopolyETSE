@@ -72,6 +72,10 @@ public class Casilla {
             return this.precio*0.5;
     }
 
+    public boolean getHipotecado(){
+        return this.hipotecado;
+    }
+
     public void setHipotecado(boolean hipotecado){
         this.hipotecado = hipotecado;
     }

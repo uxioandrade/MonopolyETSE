@@ -14,6 +14,7 @@ public class Avatar {
     private Tablero tablero;
     private int numVueltas;
     private int encarcelado;
+    private boolean modoAvanzado;
 
     private final ArrayList<String> listaTipos = new ArrayList<String>() {{
         add("sombrero");
@@ -59,6 +60,7 @@ public class Avatar {
         this.tablero.getAvatares().put(this.id,this);
         this.encarcelado = 0;
         this.numVueltas = 0;
+        this.modoAvanzado = false;
     }
 
     public Avatar(Jugador jug, Tablero tabla){
@@ -71,6 +73,7 @@ public class Avatar {
         this.tablero.getAvatares().put(this.id,this);
         this.encarcelado = 0;
         this.numVueltas = 0;
+        this.modoAvanzado = false;
     }
 
     public String getId(){
@@ -132,6 +135,18 @@ public class Avatar {
     }
 
     //No es necesario el setter de numvueltas, ya que este solo se puede modificar de 1 en 1 cuando se completa una vuelta
+
+    public boolean getModoAvanzado(){
+        return modoAvanzado;
+    }
+
+    public void setModoAvanzado(boolean valor){
+        this.modoAvanzado = valor;
+    }
+
+    public void switchMode(){
+        this.modoAvanzado = !this.modoAvanzado;
+    }
 
     public void moverCasilla(int valor){
         this.casilla.quitarAvatar(this);
