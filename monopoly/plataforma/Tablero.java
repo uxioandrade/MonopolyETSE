@@ -1,6 +1,7 @@
 package monopoly.plataforma;
 import monopoly.contenido.Avatar;
 import monopoly.contenido.Casilla;
+import monopoly.contenido.Comprables;
 import monopoly.contenido.Jugador;
 
 import java.util.HashMap;
@@ -185,11 +186,12 @@ public class Tablero {
             System.out.println(ava.toString());
         }
     }
+    /*
     public void listarPropiedades(){
         for(Casilla cas: Valor.casillas){
-            if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
-                System.out.println(cas.toString());
-            }
+                if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
+                    System.out.println(cas.toString());
+                }
         }
-    }
+    }*/
 }

@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-public class Edificios {
+public class Edificios{
 
     private Casilla casilla;
     private double precio;

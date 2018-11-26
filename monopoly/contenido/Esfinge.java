@@ -2,9 +2,9 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Tablero;
 
-public class Pelota extends Avatar{
+public class Esfinge extends Avatar{
 
-    public Pelota(Jugador jug, Tablero tablero){
+    public Esfinge(Jugador jug, Tablero tablero){
         super(jug,tablero);
     }
 
@@ -14,4 +14,5 @@ public class Pelota extends Avatar{
         }else
             super.moverNormal(valor);
     }
+
 }

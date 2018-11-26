@@ -2,22 +2,19 @@ package monopoly.contenido;
 import monopoly.plataforma.Valor;
 import java.util.ArrayList;
 
-public class Casilla {
+public abstract class Casilla {
 
     private int posicion;
-    private Grupo grupo;
     private String nombre;
-    private double precio;
-    private boolean hipotecado;
-    private Jugador propietario;
     private ArrayList<Avatar> avatares;
 
-    public Casilla(String name,int pos){
-        this.posicion = pos;
-        this.nombre = name;
-        this.hipotecado = false;
+    public Casilla(String nombre, int posicion){
+        if(posicion >=0 && posicion<40)
+            this.posicion = posicion;
+        this.nombre = nombre;
         this.avatares = new ArrayList<>();
     }
+
     public String getNombre(){
         return this.nombre;
     }
@@ -37,49 +34,9 @@ public class Casilla {
     public void quitarAvatar(Avatar a){
         if(this.avatares.contains(a)) this.avatares.remove(a);
     }
-    public void setPrecio(double precio){
-        this.precio=precio;
-    }
-    public double getPrecio(){
-        return this.precio;
-    }
-    public Jugador getPropietario(){
-        return this.propietario;
-    }
-    public void setPropietario(Jugador propietario){
-        if(propietario != null) this.propietario=propietario;
-    }
-    public Grupo getGrupo(){
-        return this.grupo;
-    }
 
-    public void setGrupo(Grupo grupo){
-        this.grupo = grupo;
-    }
 
-    public double getAlquiler(int tirada){
-        return Valor.getDineroVuelta()*tirada/200.0;
-    }
-
-    public double getAlquiler() {
-        if(this.getGrupo().getNombre().equals("Especiales"))
-            return this.precio;
-        else
-            return this.precio*0.1;
-    }
-
-    public double getHipoteca(){
-            return this.precio*0.5;
-    }
-
-    public boolean getHipotecado(){
-        return this.hipotecado;
-    }
-
-    public void setHipotecado(boolean hipotecado){
-        this.hipotecado = hipotecado;
-    }
-
+    /*
     @Override
     public String toString(){
         //En los criterios pone que no es necesario describir las casillas especiales
@@ -134,5 +91,5 @@ public class Casilla {
             aux += "Solar hipotecado, paga " + 1.1*this.getHipoteca() + " para deshipotecar" + "\n";
         aux += "}\n";
         return aux;
-    }
+    }*/
 }
