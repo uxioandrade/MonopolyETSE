@@ -4,29 +4,71 @@ import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Jugador {
 
     private Avatar avatar;
     private String nombre;
     private double dinero;
-    private ArrayList<Casilla> propiedades;
+    private ArrayList<Comprables> propiedades;
 
     public Jugador(){
         this.avatar = null;
         this.nombre = "Banca";
         this.dinero = Double.POSITIVE_INFINITY;
-        this.propiedades = Valor.casillas;
-        for(Casilla c : this.propiedades){
+        propiedades = new ArrayList<>();
+        for(Casilla c : Valor.casillas){
+            if(c instanceof Comprables)
+                this.propiedades.add((Comprables)c);
+        }
+        for(Comprables c : this.propiedades){
             c.setPropietario(this);
         }
     }
 
     public Jugador(String nombre, String tipo, Tablero tablero){
-        this.avatar = new Avatar(tipo,this, tablero);
+        this.avatar = generarAvatar(tipo,tablero);
         this.dinero = Valor.FORTUNA_INICIAL;
         this.propiedades = new ArrayList<>();
         this.nombre = nombre;
+    }
+
+    private Avatar generarAvatar(String tipo, Tablero tablero){
+        Avatar avatar;
+        switch (tipo){
+            case "Coche":
+            case "coche":
+                avatar = new Coche(this,tablero);
+                break;
+            case "esfinge":
+            case "Esfinge":
+                avatar = new Esfinge(this,tablero);
+                break;
+            case "pelota":
+            case "Pelota":
+                avatar = new Pelota(this,tablero);
+                break;
+            case "sombrero":
+            case "Sombrero":
+                avatar = new Sombrero(this,tablero);
+                break;
+            default:
+                avatar = generarAvatar(asignarTipoAleatorio(),tablero);
+        }
+        return avatar;
+    }
+
+    private final ArrayList<String> listaTipos = new ArrayList<String>() {{
+        add("Sombrero");
+        add("Coche");
+        add("Esfinge");
+        add("Pelota");
+    }};
+
+    private String asignarTipoAleatorio(){
+        Random rnd = new Random();
+        return this.listaTipos.get(rnd.nextInt(4));
     }
 
     public Avatar getAvatar(){
@@ -57,15 +99,15 @@ public class Jugador {
     //esto implicaría que la partida es una partida nueva
 
 
-    public ArrayList<Casilla> getPropiedades(){
+    public ArrayList<Comprables> getPropiedades(){
         return this.propiedades;
     }
 
-    public void setPropiedades(ArrayList<Casilla> casillas){//Podría ser interesante en las próximas entregas
+    public void setPropiedades(ArrayList<Comprables> casillas){//Podría ser interesante en las próximas entregas
         this.propiedades = casillas;
     }
 
-    public void anhadirPropiedad(Casilla casilla){
+    public void anhadirPropiedad(Comprables casilla){
         if(casilla != null)
             this.propiedades.add(casilla);
     }
@@ -78,9 +120,12 @@ public class Jugador {
     }
     public int numSolaresGrupo(Grupo grupo){
         int i=0;
-        for (Casilla cas: this.getPropiedades()){//recorremos las propiedades del jugador
-            if(cas.getGrupo().equals(grupo)){//si el grupo de la casilla coincide con el que buscamos sumamos 1
-                i++;
+        for (Comprables cas: this.getPropiedades()){//recorremos las propiedades del jugador
+            if(cas instanceof Solar) {
+                Solar sol = (Solar) cas;
+                if (sol.getGrupo().equals(grupo)) {//si el grupo de la casilla coincide con el que buscamos sumamos 1
+                    i++;
+                }
             }
         }
         return i;
@@ -94,7 +139,7 @@ public class Jugador {
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Avatar: " + this.avatar.getId() + "\n" +
-                "Tipo: " + this.avatar.getTipo() + "\n" +
+           //     "Tipo: " + this.avatar.getTipo() + "\n" +
                 "Dinero Actual: " + this.dinero + "\n" +
                 "Propiedades: {";
         if(this.propiedades.size()!=0) {//si el jugador tiene propiedades las añadimos al string

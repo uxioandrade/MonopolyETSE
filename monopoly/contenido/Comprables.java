@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Valor;
+import monopoly.plataforma.Accion;
 
 public abstract class Comprables extends Casilla{
 
@@ -39,4 +39,11 @@ public abstract class Comprables extends Casilla{
     }
 
     public abstract double getAlquiler(int tirada);
+
+    public abstract void pagarAlquiler(Jugador jugador, int tirada, Accion accion);
+
+    public void accionCaer(Jugador jugador, int tirada, Accion accion) {
+        if (!propietario.equals(accion.getTablero().getBanca()) && !propietario.equals(jugador))
+            this.pagarAlquiler(jugador, tirada, accion);
+    }
 }

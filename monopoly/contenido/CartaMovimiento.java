@@ -36,31 +36,36 @@ public class CartaMovimiento extends Carta{
 
     private void cobrarAccion(Jugador jugador, Tablero tablero, double cantidad){
         //Se resta el alquiler del jugador que ha caído en el servicio
-        jugador.modificarDinero(-jugador.getAvatar().getCasilla().getAlquiler()*2);
-        System.out.println("Se han pagado " + jugador.getAvatar().getCasilla().getAlquiler()*2 + "€ de alquiler.");
+        jugador.modificarDinero(-cantidad);
+        System.out.println("Se han pagado " + cantidad + "€ de alquiler.");
         //Se aumenta el dinero del propietario
-        jugador.getAvatar().getCasilla().getPropietario().modificarDinero(jugador.getAvatar().getCasilla().getAlquiler()*2);
+        Comprables casillaComprable;
+        casillaComprable = (Comprables) jugador.getAvatar().getCasilla();
+        casillaComprable.getPropietario().modificarDinero(cantidad);
     }
 
     public void accionCarta(Jugador jugador, Tablero tablero){
         System.out.println(super.getDescripcion());
+        Comprables casillaComprable;
         Accion accion = new Accion(tablero);
+        //Siempre se cae en una casilla que tiene un alquiler asociado
         if(this.accionFinanciera && this.posicion <= jugador.getAvatar().getCasilla().getPosicion())
             jugador.modificarDinero(Valor.getDineroVuelta());
         jugador.getAvatar().setCasilla(Valor.casillas.get(this.posicion));
+        casillaComprable = (Comprables) jugador.getAvatar().getCasilla();
         switch (alquiler){
             case 0:
                 break;
             case 1:
-                accion.pagarAlquiler(jugador,1);
+                casillaComprable.accionCaer(jugador,1,accion);
                 break;
             case 2:
-                double cantidadDoble = jugador.getAvatar().getCasilla().getAlquiler()*2;
+                double cantidadDoble = casillaComprable.getAlquiler(1)*2;
                 if (jugador.getDinero() >= cantidadDoble){
                    cobrarAccion(jugador,tablero,cantidadDoble);
                 } else {
                     System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-                    if(accion.menuHipotecar(jugador,tablero,jugador.getAvatar().getCasilla().getAlquiler()*2)) {
+                    if(accion.menuHipotecar(jugador,tablero,casillaComprable.getAlquiler(1)*2)) {
                         cobrarAccion(jugador,tablero,cantidadDoble);
                     }
                 }

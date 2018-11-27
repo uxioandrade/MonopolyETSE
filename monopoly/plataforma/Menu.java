@@ -2,11 +2,7 @@ package monopoly.plataforma;/*import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;*/
 
-import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.Scanner;
 
 import monopoly.contenido.Avatar;
@@ -79,22 +75,22 @@ public class Menu {
                     break;
                 case "hipotecar":
                     auxCasilla = "";
-                    for(int i = 2; i < partes.length - 1;i++) {
+                    for(int i = 1; i < partes.length - 1;i++) {
                         auxCasilla += partes[i] + " ";
                     }
                     if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
                     else if(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null)//si existe la casilla
-                        accion.hipotecar(this.tablero.getCasillas().get(partes[1]),this.jugadorActual);
+                        accion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),this.jugadorActual);
                     else System.out.println("La casilla que quieres hipotecar no existe :(");
                     break;
                 case "deshipotecar":
                     auxCasilla = "";
-                    for(int i = 2; i < partes.length - 1;i++) {
+                    for(int i = 1; i < partes.length - 1;i++) {
                         auxCasilla += partes[i] + " ";
                     }
                     if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
                     else if(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null)//si existe la casilla
-                        accion.hipotecar(this.tablero.getCasillas().get(partes[1]),this.jugadorActual);
+                        accion.desHipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),this.jugadorActual);
                     else System.out.println("La casilla que quieres hipotecar no existe :(");
                     break;
                 case "lanzar":
@@ -113,14 +109,14 @@ public class Menu {
                                 } else {
                                     System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
                                     jugadorActual.getAvatar().moverCasilla(tirada);
-                                    accion.caer(jugadorActual, tirada);
+                                    jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                                     if (jugadorActual.getAvatar().getEncarcelado() != 0) countTiradas++;
                                 }
                             } else {
                                 if (this.dados.sonDobles()) {
                                     jugadorActual.getAvatar().setEncarcelado(0);
                                     jugadorActual.getAvatar().moverCasilla(tirada);
-                                    accion.caer(jugadorActual, tirada);
+                                    jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                                     countTiradas++;
                                 } else {
                                     jugadorActual.getAvatar().modificarEncarcelado(1);
@@ -190,14 +186,14 @@ public class Menu {
                             this.tablero.listarAvatares();
                             this.tablero.imprimirTablero();
                         }
-                        if(partes[1].equals("enventa")) this.tablero.listarPropiedades();
+                        //if(partes[1].equals("enventa")) this.tablero.listarPropiedades();
 
                     }else
                         System.out.println("Comando incorrecto");
                     break;
                 case "chetar":
                     jugadorActual.getAvatar().setCasilla(tablero.getCasillas().get(partes[1]));
-                    accion.caer(jugadorActual,1);
+                    jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                     break;
                 case "ver":
                     if(partes.length==2){

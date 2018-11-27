@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import monopoly.Carcel;
 import monopoly.contenido.*;
 
 public class Valor {
@@ -36,58 +37,8 @@ public class Valor {
         grupos.put("Naranja", new Grupo("Naranja", ANSI_AMARILLO, new ArrayList<Casilla>(Arrays.asList(casillas.get(26), casillas.get(27), casillas.get(29))), grupos.get("Rojo").getPrecio() * 1.3));
         grupos.put("Verde", new Grupo("Verde", ANSI_VERDE, new ArrayList<Casilla>(Arrays.asList(casillas.get(31), casillas.get(32), casillas.get(34))), grupos.get("Naranja").getPrecio() * 1.3));
         grupos.put("Azul", new Grupo("Azul", ANSI_AZUL, new ArrayList<Casilla>(Arrays.asList(casillas.get(37), casillas.get(39))), grupos.get("Verde").getPrecio() * 1.3));
-        /*grupos.put("Estaciones", new Grupo("Estaciones",Negro,new ArrayList<Casilla>(Arrays.asList(casillas.get(5),casillas.get(15),casillas.get(25),casillas.get(35))), this.grupos.get("Cyan").getPrecio()*2.0 ));
-        grupos.put("Impuestos", new Grupo("Impuestos",Negro,new ArrayList<Casilla>(Arrays.asList(casillas.get(4),casillas.get(38))), -this.grupos.get("Cyan").getPrecio()*0.66));
-        grupos.put("Suerte", new Grupo("Suerte",Negro,new ArrayList<Casilla>(Arrays.asList(casillas.get(7),casillas.get(22),casillas.get(36))),0.0));
-        grupos.put("Caja Comunidad",new Grupo("Caja Comunidad",Negro,new ArrayList<Casilla>(Arrays.asList(casillas.get(2),casillas.get(17),casillas.get(33))),0.0));
-        grupos.put("Servicios",new Grupo("Servicios",Negro,new ArrayList<Casilla>(Arrays.asList(casillas.get(12),casillas.get(28))),100.0));
-        grupos.put("Carcel",new Grupo("Carcel", Negro, new ArrayList<Casilla>(Arrays.asList(casillas.get(10))),0.0));*/
-        grupos.put("Especiales", new Grupo("Especiales", ANSI_NEGRO, new ArrayList<Casilla>(Arrays.asList(casillas.get(0), casillas.get(20), casillas.get(30), casillas.get(5), casillas.get(15), casillas.get(25), casillas.get(35), casillas.get(4), casillas.get(38), casillas.get(7), casillas.get(22), casillas.get(36), casillas.get(2), casillas.get(17), casillas.get(33), casillas.get(12), casillas.get(28), casillas.get(10))), 0.0));
         setValoresEspeciales();
     }
-
-    public final static ArrayList<Casilla> casillas = new ArrayList<>(Arrays.asList(
-            new Casilla("Salida",0),
-            new Solar("Bag End",1),
-            new Casilla("Caja1",2),
-            new Solar("Farmer Maggot's",3),
-            new Impuesto("Impuesto1",4),
-            new Casilla("Estacion1",5),
-            new Solar("Chetwood Forest",6),
-            new Casilla("Suerte1",7),
-            new Solar("Weathertop",8),
-            new Solar("Ford of Bruinen",9),
-            new Casilla("Carcel",10),
-            new Solar("Rivendell",11),
-            new Servicio("Servicio1",12),
-            new Solar("Council of Elrond",13),
-            new Solar("Caras Galadon",14),
-            new Casilla("Estacion2",15),
-            new Solar("Fall of Rauros",16),
-            new Casilla("Caja2",17),
-            new Solar("Nen Hithoel",18),
-            new Solar("Argonath",19),
-            new Casilla("Parking",20),
-            new Solar("Golden Hall",21),
-            new Casilla("Suerte2",22),
-            new Solar("Edoras",23),
-            new Solar("Helm's Deep",24),
-            new Casilla("Estacion3",25),
-            new Solar("Isengard Caverns",26),
-            new Solar("Fords of Isen",27),
-            new Servicio("Servicio2",28),
-            new Solar("Tower of Orthanc",29),
-            new Casilla("VeCarcel",30),
-            new Solar("Pelennor Fields",31),
-            new Solar("Osgiliath",32),
-            new Casilla("Caja3",33),
-            new Solar("Minas Tirith",34),
-            new Casilla("Estacion4",35),
-            new Casilla("Suerte3",36),
-            new Solar("Barad-dûr",37),
-            new Impuesto("Impuesto2",38),
-            new Solar("Mt. Doom",39)
-    ));
 
     public final static ArrayList<Carta> cartasSuerte = new ArrayList<>(Arrays.asList(
             new CartaMovimiento(28,true,0,"Ve al " + " y coge un avión. Si pasas por la casilla de Salida, cobra "),
@@ -100,6 +51,49 @@ public class Valor {
 
     public final static ArrayList<Carta> cartaCajaKomuna = new ArrayList<>(Arrays.asList(
 
+    ));
+
+    public final static ArrayList<Casilla> casillas = new ArrayList<>(Arrays.asList(
+            new Salida("Salida",0),
+            new Solar("Bag End",1),
+            new CasillasCarta("Caja1",2,cartaCajaKomuna),
+            new Solar("Farmer Maggot's",3),
+            new Impuesto("Impuesto1",4),
+            new Transporte("Estacion1",5),
+            new Solar("Chetwood Forest",6),
+            new CasillasCarta("Suerte1",7,cartasSuerte),
+            new Solar("Weathertop",8),
+            new Solar("Ford of Bruinen",9),
+            new Carcel("Carcel",10),
+            new Solar("Rivendell",11),
+            new Servicio("Servicio1",12),
+            new Solar("Council of Elrond",13),
+            new Solar("Caras Galadon",14),
+            new Transporte("Estacion2",15),
+            new Solar("Fall of Rauros",16),
+            new CasillasCarta("Caja2",17,cartaCajaKomuna),
+            new Solar("Nen Hithoel",18),
+            new Solar("Argonath",19),
+            new Parking("Parking",20),
+            new Solar("Golden Hall",21),
+            new CasillasCarta("Suerte2",22,cartasSuerte),
+            new Solar("Edoras",23),
+            new Solar("Helm's Deep",24),
+            new Transporte("Estacion3",25),
+            new Solar("Isengard Caverns",26),
+            new Solar("Fords of Isen",27),
+            new Servicio("Servicio2",28),
+            new Solar("Tower of Orthanc",29),
+            new VeCarcel("VeCarcel",30),
+            new Solar("Pelennor Fields",31),
+            new Solar("Osgiliath",32),
+            new CasillasCarta("Caja3",33,cartaCajaKomuna),
+            new Solar("Minas Tirith",34),
+            new Transporte("Estacion4",35),
+            new CasillasCarta("Suerte3",36,cartasSuerte),
+            new Solar("Barad-dûr",37),
+            new Impuesto("Impuesto2",38),
+            new Solar("Mt. Doom",39)
     ));
 
     public static double PRECIO_G1 = 120;
@@ -120,12 +114,12 @@ public class Valor {
 
     private static void setValoresEspeciales(){
         for(int i=5;i<40;i+=10){
-            casillas.get(i).setPrecio(dineroVuelta);
+            ((Transporte)casillas.get(i)).setPrecio(dineroVuelta);
         }
-        casillas.get(12).setPrecio(precioServicio);
-        casillas.get(28).setPrecio(precioServicio);
-        casillas.get(4).setPrecio(-1.0*dineroVuelta/2);
-        casillas.get(38).setPrecio(-1.0*dineroVuelta);
+        ((Servicio)casillas.get(12)).setPrecio(precioServicio);
+        ((Servicio)casillas.get(28)).setPrecio(precioServicio);
+        ((Impuesto)casillas.get(4)).setApagar(dineroVuelta/2);
+        ((Impuesto)casillas.get(38)).setApagar(dineroVuelta);
     }
     public static void setDineroAcumulado(double valor){
         if(valor >= 0)

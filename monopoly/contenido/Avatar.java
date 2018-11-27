@@ -2,7 +2,7 @@ package monopoly.contenido;
 
 import java.util.Iterator;
 import java.util.Random;
-import java.util.ArrayList;
+
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 public abstract class Avatar {
@@ -27,13 +27,6 @@ public abstract class Avatar {
         this.modoAvanzado = false;
     }
 
-    private final ArrayList<String> listaTipos = new ArrayList<String>() {{
-        add("sombrero");
-        add("coche");
-        add("esfinge");
-        add("pelota");
-    }};
-
     //Función privada que asigna un id aleatorio no repetido a un avatar
     private void asignarId(){
         Random rnd = new Random();
@@ -53,10 +46,6 @@ public abstract class Avatar {
         }
     }
 
-    private String asignarTipoAleatorio(){
-        Random rnd = new Random();
-        return this.getListaTipos().get(rnd.nextInt(4));
-    }
     /*
     public Avatar(Jugador jug, Tablero tabla){
         //Inicializamos el tipo a un valor arbitrario
@@ -75,12 +64,6 @@ public abstract class Avatar {
     }
 
     //No tiene sentido el setter de Id, pues es único e invariable a lo largo de la partida
-
-    private ArrayList<String> getListaTipos(){
-        return (ArrayList) this.listaTipos.clone();
-    }
-
-    //El atributo listatipos es constante, no tiene sentido crear un getter
 
     public Casilla getCasilla(){
         return this.casilla;

@@ -1,6 +1,8 @@
 package monopoly.contenido;
 
 import java.util.ArrayList;
+import monopoly.plataforma.Accion;
+
 
 public class Solar extends Comprables{
 
@@ -75,4 +77,18 @@ public class Solar extends Comprables{
         return  construccionesTipo;
     }
 
+    public void pagarAlquiler(Jugador jugador, int tirada, Accion accion){
+        if (jugador.getDinero() >= this.getAlquiler(tirada)){
+            //Se resta el alquiler del jugador que ha caído en el servicio
+            jugador.modificarDinero(-this.getAlquiler(tirada));
+            System.out.println("Se han pagado " + this.getAlquiler(tirada) + "€ de alquiler.");
+            //Se aumenta el dinero del propietario
+            super.getPropietario().modificarDinero(this.getAlquiler(tirada));
+        } else {
+            System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
+            if(accion.menuHipotecar(jugador,accion.getTablero(),super.getPrecio())){
+                pagarAlquiler(jugador,tirada,accion);
+            }
+        }
+    }
 }

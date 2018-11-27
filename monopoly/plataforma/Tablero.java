@@ -1,8 +1,5 @@
 package monopoly.plataforma;
-import monopoly.contenido.Avatar;
-import monopoly.contenido.Casilla;
-import monopoly.contenido.Comprables;
-import monopoly.contenido.Jugador;
+import monopoly.contenido.*;
 
 import java.util.HashMap;
 
@@ -116,7 +113,12 @@ public class Tablero {
     private void printCasilla(int i){
         StringBuilder aux = new StringBuilder();
         int lenAux;
-        System.out.printf("\033[0;1m%s",Valor.casillas.get(i).getGrupo().getColor() + Valor.casillas.get(i).getNombre());
+        String color = "";
+        if(Valor.casillas.get(i) instanceof Solar){
+            Solar solar = (Solar) Valor.casillas.get(i);
+            color = solar.getGrupo().getColor();
+        }
+        System.out.printf("\033[0;1m%s",color + Valor.casillas.get(i).getNombre());
 
         aux.append(" " + rellenarCasilla(Valor.casillas.get(i)));
         lenAux = LONGITUDCASILLA - aux.length() - Valor.casillas.get(i).getNombre().length();

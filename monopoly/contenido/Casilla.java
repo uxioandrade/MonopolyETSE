@@ -1,6 +1,9 @@
 package monopoly.contenido;
 import monopoly.plataforma.Valor;
+import monopoly.plataforma.Tablero;
+import monopoly.plataforma.Accion;
 import java.util.ArrayList;
+
 
 public abstract class Casilla {
 
@@ -35,6 +38,8 @@ public abstract class Casilla {
         if(this.avatares.contains(a)) this.avatares.remove(a);
     }
 
+    public abstract void accionCaer(Jugador jugador,int tirada, Accion accion);
+
 
     /*
     @Override
@@ -52,7 +57,7 @@ public abstract class Casilla {
         }
         else{
             if(this.getNombre().contains("Estacion")){
-                aux += "Tipo: " + "Transportes" + "\n" +
+                aux += "Tipo: " + "Transporte" + "\n" +
                         "Precio: " + this.precio + "\n" +
                         "Uso transporte: " + this.getAlquiler() + "\n" +
                         "Hipoteca: " + this.getHipoteca() + "\n";
