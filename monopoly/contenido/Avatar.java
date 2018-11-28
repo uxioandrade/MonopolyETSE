@@ -121,6 +121,16 @@ public abstract class Avatar {
 
     public abstract void moverCasilla(int valor);
 
+    public void retrocederCasillas(int valor){
+        this.getCasilla().quitarAvatar(this);
+        if(this.getCasilla().getPosicion() - valor < 0){
+            this.setCasilla(Valor.casillas.get(40 + this.getCasilla().getPosicion() - valor));
+        }else{
+            this.setCasilla(Valor.casillas.get(this.getCasilla().getPosicion() - valor));
+        }
+        this.getCasilla().anhadirAvatar(this);
+    }
+
     void moverNormal(int valor){ //Acceso a paquete
             this.casilla.quitarAvatar(this);
             //Caso en el que el movimiento suponga completar una vuelta
