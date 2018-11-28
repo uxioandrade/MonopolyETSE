@@ -2,7 +2,7 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 
-public class VeCarcel extends Casilla{
+public class VeCarcel extends Casilla {
 
     public VeCarcel(String nombre, int posicion) {
         super(nombre, posicion);

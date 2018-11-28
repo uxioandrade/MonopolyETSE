@@ -28,12 +28,14 @@ public class CartaPagar extends Carta{
 
     private void cobrarAccion(Jugador jugador, Tablero tablero, double cantidad) {
         jugador.modificarDinero(cantidad * -1);
+        jugador.modificarPremiosInversionesOBote(cantidad * -1);
         if (!banca) {
             Iterator<Jugador> itJug = tablero.getJugadores().values().iterator();
             while (itJug.hasNext()) {
                 Jugador jug = itJug.next();
                 if (!jug.equals(jugador)) {
                     jug.modificarDinero(-1 * this.cantidad);
+                    jug.modificarPremiosInversionesOBote(this.cantidad);
                 }
             }
         }

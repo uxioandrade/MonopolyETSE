@@ -37,6 +37,7 @@ public class CartaMovimiento extends Carta{
     private void cobrarAccion(Jugador jugador, Tablero tablero, double cantidad){
         //Se resta el alquiler del jugador que ha caído en el servicio
         jugador.modificarDinero(-cantidad);
+        jugador.modificarPagoAlquileres(cantidad);
         System.out.println("Se han pagado " + cantidad + "€ de alquiler.");
         //Se aumenta el dinero del propietario
         Comprables casillaComprable;
@@ -49,8 +50,10 @@ public class CartaMovimiento extends Carta{
         Comprables casillaComprable;
         Accion accion = new Accion(tablero);
         //Siempre se cae en una casilla que tiene un alquiler asociado
-        if(this.accionFinanciera && this.posicion <= jugador.getAvatar().getCasilla().getPosicion())
+        if(this.accionFinanciera && this.posicion <= jugador.getAvatar().getCasilla().getPosicion()) {
             jugador.modificarDinero(Valor.getDineroVuelta());
+            jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
+        }
         jugador.getAvatar().setCasilla(Valor.casillas.get(this.posicion));
         casillaComprable = (Comprables) jugador.getAvatar().getCasilla();
         switch (alquiler){

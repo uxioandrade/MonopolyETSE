@@ -12,6 +12,13 @@ public class Jugador {
     private String nombre;
     private double dinero;
     private ArrayList<Comprables> propiedades;
+    private double dineroInvertido;
+    private double pagoAlquileres;
+    private double cobroAlquileres;
+    private double pasarPorCasilla;
+    private double premiosInversionesOBote;
+    private int vecesCarcel;
+    private int vecesDados;
 
     public Jugador(){
         this.avatar = null;
@@ -112,6 +119,60 @@ public class Jugador {
             this.propiedades.add(casilla);
     }
 
+    public double getDineroInvertido(){
+        return this.dineroInvertido;
+    }
+
+    public void modificarDineroInvertido(double valor){
+        this.dineroInvertido += valor;
+    }
+
+    public double getPagoAlquileres(){
+        return this.pagoAlquileres;
+    }
+
+    public void modificarPagoAlquileres(double valor){
+        this.pagoAlquileres += valor;
+    }
+
+    public double getCobroAlquileres(){
+        return this.cobroAlquileres;
+    }
+
+    public void modificarCobroAlquileres(double valor){
+        this.pagoAlquileres += valor;
+    }
+
+    public double getPasarPorCasilla(){
+        return this.pasarPorCasilla;
+    }
+
+    public void modificarPasarPorCasilla(double valor){
+        this.pasarPorCasilla += valor;
+    }
+
+    public double getPremiosInversionesOBote(){
+        return this.premiosInversionesOBote;
+    }
+
+    public void modificarPremiosInversionesOBote(double valor){
+        this.premiosInversionesOBote += valor;
+    }
+
+    public int getVecesCarcel(){
+        return this.vecesCarcel;
+    }
+
+    public int getVecesDados(){return this.vecesDados;}
+
+    public void anhadirVecesDados(){
+        this.vecesDados++;
+    }
+
+    public void anhadirVecesCarcel(){
+        this.vecesCarcel++;
+    }
+
     public String getDescripcionInicial(){
         String aux = "\t{\n" +
                 "\t\tNombre: " + this.nombre + "\n" +
@@ -132,6 +193,33 @@ public class Jugador {
     }
     public boolean poseeGrupoCompleto(Grupo grupo){
         return (this.numSolaresGrupo(grupo)==grupo.getCasillas().size());//comparamos que el numero de casillas que posee del grupo coincidan con el numero de casillas del grupo
+    }
+
+    public double calcularFortuna(){
+        double total=dinero;
+        for(Comprables c: this.propiedades){
+            if(!c.getHipotecado()) {
+                total += c.getPrecio();
+                if(c instanceof Solar && ((Solar)c).getConstrucciones() != null){
+                    for(Edificios ed : ((Solar) c).getConstrucciones()){
+                        total += ed.getPrecio();
+                    }
+                }
+            }
+        }
+        return total;
+    }
+
+    public void imprimirEstadisticas(){
+
+        String aux = "{" +
+                "\ndineroInvertido: " + this.getDineroInvertido() +
+                "\npagoDeAlquileres: " + this.getPagoAlquileres() +
+                "\ncobroDeAlquileres: " + this.getCobroAlquileres() +
+                "\npasarPorCasillaDeSalida:" + this.getPasarPorCasilla() +
+                "\npremiosInversionesOBote:" + this.getPremiosInversionesOBote() +
+                "\nvecesEnLaCarcel: " + this.getVecesCarcel() + "\n}";
+        System.out.println(aux);
     }
 
     @Override

@@ -128,6 +128,7 @@ public abstract class Avatar {
                 this.casilla= Valor.casillas.get(this.casilla.getPosicion() + valor - 40);
                 //Se le ingresa al jugador el dinero correspondiente a completar la vuelta
                 this.jugador.modificarDinero(Valor.getDineroVuelta());
+                this.jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
                 this.numVueltas++;
                 System.out.println("El jugador " + this.jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
                 //Se recorren los avatares para comprobar si es necesario actualizar el dinero de pasar por la casilla de salida

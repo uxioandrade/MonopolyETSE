@@ -1,5 +1,8 @@
 package monopoly.contenido;
 
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -9,8 +12,9 @@ public class Grupo {
     private double precio;
     private String nombre;//Nombre asociado, que es el color
     private String color;//String asociado al color
+    private double rentabilidad;
 
-    public Grupo(String nombre,String color, ArrayList<Casilla> casillas, double precio){
+    public Grupo(String nombre, String color, ArrayList<Casilla> casillas, double precio){
         this.solares = new ArrayList<>();
         for(Casilla c: casillas) {
             this.solares.add((Solar)c);
@@ -51,6 +55,34 @@ public class Grupo {
 
     public String getNombre(){
         return this.nombre;
+    }
+
+    public double getRentabilidad(){
+        return this.rentabilidad;
+    }
+
+    public void sumarRentabilidad(double valor){
+        if(valor > 0)
+            this.rentabilidad += valor;
+    }
+
+    public void listarEdificiosGrupo(){
+        String aux = "";
+        String[] tipo = new String[]{"Casa","Hotel","Piscina","Pista"};
+        int i = 0;
+        for(Solar s: this.solares){
+            aux += "{\npropiedad: " + s.getNombre() +",\n";
+            for(int k = 0;k<4;k++) {
+                aux+= tipo[k] + "s: ";
+                for (i = 0; i < s.getConstrucciones(tipo[k]).size(); i++) {
+                    aux += "[" + tipo[k] + i + "],";
+                }
+                if (i == 0) aux += "-,";
+                aux += "\n";
+            }
+            aux += "alquiler: " + s.getAlquiler(1) + "\n},\n";
+        }
+        System.out.println(aux);
     }
 
     @Override

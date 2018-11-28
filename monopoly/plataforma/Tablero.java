@@ -1,6 +1,7 @@
 package monopoly.plataforma;
 import monopoly.contenido.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.Iterator;
@@ -8,9 +9,10 @@ import java.util.Iterator;
 public class Tablero {
 
     public final static int LONGITUDCASILLA = 20;
-    private HashMap<String,Casilla> casillas;
+    private HashMap<String, Casilla> casillas;
     private HashMap<String,Jugador> jugadores;
     private HashMap<String,Avatar> avatares;
+    private ArrayList<ArrayList<Edificios>> edificios;
     private Jugador banca;
     private int vueltas;
 
@@ -18,10 +20,14 @@ public class Tablero {
         this.jugadores = new HashMap<>();
         this.avatares = new HashMap<>();
         this.casillas = new HashMap<>();
+        this.banca = new Jugador();
+        this.edificios = new ArrayList<>(); //0-> Casas 1-> Hoteles 2->Piscinas 3->Pistas Deportes
+        for(int i = 0; i <4 ; i++) {
+            this.edificios.add(new ArrayList<Edificios>());
+        }
         for(Casilla cas: Valor.casillas){
             this.casillas.put(cas.getNombre(),cas);
         }
-        this.banca = new Jugador();
         this.vueltas = 0;
     }
 
@@ -29,6 +35,10 @@ public class Tablero {
         this.jugadores = jugadores;
         this.avatares = new HashMap<>();
         this.casillas = new HashMap<>();
+        this.edificios = new ArrayList<>();
+        for(int i = 0; i <4 ; i++) {
+            this.edificios.add(new ArrayList<Edificios>());
+        }
         for(Casilla cas: Valor.casillas){
             this.casillas.put(cas.getNombre(),cas);
         }
@@ -36,7 +46,7 @@ public class Tablero {
         this.vueltas = 0;
     }
 
-    public HashMap<String,Casilla> getCasillas(){
+    public HashMap<String, Casilla> getCasillas(){
         return this.casillas;
     }
 
@@ -75,6 +85,42 @@ public class Tablero {
     }
 
     //No tiene sentido el setter de Banca, ya que este jugador no se ve modificado a lo largo del programa
+
+    public ArrayList<Edificios> getEdificios(int tipo){
+        if(tipo >= 0 && tipo <=3)
+            return this.edificios.get(tipo);
+        else
+            return null;
+    }
+
+    public ArrayList<ArrayList<Edificios>> getEdificios(){
+        return this.edificios;
+    }
+
+    public void anhadirEdificio(Edificios ed) {
+        if (ed instanceof Casa) {
+            this.edificios.get(0).add(ed);
+        } else if (ed instanceof Hotel) {
+            this.edificios.get(1).add(ed);
+        } else if (ed instanceof Piscina) {
+            this.edificios.get(2).add(ed);
+        } else{
+            this.edificios.get(3).add(ed);
+        }
+    }
+
+    public void borrarEdificio(Edificios ed){
+        if (ed instanceof Casa) {
+            this.edificios.get(0).remove(ed);
+        } else if (ed instanceof Hotel) {
+            this.edificios.get(1).remove(ed);
+        } else if (ed instanceof Piscina) {
+            this.edificios.get(2).remove(ed);
+        } else{
+            this.edificios.get(3).remove(ed);
+        }
+    }
+
 
     public void cambiarModo(){
         Iterator<Avatar> av_it = this.avatares.values().iterator();
@@ -188,12 +234,148 @@ public class Tablero {
             System.out.println(ava.toString());
         }
     }
-    /*
-    public void listarPropiedades(){
-        for(Casilla cas: Valor.casillas){
-                if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
-                    System.out.println(cas.toString());
+
+    public void listarCasillasEdificadas(){
+        for(int i =0;i<4;i++){
+            for(int j = 0;j < this.edificios.get(i).size();j++){
+                String aux = "";
+                switch (i){
+                    case 0:
+                        aux = "casa";
+                    break;
+                    case 1:
+                        aux = "hotel";
+                    break;
+                    case 2:
+                        aux = "piscina";
+                    break;
+                    case 3:
+                        aux = "pista";
+                    break;
                 }
+                System.out.println("{\n" + "id: " + aux + "-" + (j+1) + ",\npropietario: "
+                        + this.edificios.get(i).get(j).getComprable().getPropietario().getNombre() + ",\ncasilla: "
+                        + this.edificios.get(i).get(j).getComprable().getNombre() + ",\ngrupo: "
+                        + this.edificios.get(i).get(j).getComprable().getGrupo().getNombre() + ",\ncoste: "
+                        + this.edificios.get(i).get(j).getComprable().getPrecio() + "\n}");
+            }
         }
-    }*/
+    }
+
+    public void listarPropiedades(){
+        for(Comprables cas: Valor.getComprables()){
+            if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
+                System.out.println(cas.toString());
+            }
+        }
+    }
+
+    private String getCasillaMasRentable(){
+        double max = 0;
+        String aux = "";
+        for(Comprables c: Valor.getComprables()){
+            if(c.getRentabilidad() > max){
+                aux = "[" + c.getNombre();
+                max = c.getRentabilidad();
+            }else if(c.getRentabilidad() == max){
+                aux += ", " + c.getNombre();
+            }
+        }
+        if(max > 0)
+            return aux + "]";
+        else
+            return "Ninguna casilla ha reportado beneficios";
+    }
+
+    private String getGrupoMasRentable(){
+        double max = 0;
+        String aux = "";
+        Iterator<Grupo> it_g = Valor.getGrupos().values().iterator();
+        while(it_g.hasNext()){
+            Grupo gAux = it_g.next();
+            if(gAux.getRentabilidad() > max){
+                aux = "[" + gAux.getNombre();
+                max = gAux.getRentabilidad();
+            }else if(gAux.getRentabilidad() == max){
+                aux += ", " + gAux.getNombre();
+            }
+        }
+        if(max > 0)
+            return aux + "]";
+        else
+            return "Ninguna casilla de ningún grupo ha reportado beneficios";
+    }
+
+    private String getCasillaMasFrecuentada(){
+        String aux = "";
+        double max = 0;
+        for(Casilla c: Valor.casillas){
+            if(c.numVisitas() > max){
+                aux = "[" + c.getNombre();
+                max = c.numVisitas();
+            }else if(c.numVisitas() == max){
+                aux += ", " + c.getNombre();
+            }
+        }
+        return aux + "]";
+    }
+
+    private String getJugadorMasVueltas(){
+        double max = 0;
+        String aux = "";
+        Iterator<Avatar> av_it = this.getAvatares().values().iterator();
+        while(av_it.hasNext()){
+            Avatar avAux = av_it.next();
+            if(avAux.getNumVueltas() > max){
+                aux = "[" + avAux.getJugador().getNombre();
+                max = avAux.getNumVueltas();
+            }else if(avAux.getNumVueltas() == max){
+                aux += ", " + avAux.getJugador().getNombre();
+            }
+        }
+        return aux + "]";
+    }
+
+    private String getMaxVecesDados(){
+        int max = 0;
+        String aux = "";
+        Iterator<Jugador> jug_it = this.getJugadores().values().iterator();
+        while(jug_it.hasNext()){
+            Jugador jAux = jug_it.next();
+            if(jAux.getVecesDados() > max){
+                aux = "[" + jAux.getNombre();
+                max = jAux.getVecesDados();
+            }else if(jAux.getVecesDados() == max){
+                aux += ", " + jAux.getNombre();
+            }
+        }
+        return aux + "]";
+    }
+
+    private String getJugadorCabeza(){
+        double max = 0;
+        String aux = "";
+        Iterator<Jugador> jug_it = this.getJugadores().values().iterator();
+        while(jug_it.hasNext()){
+            Jugador jAux = jug_it.next();
+            if(jAux.calcularFortuna() > max){
+                aux = "[" + jAux.getNombre();
+                max = jAux.calcularFortuna();
+            }else if(jAux.calcularFortuna() == max){
+                aux += ", " + jAux.getNombre();
+            }
+        }
+        return aux + "]";
+    }
+
+    public void obtenerEstadisticas(){
+        String aux = "{\n" +
+                "casillaMasRentable: " + this.getCasillaMasRentable() + ",\n" +
+                "grupoMasRentable: " + this.getGrupoMasRentable() + ",\n" +
+                "casillaMasFrecuentada: " + this.getCasillaMasFrecuentada() + ",\n" +
+                "jugadorMasVueltas: " + this.getJugadorMasVueltas() + ",\n" +
+                "jugadorMasVecesDados: " + this.getMaxVecesDados() + ",\n" +
+                "jugadorEnCabeza: " + this.getJugadorCabeza() + "\n}";
+        System.out.println(aux);
+    }
 }

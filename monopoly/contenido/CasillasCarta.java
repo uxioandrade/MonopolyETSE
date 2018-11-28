@@ -5,7 +5,7 @@ import monopoly.plataforma.Accion;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CasillasCarta extends Casilla{
+public class CasillasCarta extends Casilla {
 
     private ArrayList<Carta> cartas;
 
@@ -34,7 +34,7 @@ public class CasillasCarta extends Casilla{
 
     public void accionCaer(Jugador jugador,int tirada, Accion accion){
         ArrayList<Carta> casCaja = barajarCartas(this.cartas);
-        Carta cartaEscogida = casCaja.get(elegirCarta());
+        Carta cartaEscogida = casCaja.get(elegirCarta()-1);
         cartaEscogida.accionCarta(jugador,accion.getTablero());
     }
 

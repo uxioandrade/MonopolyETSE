@@ -2,11 +2,12 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 
-public abstract class Comprables extends Casilla{
+public abstract class Comprables extends Casilla {
 
     private double precio;
     private boolean hipotecado;
     private Jugador propietario;
+    private double rentabilidad;
 
     public Comprables(String nombre, int posicion){
         super(nombre,posicion);
@@ -32,6 +33,15 @@ public abstract class Comprables extends Casilla{
     public void setPrecio(double precio){
         if(precio > 0.00000)
             this.precio = precio;
+    }
+
+    public double getRentabilidad(){
+        return this.rentabilidad;
+    }
+
+    public void sumarRentabilidad(double valor){
+        if(valor > 0)
+            this.rentabilidad += valor;
     }
 
     public double getPrecio(){

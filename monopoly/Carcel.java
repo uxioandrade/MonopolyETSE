@@ -4,7 +4,7 @@ import monopoly.contenido.Casilla;
 import monopoly.contenido.Jugador;
 import monopoly.plataforma.Accion;
 
-public class Carcel extends Casilla{
+public class Carcel extends Casilla {
 
     public Carcel(String nombre, int posicion) {
         super(nombre, posicion);

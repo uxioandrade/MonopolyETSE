@@ -2,7 +2,7 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 
-public class Salida extends Casilla{
+public class Salida extends Casilla {
 
     public Salida(String nombre, int posicion) {
         super(nombre, posicion);

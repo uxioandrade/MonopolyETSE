@@ -73,6 +73,24 @@ public class Menu {
                 case "comprar":
                     accion.comprar(jugadorActual);
                     break;
+                case "edificar":
+                    if(partes.length ==2){
+                        accion.edificar(jugadorActual,partes[1]);
+                    }else{
+                        System.out.println("Comando incorrecto");
+                    }
+                    break;
+                case "vender":
+                    if(partes.length >= 4){
+                        auxCasilla = "";
+                        for(int i = 2; i < partes.length - 2;i++) {
+                            auxCasilla += partes[i] + " ";
+                        }
+                        accion.venderConstrucciones(jugadorActual,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
+                    }else{
+                        System.out.println("Comando incorrecto");
+                    }
+                    break;
                 case "hipotecar":
                     auxCasilla = "";
                     for(int i = 1; i < partes.length - 1;i++) {
@@ -97,6 +115,7 @@ public class Menu {
                     if(partes.length>=2 && partes[1].equals("dados")) {
                         if (countTiradas == 0) {//si tienes tiradas pendientes te muestra la tirada
                             this.dados.lanzarDados();
+                            jugadorActual.anhadirVecesDados();
                             tirada = this.dados.getSuma();
                             this.dados.getDescripcion();
                             if (jugadorActual.getAvatar().getEncarcelado() == 0) {//si no esta encarcelado
@@ -177,14 +196,21 @@ public class Menu {
                     }
                     break;
                 case "listar":
-                    if(partes.length==2){
+                    if(partes.length>=2){
                         if(partes[1].equals("jugadores")){
                             this.tablero.listarJugadores();
                             this.tablero.imprimirTablero();
-                        }
-                        if(partes[1].equals("avatares")) {
+                        }else if(partes[1].equals("avatares")) {
                             this.tablero.listarAvatares();
                             this.tablero.imprimirTablero();
+                        }else if(partes[1].equals("edificios")){
+                            if(partes.length == 2)
+                                this.tablero.listarCasillasEdificadas();
+                            else
+                                if(Valor.getGrupos().containsKey(partes[2]))
+                                    Valor.getGrupos().get(partes[2]).listarEdificiosGrupo();
+                                else
+                                    System.out.println("El grupo introducido no existe");
                         }
                         //if(partes[1].equals("enventa")) this.tablero.listarPropiedades();
 
@@ -192,7 +218,11 @@ public class Menu {
                         System.out.println("Comando incorrecto");
                     break;
                 case "chetar":
-                    jugadorActual.getAvatar().setCasilla(tablero.getCasillas().get(partes[1]));
+                    auxCasilla = "";
+                    for(int i = 1; i < partes.length - 1;i++) {
+                        auxCasilla += partes[i] + " ";
+                    }
+                    jugadorActual.getAvatar().setCasilla(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]));
                     jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                     break;
                 case "ver":
@@ -207,6 +237,18 @@ public class Menu {
                     }else{
                         System.out.println("Comando incorrecto");
                     }
+                    break;
+                case "estadisticas":
+                    if(partes.length==1)
+                        this.tablero.obtenerEstadisticas();
+                    else if(partes.length==2){
+                        if(turnosJugadores.contains(partes[1])){
+                            this.tablero.getJugadores().get(partes[1]).imprimirEstadisticas();
+                        }else
+                            System.out.println("El jugador introducido no existe");
+                    }
+                    else
+                        System.out.println("Comando incorrecto");
                     break;
                 default:
                     System.out.println("\nComando incorrecto.");

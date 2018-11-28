@@ -96,6 +96,15 @@ public class Valor {
             new Solar("Mt. Doom",39)
     ));
 
+    public static ArrayList<Comprables> getComprables(){
+        ArrayList<Comprables> comprables = new ArrayList<>();
+        for(Casilla c: casillas){
+            if(c instanceof Comprables)
+                comprables.add((Comprables)c);
+        }
+        return comprables;
+    }
+
     public static double PRECIO_G1 = 120;
     private static double precioTotalSolares = PRECIO_G1*23.85769;
     public final static double FORTUNA_INICIAL = precioTotalSolares /3.0;
