@@ -17,6 +17,7 @@ public class Jugador {
     private double cobroAlquileres;
     private double pasarPorCasilla;
     private double premiosInversionesOBote;
+    private double pagoImpuestos;
     private int vecesCarcel;
     private int vecesDados;
 
@@ -140,7 +141,7 @@ public class Jugador {
     }
 
     public void modificarCobroAlquileres(double valor){
-        this.pagoAlquileres += valor;
+        this.cobroAlquileres += valor;
     }
 
     public double getPasarPorCasilla(){
@@ -159,6 +160,14 @@ public class Jugador {
         this.premiosInversionesOBote += valor;
     }
 
+    public double getPagoImpuestos(){
+        return this.pagoImpuestos;
+    }
+
+    public void modificarPagoImpuestos(double valor){
+        this.pagoImpuestos += valor;
+    }
+
     public int getVecesCarcel(){
         return this.vecesCarcel;
     }
@@ -172,6 +181,7 @@ public class Jugador {
     public void anhadirVecesCarcel(){
         this.vecesCarcel++;
     }
+
 
     public String getDescripcionInicial(){
         String aux = "\t{\n" +
@@ -215,6 +225,7 @@ public class Jugador {
         String aux = "{" +
                 "\ndineroInvertido: " + this.getDineroInvertido() +
                 "\npagoDeAlquileres: " + this.getPagoAlquileres() +
+                "\npagoImpuestos: " + this.getPagoImpuestos() +
                 "\ncobroDeAlquileres: " + this.getCobroAlquileres() +
                 "\npasarPorCasillaDeSalida:" + this.getPasarPorCasilla() +
                 "\npremiosInversionesOBote:" + this.getPremiosInversionesOBote() +

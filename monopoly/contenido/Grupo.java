@@ -1,8 +1,6 @@
 package monopoly.contenido;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
-
-import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.ArrayList;
 
 
@@ -84,6 +82,52 @@ public class Grupo {
         }
         System.out.println(aux);
     }
+    public ArrayList<Edificios> getEdificiosGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones()){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getCasasGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("casa")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getHotlesGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("hotel")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getPistaDeportesGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("pìsta")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getPiscinasGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("piscina")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+
 
     @Override
     public String toString(){

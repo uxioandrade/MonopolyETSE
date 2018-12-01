@@ -3,7 +3,6 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Tablero;
-import sun.tools.jconsole.Tab;
 
 import java.util.Iterator;
 
