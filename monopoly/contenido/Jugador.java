@@ -140,7 +140,7 @@ public class Jugador {
     }
 
     public void modificarCobroAlquileres(double valor){
-        this.pagoAlquileres += valor;
+        this.cobroAlquileres += valor;
     }
 
     public double getPasarPorCasilla(){
