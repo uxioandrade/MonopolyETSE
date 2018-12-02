@@ -49,14 +49,23 @@ public class Valor {
             new CartaPagar(-10000,true,"¡Has ganado el bote de la lotería! Recibe 1000000€.")
     ));
 
-    public final static ArrayList<Carta> cartaCajaKomuna = new ArrayList<>(Arrays.asList(
-
+    public final static ArrayList<Carta> cartasCajaComunidad = new ArrayList<>(Arrays.asList(
+            new CartaPagar(500000,true,"Paga 500000 por un fin de semana en un balneario de 5 estrellas"),
+            new CartaMovimiento(30,false,0,"Te investigan por fraude de identidad. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar los " + getDineroVuelta() + "€."),
+            new CartaMovimiento(0,true,0,"Colócate en la casilla de Salida. Cobra " + getDineroVuelta() + "€."),
+            new CartaPagar(-200000,true,"Tu compañía de Internet obtiene beneficios. Recibe 20000€."),
+            new CartaPagar(10000,true,"Paga 10000€ por invitar a todos tus amigos a un viaje a León"),
+            new CartaPagar(-50000,true,"Devolución de Hacienda. Cobra 50000€"),
+            new CartaMovimiento(1,false,1,"Retrocede hasta Bag End para comprar antigüedades exóticas"),
+            new CartaPagar(20000,false,"Alquilas a todos tus amigos una villa en The Shire durante una semana. Paga 20000€ a cada jugador."),
+            new CartaPagar(-100000,true,"Recibe 100000€ de beneficios por alquilar los servicios de tu jet privado."),
+            new CartaMovimiento(21,true, 1,"Ve a Fall of Rauros a disfrutar de las vistas. Si pasas por la casilla de Salida, cobra" + getDineroVuelta() + "€.")
     ));
 
     public final static ArrayList<Casilla> casillas = new ArrayList<>(Arrays.asList(
             new Salida("Salida",0),
             new Solar("Bag End",1),
-            new CasillasCarta("Caja1",2,cartaCajaKomuna),
+            new CasillasCarta("Caja1",2, cartasCajaComunidad),
             new Solar("Farmer Maggot's",3),
             new Impuesto("Impuesto1",4),
             new Transporte("Estacion1",5),
@@ -71,7 +80,7 @@ public class Valor {
             new Solar("Caras Galadon",14),
             new Transporte("Estacion2",15),
             new Solar("Fall of Rauros",16),
-            new CasillasCarta("Caja2",17,cartaCajaKomuna),
+            new CasillasCarta("Caja2",17, cartasCajaComunidad),
             new Solar("Nen Hithoel",18),
             new Solar("Argonath",19),
             new Parking("Parking",20),
@@ -87,7 +96,7 @@ public class Valor {
             new VeCarcel("VeCarcel",30),
             new Solar("Pelennor Fields",31),
             new Solar("Osgiliath",32),
-            new CasillasCarta("Caja3",33,cartaCajaKomuna),
+            new CasillasCarta("Caja3",33, cartasCajaComunidad),
             new Solar("Minas Tirith",34),
             new Transporte("Estacion4",35),
             new CasillasCarta("Suerte3",36,cartasSuerte),

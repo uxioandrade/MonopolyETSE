@@ -75,6 +75,14 @@ public class Accion {
             return;
         }
 
+        //Caso especial en el que el avatar sea un coche
+        if(jugador.getAvatar() instanceof Coche){
+            if(!((Coche)jugador.getAvatar()).getPoderComprar()){
+                System.out.println("Un coche no puede comprar más de una vez cada turno");
+                return;
+            }
+        }
+
         comprable = (Comprables) jugador.getAvatar().getCasilla();
         //Caso en el que la propiedad ya está adquirida
         if (!comprable.getPropietario().equals(this.tablero.getBanca())) {
@@ -95,6 +103,12 @@ public class Accion {
         jugador.anhadirPropiedad(comprable);
         //Añade el propietario a la casilla
         comprable.setPropietario(jugador);
+
+        //Caso en el que el avatar es un coche: no puede volver a comprar en el turno
+        if(jugador.getAvatar() instanceof Coche){
+            ((Coche)jugador.getAvatar()).setPoderComprar(false);
+        }
+
         System.out.println("Operación realizada con éxito");
         System.out.println("\t" + jugador.getAvatar().getCasilla().getNombre() + " se ha anadido a tu lista de propiedades");
         System.out.println("\tTu saldo actual es de: " + jugador.getDinero() + "€");
@@ -292,19 +306,39 @@ public class Accion {
                         }
                     }else System.out.println("La casilla que quieres hipotecar no existe");
                     break;
+                case "vender":
+                    if(partes.length >= 4){
+                        auxCasilla = "";
+                        for(int i = 2; i < partes.length - 2;i++) {
+                            auxCasilla += partes[i] + " ";
+                        }
+                        accion.venderConstrucciones(jugador,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
+                    }else{
+                        System.out.println("Comando incorrecto");
+                    }
+                    break;
                 case "bancarrota":
                     Comprables comprable;
                     for(Casilla cas : jugador.getPropiedades()){
                         comprable = (Comprables) cas;
+                        if(cas instanceof Solar){
+                            for(Edificios ed: ((Solar) comprable).getConstrucciones()){
+                                this.tablero.borrarEdificio(ed);
+                                ((Solar) comprable).getConstrucciones().remove(ed);
+                            }
+                        }
                         comprable.setPropietario(this.tablero.getBanca());
                         comprable.setHipotecado(false);
-                        //Borrar todas las edificaciones del hashmap
                         jugador.getPropiedades().remove(cas);
                     }
                     Valor.casillas.get(jugador.getAvatar().getCasilla().getPosicion()).quitarAvatar(jugador.getAvatar());
                     this.tablero.getAvatares().remove(jugador.getAvatar().getId());
                     this.tablero.getJugadores().remove(jugador.getNombre());
                     Menu.turnosJugadores.remove(jugador.getNombre());
+                    if(Menu.turnosJugadores.size() == 1){
+                        System.out.println("Partida acabada!\n Enhorabuena " + Menu.turnosJugadores.get(0) + ", eres el ganador!!!!");
+                        System.exit(0);
+                    }
                     return false;
             }
         }

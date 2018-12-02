@@ -5,10 +5,7 @@ import java.io.IOException;*/
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import monopoly.contenido.Avatar;
-import monopoly.contenido.Casilla;
-import monopoly.contenido.Dados;
-import monopoly.contenido.Jugador;
+import monopoly.contenido.*;
 
 public class Menu {
 
@@ -119,17 +116,34 @@ public class Menu {
                             tirada = this.dados.getSuma();
                             this.dados.getDescripcion();
                             if (jugadorActual.getAvatar().getEncarcelado() == 0) {//si no esta encarcelado
-                                if (!this.dados.sonDobles()) countTiradas++;//si no son dobles aumentamos una tirada si fuesen dobles no se aumenta porque tendria derecho a volver a tirar
-                                else vecesDobles++;//si son dobles incrementamos veces dobles
-                                if (vecesDobles >= 3) {//si saco dobles 3 veces va a la carcel y se cancelan sus acciones pendientes
-                                    accion.irCarcel(jugadorActual);
-                                    countTiradas++;
-                                    System.out.println("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
-                                } else {
-                                    System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
-                                    jugadorActual.getAvatar().moverCasilla(tirada);
-                                    jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
-                                    if (jugadorActual.getAvatar().getEncarcelado() != 0) countTiradas++;
+                                if(this.jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()) {
+                                    if(((Coche) this.jugadorActual.getAvatar()).getNumTiradas() > 0){
+                                        ((Coche) this.jugadorActual.getAvatar()).moverCasilla(tirada);
+                                    }else if(((Coche) this.jugadorActual.getAvatar()).getNumTiradas() == 0) {
+                                        System.out.println("El coche ya ha realizado todas las tiradas que podía en su turno");
+                                    }else{
+                                        ((Coche) this.jugadorActual.getAvatar()).moverCasilla(tirada);
+                                        System.out.println(this.jugadorActual.getNombre() + " aún le quedan " + (((Coche) this.jugadorActual.getAvatar()).getNumTiradas()*-1 + 1) + " turnos para poder volver a tirar");
+                                    }
+                                    if(((Coche) this.jugadorActual.getAvatar()).getNumTiradas() <= 0) countTiradas++;
+                                    if(jugadorActual.getAvatar().getEncarcelado() != 0){
+                                        countTiradas++;
+                                        ((Coche) this.jugadorActual.getAvatar()).setNumTiradas(0);
+                                    }
+                                }else {
+                                    if (!this.dados.sonDobles())
+                                        countTiradas++;//si no son dobles aumentamos una tirada si fuesen dobles no se aumenta porque tendria derecho a volver a tirar
+                                    else vecesDobles++;//si son dobles incrementamos veces dobles
+                                    if (vecesDobles >= 3) {//si saco dobles 3 veces va a la carcel y se cancelan sus acciones pendientes
+                                        accion.irCarcel(jugadorActual);
+                                        countTiradas++;
+                                        System.out.println("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
+                                    } else {
+                                        System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
+                                        jugadorActual.getAvatar().moverCasilla(tirada);
+                                        jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
+                                        if (jugadorActual.getAvatar().getEncarcelado() != 0) countTiradas++;
+                                    }
                                 }
                             } else {
                                 if (this.dados.sonDobles()) {
@@ -140,8 +154,17 @@ public class Menu {
                                 } else {
                                     jugadorActual.getAvatar().modificarEncarcelado(1);
                                     countTiradas++;
-                                    if (jugadorActual.getAvatar().getEncarcelado() >= 3)
+                                    if (jugadorActual.getAvatar().getEncarcelado() > 3) {
+                                        countTiradas = 0;
                                         accion.salirCarcel(jugadorActual);
+                                        //System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
+                                        jugadorActual.getAvatar().moverCasilla(tirada);
+                                        if(this.jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()){
+                                            if(tirada > 4)
+                                                ((Coche) this.jugadorActual.getAvatar()).setNumTiradas(3);
+                                        }
+                                        jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
+                                    }
                                     else
                                         System.out.println("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
                                 }
@@ -160,6 +183,10 @@ public class Menu {
                         if(partes[1].equals("turno")) {//si no hay alquileres por pagar o tiradas pendientes deja finalizar el turno
                             if (countTiradas != 0) {
                                 this.turno++;
+                                if(jugadorActual.getAvatar() instanceof Coche) {
+                                    ((Coche) jugadorActual.getAvatar()).setPoderComprar(true);
+                                    ((Coche) jugadorActual.getAvatar()).anhadirTirada();
+                                }
                                 jugadorActual = this.tablero.getJugadores().get(turnosJugadores.get(this.turno % turnosJugadores.size()));
                                 countTiradas = 0;
                                 vecesDobles = 0;
@@ -182,7 +209,7 @@ public class Menu {
                     if(partes.length==2 && partes[1].equals("carcel")){
                         if(countTiradas ==0){
                             accion.salirCarcel(jugadorActual);
-                            countTiradas++;
+                            countTiradas = 0;
                         }else{
                             if(jugadorActual.getAvatar().getEncarcelado()>0)
                                 System.out.println("No puedes pagar para salir de la cárcel una vez que has lanzado los dados");

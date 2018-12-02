@@ -55,24 +55,28 @@ public class CartaMovimiento extends Carta{
             jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
         }
         jugador.getAvatar().setCasilla(Valor.casillas.get(this.posicion));
-        casillaComprable = (Comprables) jugador.getAvatar().getCasilla();
-        switch (alquiler){
-            case 0:
-                break;
-            case 1:
-                casillaComprable.accionCaer(jugador,1,accion);
-                break;
-            case 2:
-                double cantidadDoble = casillaComprable.getAlquiler(1)*2;
-                if (jugador.getDinero() >= cantidadDoble){
-                   cobrarAccion(jugador,tablero,cantidadDoble);
-                } else {
-                    System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-                    if(accion.menuHipotecar(jugador,tablero,casillaComprable.getAlquiler(1)*2)) {
-                        cobrarAccion(jugador,tablero,cantidadDoble);
+        if(jugador.getAvatar().getCasilla() instanceof  Comprables) {
+            casillaComprable = (Comprables) jugador.getAvatar().getCasilla();
+            switch (alquiler) {
+                case 0:
+                    break;
+                case 1:
+                    casillaComprable.accionCaer(jugador, 1, accion);
+                    break;
+                case 2:
+                    double cantidadDoble = casillaComprable.getAlquiler(1) * 2;
+                    if (jugador.getDinero() >= cantidadDoble) {
+                        cobrarAccion(jugador, tablero, cantidadDoble);
+                    } else {
+                        System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
+                        if (accion.menuHipotecar(jugador, tablero, casillaComprable.getAlquiler(1) * 2)) {
+                            cobrarAccion(jugador, tablero, cantidadDoble);
+                        }
                     }
-                }
-                break;
+                    break;
+            }
+        }else{
+            jugador.getAvatar().getCasilla().accionCaer(jugador,1,accion);
         }
     }
 }
