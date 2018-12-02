@@ -24,6 +24,7 @@ public class Solar extends Comprables{
     }
 
     public double getAlquiler(int valor){
+        if(super.getPropietario().getNombre().contains("Banca")) return 0.1*super.getPrecio();
         double alquiler=0;
         if(this.construcciones.size()==0) alquiler=0.1*super.getPrecio();
         else{
@@ -49,7 +50,7 @@ public class Solar extends Comprables{
         }
 
         if(this.getPropietario().poseeGrupoCompleto(this.grupo)){
-            return alquiler;
+            return 2*alquiler;
         }
         return alquiler;
     }
