@@ -128,6 +128,10 @@ public class Accion {
                     case "casa":
                     case "Casa":
                         if(solarActual.getConstrucciones("Casa").size() < 4) {
+                            if(solarActual.getGrupo().getHotlesGrupo().size()>=solarActual.getGrupo().getCasillas().size() && solarActual.getGrupo().getCasasGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                System.out.println("Operación Cancelada: Si construyes esta casa sobrepasarás el límite de edificaciones del grupo");
+                                return;
+                            }
                             if (jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio()) {
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio());
@@ -146,6 +150,10 @@ public class Accion {
                     case "Hotel":
                         if(jugador.getDinero() >= Valor.MULTIPLICADOR_INIIAL_HOTEL*(solarActual.getPrecio())){
                             if(((Solar) solarActual).getConstrucciones("Casa").size() >= 4) {
+                                if(solarActual.getGrupo().getHotlesGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes este hotel sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 for(int i = 0;i <4;i++){
                                     Casa casaBorrar = ((Casa) solarActual.getConstrucciones("Casa").get(0));
                                     solarActual.getConstrucciones().remove(casaBorrar);
@@ -168,6 +176,10 @@ public class Accion {
                     case "Piscina":
                         if(jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISCINA*solarActual.getPrecio()){
                             if(solarActual.getConstrucciones("Casa").size() >= 2 && solarActual.getConstrucciones("Hotel").size() >= 1) {
+                                if(solarActual.getGrupo().getPiscinasGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes esta piscina sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISCINA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISCINA * solarActual.getPrecio());
                                 Piscina nuevaPiscina = new Piscina(Valor.MULTIPLICADOR_INICIAL_PISCINA* solarActual.getPrecio(), solarActual);
@@ -185,6 +197,10 @@ public class Accion {
                     case "Pista":
                         if(jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISTA*solarActual.getPrecio()){
                             if(solarActual.getConstrucciones("Hotel").size() >= 2) {
+                                if(solarActual.getGrupo().getPistaDeportesGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes esta pista de deporte sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISTA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISTA * solarActual.getPrecio());
                                 PistaDeporte nuevaPista = new PistaDeporte(Valor.MULTIPLICADOR_INICIAL_PISTA*solarActual.getPrecio(), solarActual);
@@ -252,14 +268,24 @@ public class Accion {
         }
 
         comprable = (Comprables) propiedad;
-        //Comprueba que el jugador tenga la propiedad actual
-        if (jugActual.getPropiedades().contains(comprable) && !comprable.getHipotecado()) {
-            jugActual.modificarDinero(comprable.getHipoteca());
-            comprable.setHipotecado(true);
-            System.out.println("El jugador " + jugActual.getNombre() + " ha hipotecado la propiedad " + comprable.getNombre());
-        } else {
-            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre());
+        if(!jugActual.getPropiedades().contains(comprable)){
+            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+" porque no le pertenece");
+            return;
         }
+        if(comprable.getHipotecado()){
+            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+" porque ya está hipotecada");
+            return;
+        }
+        if(propiedad instanceof Solar){
+            if(((Solar)propiedad).getConstrucciones().size()>0){
+                System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+", antes debe vender los edificios de la misma");
+                return;
+            }
+        }
+        jugActual.modificarDinero(comprable.getHipoteca());
+        comprable.setHipotecado(true);
+        System.out.println("El jugador " + jugActual.getNombre() + " ha hipotecado la propiedad " + comprable.getNombre()+ "recibiendo así "+ comprable.getHipoteca()+"$");
+
     }
 
     public void desHipotecar(Casilla propiedad, Jugador jugActual) {

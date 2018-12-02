@@ -2,6 +2,7 @@ package monopoly.contenido;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Accion;
+import monopoly.Carcel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,38 +75,42 @@ public abstract class Casilla {
 
     public abstract void accionCaer(Jugador jugador,int tirada, Accion accion);
 
-    /*
+
     @Override
     public String toString(){
         //En los criterios pone que no es necesario describir las casillas especiales
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Posición: " + this.posicion + "\n";
-        if(!this.getGrupo().getNombre().equals("Especiales")) {
+        if(this instanceof Solar) {
             aux +=  "Tipo: Solar\n" +
-                    "Grupo: " + this.grupo.getNombre() + "\n" +
-                    "Precio: " + this.precio + "\n" +
-                    "Alquiler: " + this.getAlquiler() + "\n" +
-                    "Hipoteca: " + this.getHipoteca() + "\n";
+                    "Grupo: " + ((Solar) this).getGrupo().getNombre() + "\n" +
+                    "Precio: " + ((Solar) this).getPrecio() + "\n" +
+                    "Alquiler: " + ((Solar) this).getAlquiler(1) + "\n" +
+                    "Casas: " + ((Solar) this).getConstrucciones("casa").size() + "\n" +
+                    "Hoteles: " + ((Solar) this).getConstrucciones("hotel").size() + "\n" +
+                    "Piscinas: " + ((Solar) this).getConstrucciones("piscina").size() + "\n" +
+                    "Pistas de Deporte: " + ((Solar) this).getConstrucciones("pista").size() + "\n" +
+                    "Hipoteca: " + ((Solar) this).getHipoteca() + "\n";
         }
         else{
-            if(this.getNombre().contains("Estacion")){
+            if(this instanceof Transporte){
                 aux += "Tipo: " + "Transporte" + "\n" +
-                        "Precio: " + this.precio + "\n" +
-                        "Uso transporte: " + this.getAlquiler() + "\n" +
-                        "Hipoteca: " + this.getHipoteca() + "\n";
+                        "Precio: " + ((Transporte) this).getPrecio() + "\n" +
+                        "Uso transporte: " + ((Transporte) this).getAlquiler(1) + "\n" +
+                        "Hipoteca: " + ((Transporte) this).getHipoteca() + "\n";
             }
-            else if(this.getNombre().contains("Servicio")){
+            else if(this instanceof Servicio){
                 aux += "Tipo: " + "Servicios" + "\n" +
-                        "Precio: " + this.precio + "\n" +
-                        "Uso Servicio: " + this.getAlquiler(1)+" x suma de los dados" + "\n" +
-                        "Hipoteca: " + this.getHipoteca() + "\n";
+                        "Precio: " + ((Servicio) this).getPrecio() + "\n" +
+                        "Uso Servicio: " + ((Servicio) this).getAlquiler(1)+" x suma de los dados" + "\n" +
+                        "Hipoteca: " + ((Servicio) this).getHipoteca() + "\n";
             }
-            else if(this.getNombre().contains("Impuesto")){
+            else if(this instanceof Impuesto){
                 aux += "Tipo: " + "Impuestos" + "\n" +
-                        "A pagar: " + this.getAlquiler() + "\n";
+                        "A pagar: " + ((Impuesto)this).getApagar() + "\n";
             }
-            else if(this.getNombre().equals("Carcel")){
+            else if(this instanceof Carcel){
                 aux+="salir: "+Valor.getDineroSalirCarcel()+"\n"+
                       "Jugadores:";                 
                 for (Avatar a: avatares){
@@ -114,7 +119,7 @@ public abstract class Casilla {
                 }
                 aux+="\n";
             }
-            else if(this.getNombre().equals("Parking")){
+            else if(this instanceof Parking){
                 aux +="Bote: "+Valor.getDineroAcumulado()+"\n"+
                        "Jugadores: ";
                 for (Avatar a: avatares){
@@ -123,11 +128,14 @@ public abstract class Casilla {
                 aux+="\n";
             }
         }
-        if(!this.propietario.getNombre().equals("Banca"))
-            aux += "Propietario: " + this.propietario.getNombre() + "\n";
-        if(this.hipotecado)
-            aux += "Solar hipotecado, paga " + 1.1*this.getHipoteca() + " para deshipotecar" + "\n";
+        if(this instanceof Comprables){
+            if(!((Comprables) this).getPropietario().getNombre().equals("Banca"))
+                aux += "Propietario: " + ((Comprables) this).getPropietario().getNombre() + "\n";
+            if(((Comprables) this).getHipotecado())
+                aux += "Solar hipotecado, paga " + 1.1*((Comprables) this).getHipoteca() + " para deshipotecar" + "\n";
+        }
+
         aux += "}\n";
         return aux;
-    }*/
+    }
 }

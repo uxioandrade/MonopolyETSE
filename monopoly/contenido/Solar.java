@@ -24,7 +24,35 @@ public class Solar extends Comprables{
     }
 
     public double getAlquiler(int valor){
-        return super.getPrecio()*0.1;
+        if(super.getPropietario().getNombre().contains("Banca")) return 0.1*super.getPrecio();
+        double alquiler=0;
+        if(this.construcciones.size()==0) alquiler=0.1*super.getPrecio();
+        else{
+            switch (this.getConstrucciones("casa").size()){
+                case 1:
+                    alquiler+=5*super.getPrecio();
+                    break;
+                case 2:
+                    alquiler+=15*super.getPrecio();
+                    break;
+                case 3:
+                    alquiler+=35*super.getPrecio();
+                    break;
+                case 4:
+                    alquiler+=50*super.getPrecio();
+                    break;
+                default:
+
+            }
+            alquiler+=70*this.getConstrucciones("hotel").size();
+            alquiler+=25*this.getConstrucciones("piscina").size();
+            alquiler+=25*this.getConstrucciones("pista").size();
+        }
+
+        if(this.getPropietario().poseeGrupoCompleto(this.grupo)){
+            return 2*alquiler;
+        }
+        return alquiler;
     }
 
     public void anhadirEdificio(Edificios edificio){
@@ -76,7 +104,7 @@ public class Solar extends Comprables{
                 }
                 break;
             default:
-                return null;
+                return construccionesTipo;
         }
         return  construccionesTipo;
     }

@@ -105,6 +105,13 @@ public abstract class Avatar {
         return this.numVueltas;
     }
 
+    public String getTipo(){
+        if (this instanceof Pelota) return "Pelota";
+        if (this instanceof Sombrero) return "Sombrero";
+        if (this instanceof Coche) return "Coche";
+        return "Esfinge";
+    }
+
     //No es necesario el setter de numvueltas, ya que este solo se puede modificar de 1 en 1 cuando se completa una vuelta
 
     public boolean getModoAvanzado(){

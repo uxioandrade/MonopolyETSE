@@ -1,8 +1,6 @@
 package monopoly.contenido;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
-
-import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.ArrayList;
 
 
@@ -82,8 +80,67 @@ public class Grupo {
             }
             aux += "alquiler: " + s.getAlquiler(1) + "\n},\n";
         }
+        int tamanho=this.getCasillas().size();
         System.out.println(aux);
+        if(this.getPistaDeportesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getPistaDeportesGrupo().size())+" Pista de Deporte");
+        else System.out.println("Ya no se pueden construir más pistas de deporte.");
+        if(this.getPiscinasGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getPiscinasGrupo().size())+" Piscinas");
+        else System.out.println("Ya no se pueden construir más piscinas.");
+        if(this.getHotlesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getHotlesGrupo().size())+" Hoteles");
+        else System.out.println("Ya no se pueden construir más hoteles.");
+        if(this.getCasasGrupo().size()<tamanho || this.getHotlesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir casas");
+        else System.out.println("Ya no se pueden construir más casas.");
     }
+    public ArrayList<Edificios> getEdificiosGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones()){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getCasasGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("casa")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getHotlesGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("hotel")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getPistaDeportesGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("pìsta")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+    public ArrayList<Edificios> getPiscinasGrupo(){
+        ArrayList<Edificios> edificios =new ArrayList<>();
+        for(Solar s: this.solares){
+            for(Edificios ed: s.getConstrucciones("piscina")){
+                edificios.add(ed);
+            }
+        }
+        return edificios;
+    }
+
 
     @Override
     public String toString(){
