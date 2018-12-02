@@ -80,7 +80,20 @@ public class Grupo {
             }
             aux += "alquiler: " + s.getAlquiler(1) + "\n},\n";
         }
+        int tamanho=this.getCasillas().size();
         System.out.println(aux);
+        if(this.getPistaDeportesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getPistaDeportesGrupo().size())+" Pista de Deporte");
+        else System.out.println("Ya no se pueden construir más pistas de deporte.");
+        if(this.getPiscinasGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getPiscinasGrupo().size())+" Piscinas");
+        else System.out.println("Ya no se pueden construir más piscinas.");
+        if(this.getHotlesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir "+(tamanho-this.getHotlesGrupo().size())+" Hoteles");
+        else System.out.println("Ya no se pueden construir más hoteles.");
+        if(this.getCasasGrupo().size()<tamanho || this.getHotlesGrupo().size()<tamanho)
+            System.out.println("Aun se pueden construir casas");
+        else System.out.println("Ya no se pueden construir más casas.");
     }
     public ArrayList<Edificios> getEdificiosGrupo(){
         ArrayList<Edificios> edificios =new ArrayList<>();

@@ -235,6 +235,10 @@ public class Jugador {
 
     @Override
     public String toString(){
+        int casas=0;
+        int hoteles=0;
+        int piscinas=0;
+        int pistas=0;
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Avatar: " + this.avatar.getId() + "\n" +
@@ -244,10 +248,27 @@ public class Jugador {
         if(this.propiedades.size()!=0) {//si el jugador tiene propiedades las añadimos al string
             aux +="\n";
             for (Casilla prop : propiedades) {
-                aux += "\t" + prop.getNombre() + "\n";
+                if(prop instanceof Solar){
+                    casas+=((Solar) prop).getConstrucciones("casa").size();
+                    hoteles+=((Solar) prop).getConstrucciones("hotel").size();
+                    piscinas+=((Solar) prop).getConstrucciones("piscina").size();
+                    pistas+=((Solar) prop).getConstrucciones("pista").size();
+                    aux+="\t[" + prop.getNombre() +
+                            ". casas: " +((Solar) prop).getConstrucciones("casa").size()+
+                            ", hoteles: " +((Solar) prop).getConstrucciones("hotele").size()+
+                            ", piscinas: " +((Solar) prop).getConstrucciones("piscina").size()+
+                            ", pistas: " +((Solar) prop).getConstrucciones("pista").size()+
+                            "]\n";
+                }
+                else { aux += "\t" + prop.getNombre() + "\n"; }
             }
         }
-        aux += "}\n}\n";
+        aux += "}\n";
+        aux+="Total de Casas: " + casas+ "\n" +
+                "Total de Hoteles: " + hoteles+ "\n" +
+                "Total de Piscinas: " + piscinas + "\n" +
+                "Total de Pistas de Deporte: "+ pistas+"\n";
+        aux += "\n}\n";
         return aux;
     }
 }
