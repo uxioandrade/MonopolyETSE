@@ -242,7 +242,7 @@ public class Jugador {
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Avatar: " + this.avatar.getId() + "\n" +
-           //     "Tipo: " + this.avatar.getTipo() + "\n" +
+               "Tipo: " + this.avatar.getTipo() + "\n" +
                 "Dinero Actual: " + this.dinero + "\n" +
                 "Propiedades: {";
         if(this.propiedades.size()!=0) {//si el jugador tiene propiedades las añadimos al string

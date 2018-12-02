@@ -11,7 +11,7 @@ public class Transporte extends Comprables{
     }
 
     public double getAlquiler(int tirada){
-        if(super.getPropietario().getNombre().contains("Banca")) return Valor.getDineroVuelta()*0.25*count;
+        if(super.getPropietario().getNombre().contains("Banca")) return Valor.getDineroVuelta()*0.25;
         int count = 0;
         for(Casilla c : super.getPropietario().getPropiedades()){
             if(c instanceof Transporte)
