@@ -11,7 +11,7 @@ public class Jugador {
     private Avatar avatar;
     private String nombre;
     private double dinero;
-    private ArrayList<Comprables> propiedades;
+    private ArrayList<Propiedades> propiedades;
     private double dineroInvertido;
     private double pagoAlquileres;
     private double cobroAlquileres;
@@ -27,10 +27,10 @@ public class Jugador {
         this.dinero = Double.POSITIVE_INFINITY;
         this.propiedades = new ArrayList<>();
         for(Casilla c : Valor.casillas){
-            if(c instanceof Comprables)
-                this.propiedades.add((Comprables)c);
+            if(c instanceof Propiedades)
+                this.propiedades.add((Propiedades)c);
         }
-        for(Comprables c : this.propiedades){
+        for(Propiedades c : this.propiedades){
             c.setPropietario(this);
         }
     }
@@ -108,15 +108,15 @@ public class Jugador {
     //esto implicaría que la partida es una partida nueva
 
 
-    public ArrayList<Comprables> getPropiedades(){
+    public ArrayList<Propiedades> getPropiedades(){
         return this.propiedades;
     }
 
-    public void setPropiedades(ArrayList<Comprables> casillas){//Podría ser interesante en las próximas entregas
+    public void setPropiedades(ArrayList<Propiedades> casillas){//Podría ser interesante en las próximas entregas
         this.propiedades = casillas;
     }
 
-    public void anhadirPropiedad(Comprables casilla){
+    public void anhadirPropiedad(Propiedades casilla){
         if(casilla != null)
             this.propiedades.add(casilla);
     }
@@ -194,7 +194,7 @@ public class Jugador {
     }
     public int numSolaresGrupo(Grupo grupo){
         int i=0;
-        for (Comprables cas: this.getPropiedades()){//recorremos las propiedades del jugador
+        for (Propiedades cas: this.getPropiedades()){//recorremos las propiedades del jugador
             if(cas instanceof Solar) {
                 Solar sol = (Solar) cas;
                 if (sol.getGrupo().equals(grupo)) {//si el grupo de la casilla coincide con el que buscamos sumamos 1
@@ -210,7 +210,7 @@ public class Jugador {
 
     public double calcularFortuna(){
         double total=dinero;
-        for(Comprables c: this.propiedades){
+        for(Propiedades c: this.propiedades){
             if(!c.getHipotecado()) {
                 total += c.getPrecio();
                 if(c instanceof Solar && ((Solar)c).getConstrucciones() != null){
@@ -242,7 +242,7 @@ public class Jugador {
         int hoteles=0;
         int piscinas=0;
         int pistas=0;
-        ArrayList<Comprables> hipotecados = new ArrayList<>();
+        ArrayList<Propiedades> hipotecados = new ArrayList<>();
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Avatar: " + this.avatar.getId() + "\n" +
@@ -252,7 +252,7 @@ public class Jugador {
         if(this.propiedades.size()!=0) {//si el jugador tiene propiedades las añadimos al string
             aux +="\n";
             for (Casilla prop : propiedades) {
-                if (!((Comprables) prop).getHipotecado()) {
+                if (!((Propiedades) prop).getHipotecado()) {
                     if (prop instanceof Solar) {
                         casas += ((Solar) prop).getConstrucciones("casa").size();
                         hoteles += ((Solar) prop).getConstrucciones("hotel").size();
@@ -260,7 +260,7 @@ public class Jugador {
                         pistas += ((Solar) prop).getConstrucciones("pista").size();
                         aux += "\t[" + prop.getNombre() +
                                 ". casas: " + ((Solar) prop).getConstrucciones("casa").size() +
-                                ", hoteles: " + ((Solar) prop).getConstrucciones("hoteli").size() +
+                                ", hoteles: " + ((Solar) prop).getConstrucciones("hotel").size() +
                                 ", piscinas: " + ((Solar) prop).getConstrucciones("piscina").size() +
                                 ", pistas: " + ((Solar) prop).getConstrucciones("pista").size() +
                                 "]\n";
@@ -268,13 +268,13 @@ public class Jugador {
                         aux += "\t" + prop.getNombre() + "\n";
                     }
                 }else{
-                    hipotecados.add((Comprables)prop);
+                    hipotecados.add((Propiedades)prop);
                 }
             }
         }
         aux += "}\n";
         aux += "Hipotecas: [";
-        for(Comprables comp : hipotecados){
+        for(Propiedades comp : hipotecados){
             aux += comp.getNombre() + ", ";
         }
         aux += "]\n";

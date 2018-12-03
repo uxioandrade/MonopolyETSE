@@ -251,7 +251,7 @@ public class Tablero {
     }
 
     public void listarPropiedades(){
-        for(Comprables cas: Valor.getComprables()){
+        for(Propiedades cas: Valor.getComprables()){
             if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
                 System.out.println(cas.toString());
             }
@@ -261,7 +261,7 @@ public class Tablero {
     private String getCasillaMasRentable(){
         double max = 0;
         String aux = "";
-        for(Comprables c: Valor.getComprables()){
+        for(Propiedades c: Valor.getComprables()){
             if(c.getRentabilidad() > max){
                 aux = "[" + c.getNombre();
                 max = c.getRentabilidad();

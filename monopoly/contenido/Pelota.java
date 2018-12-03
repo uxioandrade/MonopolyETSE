@@ -2,7 +2,6 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Tablero;
-import monopoly.plataforma.Valor;
 
 import java.util.Scanner;
 
@@ -17,8 +16,8 @@ public class Pelota extends Avatar{
         System.out.println("El jugador " + this.getJugador().getNombre() + " ha rebotado a " + this.getCasilla().getNombre());
         super.getTablero().imprimirTablero();
         this.getCasilla().accionCaer(this.getJugador(),valor,accion);
-        if(this.getCasilla() instanceof Comprables){
-            Comprables comprable = (Comprables) this.getCasilla();
+        if(this.getCasilla() instanceof Propiedades){
+            Propiedades comprable = (Propiedades) this.getCasilla();
             if(comprable.getPropietario().getNombre().equals("Banca")){
                 System.out.println("Desea comprar la propiedad " + this.getCasilla().getNombre() + " ? (Si/No)");
                 System.out.print("$> ");
@@ -35,41 +34,38 @@ public class Pelota extends Avatar{
         }
     }
 
-    public void moverCasilla(int valor){
-        if(super.getModoAvanzado()){
-            if(valor > 4){
-                super.moverNormal(5);
-                this.accionRebote(valor);
-                for(int i = 7;i <= valor;i=i+2){
-                    if(this.getEncarcelado() > 0)
-                        return;
-                    super.moverNormal(2);
-                    this.accionRebote(valor);
-                }
-                if(this.getEncarcelado() > 0)
+    public void moverEnAvanzado(int valor) {
+        if (valor > 4) {
+            super.moverEnBasico(5);
+            this.accionRebote(valor);
+            for (int i = 7; i <= valor; i = i + 2) {
+                if (this.getEncarcelado() > 0)
                     return;
-                if(valor % 2 == 0) {
-                    moverNormal(1);
-                    this.accionRebote(valor);
-                }
-            }else{
-                retrocederCasillas(1);
+                super.moverEnBasico(2);
                 this.accionRebote(valor);
-                if(valor > 2){
-                    if(this.getEncarcelado() > 0)
-                        return;
-                    this.retrocederCasillas(2);
-                    this.accionRebote(valor);
-                }
-                if(this.getEncarcelado() > 0)
-                    return;
-                if(valor % 2 == 0) {
-                    this.retrocederCasillas(1);
-                    this.accionRebote(valor);
-                }
             }
-            System.out.println("La pelota ha dejado de rebotar. Volviendo al menú principal");
-        }else
-            super.moverNormal(valor);
+            if (this.getEncarcelado() > 0)
+                return;
+            if (valor % 2 == 0) {
+                moverEnBasico(1);
+                this.accionRebote(valor);
+            }
+        } else {
+            retrocederCasillas(1);
+            this.accionRebote(valor);
+            if (valor > 2) {
+                if (this.getEncarcelado() > 0)
+                    return;
+                this.retrocederCasillas(2);
+                this.accionRebote(valor);
+            }
+            if (this.getEncarcelado() > 0)
+                return;
+            if (valor % 2 == 0) {
+                this.retrocederCasillas(1);
+                this.accionRebote(valor);
+            }
+        }
+        System.out.println("La pelota ha dejado de rebotar. Volviendo al menú principal");
     }
 }

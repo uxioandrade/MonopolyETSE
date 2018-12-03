@@ -1,7 +1,7 @@
 package monopoly.contenido;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Accion;
-import monopoly.Carcel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public abstract class Casilla {
         return this.visitasAvatares;
     }
 
-    public int numVisitasAvatar(Avatar av){
+    public int frecuenciaVisita(Avatar av){
         if(this.visitasAvatares.containsKey(av))
             return this.visitasAvatares.get(av);
         else
@@ -74,6 +74,9 @@ public abstract class Casilla {
 
     public abstract void accionCaer(Jugador jugador,int tirada, Accion accion);
 
+    public boolean estaAvatar(Avatar av){
+        return this.avatares.contains(av);
+    }
 
     @Override
     public String toString(){
@@ -85,7 +88,7 @@ public abstract class Casilla {
             aux +=  "Tipo: Solar\n" +
                     "Grupo: " + ((Solar) this).getGrupo().getNombre() + "\n" +
                     "Precio: " + ((Solar) this).getPrecio() + "€\n" +
-                    "Alquiler Actual: " + ((Solar) this).getAlquiler(1) + "€\n" +
+                    "Alquiler Actual: " + ((Solar) this).alquiler(1) + "€\n" +
                     "Alquiler Básico: " + ((Solar) this).getPrecio() * 0.1 + "€\n" +
                     "Casas: " + ((Solar) this).getConstrucciones("casa").size() +  " | valor casa " + Valor.MULTIPLICADOR_INICIAL_CASA * ((Solar) this).getPrecio() + "€\n" +
                     "Hoteles: " + ((Solar) this).getConstrucciones("hotel").size() + " | valor hotel " + Valor.MULTIPLICADOR_INICIAL_HOTEL * ((Solar) this).getPrecio() + "€\n" +
@@ -104,21 +107,21 @@ public abstract class Casilla {
             if(this instanceof Transporte){
                 aux += "Tipo: " + "Transporte" + "\n" +
                         "Precio: " + ((Transporte) this).getPrecio() + "€\n" +
-                        "Uso Transporte Actual: " + ((Transporte) this).getAlquiler(1) + "€\n" +
+                        "Uso Transporte Actual: " + ((Transporte) this).alquiler(1) + "€\n" +
                         "Uso Transporte Básico: " + Valor.getDineroVuelta() * 0.25 + "€\n" +
                         "Hipoteca: " + ((Transporte) this).getHipoteca() + "€\n";
             }
             else if(this instanceof Servicio){
                 aux += "Tipo: " + "Servicios" + "\n" +
                         "Precio: " + ((Servicio) this).getPrecio() + "\n" +
-                        "Uso Servicio: " + ((Servicio) this).getAlquiler(1)+" x suma de los dados" + "\n" +
+                        "Uso Servicio: " + ((Servicio) this).alquiler(1)+" x suma de los dados" + "\n" +
                         "Hipoteca: " + ((Servicio) this).getHipoteca() + "\n";
             }
             else if(this instanceof Impuesto){
                 aux += "Tipo: " + "Impuestos" + "\n" +
                         "A pagar: " + ((Impuesto)this).getApagar() + "\n";
             }
-            else if(this instanceof Carcel){
+            else if(this.posicion == 10){
                 aux+="salir: "+Valor.getDineroSalirCarcel()+"\n"+
                       "Jugadores:";                 
                 for (Avatar a: avatares){
@@ -127,7 +130,7 @@ public abstract class Casilla {
                 }
                 aux+="\n";
             }
-            else if(this instanceof Parking){
+            else if(this.posicion == 20){
                 aux +="Bote: "+Valor.getDineroAcumulado()+"\n"+
                        "Jugadores: ";
                 for (Avatar a: avatares){
@@ -136,11 +139,11 @@ public abstract class Casilla {
                 aux+="\n";
             }
         }
-        if(this instanceof Comprables){
-            if(!((Comprables) this).getPropietario().getNombre().equals("Banca"))
-                aux += "Propietario: " + ((Comprables) this).getPropietario().getNombre() + "\n";
-            if(((Comprables) this).getHipotecado())
-                aux += "Solar hipotecado, paga " + 1.1*((Comprables) this).getHipoteca() + " para deshipotecar" + "\n";
+        if(this instanceof Propiedades){
+            if(!((Propiedades) this).getPropietario().getNombre().equals("Banca"))
+                aux += "Propietario: " + ((Propiedades) this).getPropietario().getNombre() + "\n";
+            if(((Propiedades) this).getHipotecado())
+                aux += "Solar hipotecado, paga " + 1.1*((Propiedades) this).getHipoteca() + " para deshipotecar" + "\n";
         }
 
         aux += "}\n";
