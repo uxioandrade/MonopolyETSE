@@ -25,7 +25,7 @@ public class Jugador {
         this.avatar = null;
         this.nombre = "Banca";
         this.dinero = Double.POSITIVE_INFINITY;
-        propiedades = new ArrayList<>();
+        this.propiedades = new ArrayList<>();
         for(Casilla c : Valor.casillas){
             if(c instanceof Comprables)
                 this.propiedades.add((Comprables)c);
@@ -95,7 +95,8 @@ public class Jugador {
         return this.dinero;
     }
     public void setDinero(double dinero){
-        this.dinero=dinero;
+        if(dinero > 0)
+            this.dinero=dinero;
     }
     public void modificarDinero(double cantidad){
         this.dinero+=cantidad;
@@ -119,6 +120,8 @@ public class Jugador {
         if(casilla != null)
             this.propiedades.add(casilla);
     }
+
+    //Todos los atributos siguientes no necesitan setters, pues el único momento en el que se les asigna un valor independientemente de su anterior es al crear el jugador, después las modificaciones se hacen a partir de su valor previo
 
     public double getDineroInvertido(){
         return this.dineroInvertido;
@@ -239,31 +242,42 @@ public class Jugador {
         int hoteles=0;
         int piscinas=0;
         int pistas=0;
+        ArrayList<Comprables> hipotecados = new ArrayList<>();
         String aux = "{\n" +
                 "Nombre: " + this.nombre + "\n" +
                 "Avatar: " + this.avatar.getId() + "\n" +
-               "Tipo: " + this.avatar.getTipo() + "\n" +
+                "Tipo: " + this.avatar.getTipo() + "\n" +
                 "Dinero Actual: " + this.dinero + "\n" +
                 "Propiedades: {";
         if(this.propiedades.size()!=0) {//si el jugador tiene propiedades las añadimos al string
             aux +="\n";
             for (Casilla prop : propiedades) {
-                if(prop instanceof Solar){
-                    casas+=((Solar) prop).getConstrucciones("casa").size();
-                    hoteles+=((Solar) prop).getConstrucciones("hotel").size();
-                    piscinas+=((Solar) prop).getConstrucciones("piscina").size();
-                    pistas+=((Solar) prop).getConstrucciones("pista").size();
-                    aux+="\t[" + prop.getNombre() +
-                            ". casas: " +((Solar) prop).getConstrucciones("casa").size()+
-                            ", hoteles: " +((Solar) prop).getConstrucciones("hotele").size()+
-                            ", piscinas: " +((Solar) prop).getConstrucciones("piscina").size()+
-                            ", pistas: " +((Solar) prop).getConstrucciones("pista").size()+
-                            "]\n";
+                if (!((Comprables) prop).getHipotecado()) {
+                    if (prop instanceof Solar) {
+                        casas += ((Solar) prop).getConstrucciones("casa").size();
+                        hoteles += ((Solar) prop).getConstrucciones("hotel").size();
+                        piscinas += ((Solar) prop).getConstrucciones("piscina").size();
+                        pistas += ((Solar) prop).getConstrucciones("pista").size();
+                        aux += "\t[" + prop.getNombre() +
+                                ". casas: " + ((Solar) prop).getConstrucciones("casa").size() +
+                                ", hoteles: " + ((Solar) prop).getConstrucciones("hoteli").size() +
+                                ", piscinas: " + ((Solar) prop).getConstrucciones("piscina").size() +
+                                ", pistas: " + ((Solar) prop).getConstrucciones("pista").size() +
+                                "]\n";
+                    } else {
+                        aux += "\t" + prop.getNombre() + "\n";
+                    }
+                }else{
+                    hipotecados.add((Comprables)prop);
                 }
-                else { aux += "\t" + prop.getNombre() + "\n"; }
             }
         }
         aux += "}\n";
+        aux += "Hipotecas: [";
+        for(Comprables comp : hipotecados){
+            aux += comp.getNombre() + ", ";
+        }
+        aux += "]\n";
         aux+="Total de Casas: " + casas+ "\n" +
                 "Total de Hoteles: " + hoteles+ "\n" +
                 "Total de Piscinas: " + piscinas + "\n" +

@@ -73,7 +73,7 @@ public class Grupo {
             for(int k = 0;k<4;k++) {
                 aux+= tipo[k] + "s: ";
                 for (i = 0; i < s.getConstrucciones(tipo[k]).size(); i++) {
-                    aux += "[" + tipo[k] + i + "],";
+                    aux += "[" +s.getConstrucciones(tipo[k]).get(i).getNombre()+ "],";
                 }
                 if (i == 0) aux += "-,";
                 aux += "\n";
@@ -125,7 +125,7 @@ public class Grupo {
     public ArrayList<Edificios> getPistaDeportesGrupo(){
         ArrayList<Edificios> edificios =new ArrayList<>();
         for(Solar s: this.solares){
-            for(Edificios ed: s.getConstrucciones("pìsta")){
+            for(Edificios ed: s.getConstrucciones("pista")){
                 edificios.add(ed);
             }
         }

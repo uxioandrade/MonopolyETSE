@@ -10,9 +10,8 @@ import monopoly.contenido.*;
 
 public class Valor {
 
-    private double valor;
     private static HashMap<String,Grupo> grupos;
-    public static double dineroAcumulado;
+    private static double dineroAcumulado;
 
     //Colores
     public static final String ANSI_NEGRO = "\u001b[30m";
@@ -41,25 +40,33 @@ public class Valor {
     }
 
     public final static ArrayList<Carta> cartasSuerte = new ArrayList<>(Arrays.asList(
-            new CartaMovimiento(28,true,0,"Ve al " + " y coge un avión. Si pasas por la casilla de Salida, cobra "),
-            new CartaMovimiento(31,false,1,"Decides hacer un viaje de placer. Avanza hasta "),
-            new CartaPagar(-5000,true,"Vendes tu billete de avión para Argonath en una subasta por Internet. Cobra 50000€."),
+            new CartaMovimiento(25,true,0,"Ve a la Estación 3 y coge un avión. Si pasas por la casilla de Salida, cobra "),
+            new CartaMovimiento(31,false,1,"Decides hacer un viaje de placer. Avanza hasta Pelennor Fields"),
+            new CartaPagar(-500,true,"Vendes tu billete de avión para Argonath en una subasta por Internet. Cobra 500€."),
             new CartaMovimiento(26,true,1,"Ve a Isengard Caverns. Si pasas por la casilla de Salida, cobra "),
             new CartaMovimiento(30,false,0,"Los acreedores te persiguen por impago. Ve a la cárcel. Ve directamente sin pasar por la casilla de salida y sin cobrar"),
-            new CartaPagar(-10000,true,"¡Has ganado el bote de la lotería! Recibe 1000000€.")
+            new CartaPagar(-10000,true,"¡Has ganado el bote de la lotería! Recibe 10000€."),
+            new CartaPagar(150,true,"Paga 150€ por la matrícula del colegio privado"),
+            new CartaPagar(0,true,"El aumento del impuesto sobre bienes inmbuebles afecta a todas tus propiedades. Paga 4000€ por casa, 11500€ por hotel, 2000€ por piscina y 75000€ por pista de deportes"),
+            new CartaMovimiento(32,true,1,"Ve a Osgiliath. Si pasas por la casilla de Salida, cobra "),
+            new CartaPagar(250,false,"Has sido elegido presidente de la junta directiva. Paga a cada jugador 250€"),
+            new CartaMovimiento(-1,false,1,"!Hora punta de tráfico! Retrocede tres casillas"),
+            new CartaPagar(150,true,"Te multan por usar el móvil mientras conduces. Paga 150€"),
+            new CartaPagar(-1500,true,"Beneficio por la venta de tus acciones. Recibes 1500€"),
+            new CartaMovimiento(-2,false,2,"Avanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprársela a la banca. Si tiene dueño, paga el doble de la operación indicada")
     ));
 
     public final static ArrayList<Carta> cartasCajaComunidad = new ArrayList<>(Arrays.asList(
-            new CartaPagar(500000,true,"Paga 500000 por un fin de semana en un balneario de 5 estrellas"),
-            new CartaMovimiento(30,false,0,"Te investigan por fraude de identidad. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar los " + getDineroVuelta() + "€."),
-            new CartaMovimiento(0,true,0,"Colócate en la casilla de Salida. Cobra " + getDineroVuelta() + "€."),
-            new CartaPagar(-200000,true,"Tu compañía de Internet obtiene beneficios. Recibe 20000€."),
-            new CartaPagar(10000,true,"Paga 10000€ por invitar a todos tus amigos a un viaje a León"),
-            new CartaPagar(-50000,true,"Devolución de Hacienda. Cobra 50000€"),
+            new CartaPagar(500,true,"Paga 500 por un fin de semana en un balneario de 5 estrellas"),
+            new CartaMovimiento(30,false,0,"Te investigan por fraude de identidad. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar los "),
+            new CartaMovimiento(0,true,0,"Colócate en la casilla de Salida. Cobra "),
+            new CartaPagar(-2000,true,"Tu compañía de Internet obtiene beneficios. Recibe 2000€."),
+            new CartaPagar(1000,true,"Paga 1000€ por invitar a todos tus amigos a un viaje a Gondor"),
+            new CartaPagar(-500,true,"Devolución de Hacienda. Cobra 500€"),
             new CartaMovimiento(1,false,1,"Retrocede hasta Bag End para comprar antigüedades exóticas"),
-            new CartaPagar(20000,false,"Alquilas a todos tus amigos una villa en The Shire durante una semana. Paga 20000€ a cada jugador."),
-            new CartaPagar(-100000,true,"Recibe 100000€ de beneficios por alquilar los servicios de tu jet privado."),
-            new CartaMovimiento(21,true, 1,"Ve a Fall of Rauros a disfrutar de las vistas. Si pasas por la casilla de Salida, cobra" + getDineroVuelta() + "€.")
+            new CartaPagar(200,false,"Alquilas a todos tus amigos una villa en The Shire durante una semana. Paga 200€ a cada jugador."),
+            new CartaPagar(-1000,true,"Recibe 1000€ de beneficios por alquilar los servicios de tu jet privado."),
+            new CartaMovimiento(21,true, 1,"Ve a Fall of Rauros a disfrutar de las vistas. Si pasas por la casilla de Salida, cobra ")
     ));
 
     public final static ArrayList<Casilla> casillas = new ArrayList<>(Arrays.asList(
@@ -121,9 +128,11 @@ public class Valor {
     private static double dineroSalirCarcel = 0.25* dineroVuelta;
     private static double precioServicio = 0.75*dineroVuelta;
 
+    private static int edificios=0;
+
     //Multiplicadores
     public static final double MULTIPLICADOR_INICIAL_CASA = 0.60;
-    public static final double MULTIPLICADOR_INIIAL_HOTEL = 0.60;
+    public static final double MULTIPLICADOR_INICIAL_HOTEL = 0.60;
     public static final double MULTIPLICADOR_INICIAL_PISTA = 1.25;
     public static final double MULTIPLICADOR_INICIAL_PISCINA = 1.25;
     public static final double MULTIPLICADOR_HIPOTECA_CASILLA = 0.5;
@@ -153,10 +162,6 @@ public class Valor {
             dineroAcumulado += valor;
     }
 
-    public void actualizarValor(){
-        this.valor = this.valor + this.valor*0.04;
-    }
-
     public static HashMap<String,Grupo> getGrupos(){
         return grupos;
     }
@@ -172,6 +177,10 @@ public class Valor {
     public static double getDineroSalirCarcel(){
         return dineroSalirCarcel;
     }
+
+    public static int getEdificios(){return edificios;}
+    public static void incrementarEdificios(){edificios++;}
+
 
     public static void actualizarVuelta(){
         Iterator<Grupo> grup_i = Valor.getGrupos().values().iterator();

@@ -3,6 +3,7 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Tablero;
+import monopoly.plataforma.Valor;
 
 import java.util.Iterator;
 
@@ -19,9 +20,18 @@ public class CartaPagar extends Carta{
 
     public double getCantidad(Jugador jugador, Tablero tablero){
         if(!banca) return this.cantidad*(tablero.getAvatares().size() - 1);
-        if(this.cantidad == 0)
-            return jugador.getPropiedades().size()*2;//Hay que cambiarlo
-        else
+        if(this.cantidad == 0) {
+            double totalImpuestos = 0;
+            for(Comprables comp : jugador.getPropiedades()){
+                if(comp instanceof Solar){
+                    totalImpuestos += ((Solar) comp).getConstrucciones("Casa").size() * 4000;
+                    totalImpuestos += ((Solar) comp).getConstrucciones("Hotel").size() * 115000;
+                    totalImpuestos += ((Solar) comp).getConstrucciones("Piscina").size() * 2000;
+                    totalImpuestos += ((Solar) comp).getConstrucciones("Pista").size() * 7500;
+                }
+            }
+            return totalImpuestos;
+        }else
             return this.cantidad;
     }
 
@@ -37,6 +47,9 @@ public class CartaPagar extends Carta{
                     jug.modificarPremiosInversionesOBote(this.cantidad);
                 }
             }
+        }else{
+            if(cantidad > 0)
+                Valor.actualizarDineroAcumulado(cantidad);
         }
     }
 
