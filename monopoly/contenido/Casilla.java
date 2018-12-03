@@ -1,6 +1,5 @@
 package monopoly.contenido;
 import monopoly.plataforma.Valor;
-import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Accion;
 import monopoly.Carcel;
 import java.util.ArrayList;
@@ -85,20 +84,29 @@ public abstract class Casilla {
         if(this instanceof Solar) {
             aux +=  "Tipo: Solar\n" +
                     "Grupo: " + ((Solar) this).getGrupo().getNombre() + "\n" +
-                    "Precio: " + ((Solar) this).getPrecio() + "\n" +
-                    "Alquiler: " + ((Solar) this).getAlquiler(1) + "\n" +
-                    "Casas: " + ((Solar) this).getConstrucciones("casa").size() + "\n" +
-                    "Hoteles: " + ((Solar) this).getConstrucciones("hotel").size() + "\n" +
-                    "Piscinas: " + ((Solar) this).getConstrucciones("piscina").size() + "\n" +
-                    "Pistas de Deporte: " + ((Solar) this).getConstrucciones("pista").size() + "\n" +
-                    "Hipoteca: " + ((Solar) this).getHipoteca() + "\n";
+                    "Precio: " + ((Solar) this).getPrecio() + "€\n" +
+                    "Alquiler Actual: " + ((Solar) this).getAlquiler(1) + "€\n" +
+                    "Alquiler Básico: " + ((Solar) this).getPrecio() * 0.1 + "€\n" +
+                    "Casas: " + ((Solar) this).getConstrucciones("casa").size() +  " | valor casa " + Valor.MULTIPLICADOR_INICIAL_CASA * ((Solar) this).getPrecio() + "€\n" +
+                    "Hoteles: " + ((Solar) this).getConstrucciones("hotel").size() + " | valor hotel " + Valor.MULTIPLICADOR_INICIAL_HOTEL * ((Solar) this).getPrecio() + "€\n" +
+                    "Piscinas: " + ((Solar) this).getConstrucciones("piscina").size() +  " | valor piscina " + Valor.MULTIPLICADOR_INICIAL_PISCINA * ((Solar) this).getPrecio() + "€\n" +
+                    "Pistas de Deporte: " + ((Solar) this).getConstrucciones("pista").size() + " | valor pista de deporte " + Valor.MULTIPLICADOR_INICIAL_PISTA* ((Solar) this).getPrecio() + "€\n" +
+                    "Alquiler una casa: " + 5*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler dos casas: " + 15*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler tres casas: " + 35*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler cuatro casas: " + 50*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler hotel: " + 70*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler piscina: " + 25*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Alquiler pista de deporte: " + 25*((Solar) this).getPrecio()*0.1 + "€\n" +
+                    "Hipoteca: " + ((Solar) this).getHipoteca() + "€\n";
         }
         else{
             if(this instanceof Transporte){
                 aux += "Tipo: " + "Transporte" + "\n" +
-                        "Precio: " + ((Transporte) this).getPrecio() + "\n" +
-                        "Uso transporte: " + ((Transporte) this).getAlquiler(1) + "\n" +
-                        "Hipoteca: " + ((Transporte) this).getHipoteca() + "\n";
+                        "Precio: " + ((Transporte) this).getPrecio() + "€\n" +
+                        "Uso Transporte Actual: " + ((Transporte) this).getAlquiler(1) + "€\n" +
+                        "Uso Transporte Básico: " + Valor.getDineroVuelta() * 0.25 + "€\n" +
+                        "Hipoteca: " + ((Transporte) this).getHipoteca() + "€\n";
             }
             else if(this instanceof Servicio){
                 aux += "Tipo: " + "Servicios" + "\n" +

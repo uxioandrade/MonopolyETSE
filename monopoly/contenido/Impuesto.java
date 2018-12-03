@@ -25,7 +25,7 @@ public class Impuesto extends Casilla {
         if (apagar <= jugador.getDinero()) {
             jugador.modificarDinero(apagar);
             System.out.println("Se han pagado " + apagar + "€ de impuesto");
-            Valor.dineroAcumulado += apagar;
+            Valor.actualizarDineroAcumulado(apagar);
             jugador.modificarPagoImpuestos(apagar);
         } else {
             System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");

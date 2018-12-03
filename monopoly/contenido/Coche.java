@@ -69,7 +69,8 @@ public class Coche extends Avatar{
     }
 
     public void setNumTiradas(int valor){
-        this.numTiradas = valor;
+        if(valor >= -2 && valor < 5) //Rango de valores que puede tomar este atributo
+            this.numTiradas = valor;
     }
 
 }

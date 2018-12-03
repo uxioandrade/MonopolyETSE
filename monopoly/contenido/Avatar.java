@@ -46,19 +46,6 @@ public abstract class Avatar {
         }
     }
 
-    /*
-    public Avatar(Jugador jug, Tablero tabla){
-        //Inicializamos el tipo a un valor arbitrario
-        this.jugador = jug;
-        this.tablero = tabla;
-        this.casilla = Valor.casillas.get(0);
-        asignarId();
-        this.tablero.getAvatares().put(this.id,this);
-        this.encarcelado = 0;
-        this.numVueltas = 0;
-        this.modoAvanzado = false;
-    }*/
-
     public String getId(){
         return this.id;
     }
@@ -168,7 +155,7 @@ public abstract class Avatar {
     public String toString(){
         String aux = "{\n" +
                 "Id: " + this.id + "\n" +
-  //              "Tipo: " + this.tipo + "\n" +
+                "Tipo: " + this.getTipo() + "\n" +
                 "Jugador: " + this.jugador.getNombre() + "\n" +
                 "Casilla: " + this.casilla.getNombre() + "\n" +
                 "}\n";

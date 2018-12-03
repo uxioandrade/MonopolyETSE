@@ -30,23 +30,23 @@ public class Solar extends Comprables{
         else{
             switch (this.getConstrucciones("casa").size()){
                 case 1:
-                    alquiler+=5*super.getPrecio();
+                    alquiler+=5*super.getPrecio()*0.1;
                     break;
                 case 2:
-                    alquiler+=15*super.getPrecio();
+                    alquiler+=15*super.getPrecio()*0.1;
                     break;
                 case 3:
-                    alquiler+=35*super.getPrecio();
+                    alquiler+=35*super.getPrecio()*0.1;
                     break;
                 case 4:
-                    alquiler+=50*super.getPrecio();
+                    alquiler+=50*super.getPrecio()*0.1;
                     break;
                 default:
 
             }
-            alquiler+=70*this.getConstrucciones("hotel").size();
-            alquiler+=25*this.getConstrucciones("piscina").size();
-            alquiler+=25*this.getConstrucciones("pista").size();
+            alquiler+=70*this.getConstrucciones("hotel").size()*super.getPrecio()*0.1;
+            alquiler+=25*this.getConstrucciones("piscina").size()*super.getPrecio()*0.1;
+            alquiler+=25*this.getConstrucciones("pista").size()*super.getPrecio()*0.1;
         }
 
         if(this.getPropietario().poseeGrupoCompleto(this.grupo)){
@@ -122,7 +122,7 @@ public class Solar extends Comprables{
             this.grupo.sumarRentabilidad(this.getAlquiler(tirada));
         } else {
             System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),super.getPrecio())){
+            if(accion.menuHipotecar(jugador,accion.getTablero(),this.getAlquiler(tirada))){
                 pagarAlquiler(jugador,tirada,accion);
             }
         }

@@ -139,15 +139,35 @@ public class Menu {
                                         countTiradas++;
                                         System.out.println("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
                                     } else {
-                                        System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
+                                        if(this.jugadorActual.getAvatar() instanceof Pelota && jugadorActual.getAvatar().getModoAvanzado() && tirada <= 4){
+                                            System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " retrocede " + tirada + " posiciones");
+                                        }else
+                                            System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
                                         jugadorActual.getAvatar().moverCasilla(tirada);
-                                        jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
+                                        if(!(this.jugadorActual.getAvatar() instanceof Pelota && jugadorActual.getAvatar().getModoAvanzado()))
+                                            jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
                                         if (jugadorActual.getAvatar().getEncarcelado() != 0) countTiradas++;
                                     }
                                 }
-                            } else {
+                            }else {
                                 if (this.dados.sonDobles()) {
                                     jugadorActual.getAvatar().setEncarcelado(0);
+                                    if(this.jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()) {
+                                        if (((Coche) this.jugadorActual.getAvatar()).getNumTiradas() > 0) {
+                                            ((Coche) this.jugadorActual.getAvatar()).moverCasilla(tirada);
+                                        } else if (((Coche) this.jugadorActual.getAvatar()).getNumTiradas() == 0) {
+                                            System.out.println("El coche ya ha realizado todas las tiradas que podía en su turno");
+                                        } else {
+                                            ((Coche) this.jugadorActual.getAvatar()).moverCasilla(tirada);
+                                            System.out.println(this.jugadorActual.getNombre() + " aún le quedan " + (((Coche) this.jugadorActual.getAvatar()).getNumTiradas() * -1 + 1) + " turnos para poder volver a tirar");
+                                        }
+                                        if (((Coche) this.jugadorActual.getAvatar()).getNumTiradas() <= 0)
+                                            countTiradas++;
+                                        if (jugadorActual.getAvatar().getEncarcelado() != 0) {
+                                            countTiradas++;
+                                            ((Coche) this.jugadorActual.getAvatar()).setNumTiradas(0);
+                                        }
+                                    }
                                     jugadorActual.getAvatar().moverCasilla(tirada);
                                     jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                                     countTiradas++;
@@ -163,6 +183,7 @@ public class Menu {
                                             if(tirada > 4)
                                                 ((Coche) this.jugadorActual.getAvatar()).setNumTiradas(3);
                                         }
+                                        countTiradas++;
                                         jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
                                     }
                                     else
@@ -183,9 +204,11 @@ public class Menu {
                         if(partes[1].equals("turno")) {//si no hay alquileres por pagar o tiradas pendientes deja finalizar el turno
                             if (countTiradas != 0) {
                                 this.turno++;
-                                if(jugadorActual.getAvatar() instanceof Coche) {
+                                if(jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()) {
                                     ((Coche) jugadorActual.getAvatar()).setPoderComprar(true);
                                     ((Coche) jugadorActual.getAvatar()).anhadirTirada();
+                                    if(jugadorActual.getAvatar().getEncarcelado() != 0)
+                                        ((Coche) jugadorActual.getAvatar()).setNumTiradas(1);
                                 }
                                 jugadorActual = this.tablero.getJugadores().get(turnosJugadores.get(this.turno % turnosJugadores.size()));
                                 countTiradas = 0;
@@ -239,18 +262,12 @@ public class Menu {
                                 else
                                     System.out.println("El grupo introducido no existe");
                         }
-                        //if(partes[1].equals("enventa")) this.tablero.listarPropiedades();
-
+                        if(partes[1].equals("enventa")){
+                            this.tablero.listarPropiedades();
+                            this.tablero.imprimirTablero();
+                        }
                     }else
                         System.out.println("Comando incorrecto");
-                    break;
-                case "chetar":
-                    auxCasilla = "";
-                    for(int i = 1; i < partes.length - 1;i++) {
-                        auxCasilla += partes[i] + " ";
-                    }
-                    jugadorActual.getAvatar().setCasilla(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]));
-                    jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
                     break;
                 case "ver":
                     if(partes.length==2){
@@ -260,7 +277,15 @@ public class Menu {
                     break;
                 case "cambiar":
                     if(partes.length==2 && partes[1].equals("modo")){
-                        this.tablero.cambiarModo();
+                        if(countTiradas==0) {
+                            this.tablero.cambiarModo(jugadorActual);
+                            if (jugadorActual.getAvatar().getModoAvanzado())
+                                System.out.println("El jugador " + jugadorActual.getNombre() + " está ahora en modo avanzado de tipo " + jugadorActual.getAvatar().getTipo());
+                            else
+                                System.out.println("El jugador " + jugadorActual.getNombre() + " ya no está en modo avanzado");
+                        }else{
+                            System.out.println("El modo de movimiento debe ser cambiado antes de tirar los dados");
+                        }
                     }else{
                         System.out.println("Comando incorrecto");
                     }

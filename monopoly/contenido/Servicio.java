@@ -26,7 +26,7 @@ public class Servicio extends Comprables{
             super.sumarRentabilidad(this.getAlquiler(tirada));
         } else {
             System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),super.getPrecio()))
+            if(accion.menuHipotecar(jugador,accion.getTablero(),this.getAlquiler(tirada)))
                 this.pagarAlquiler(jugador,tirada,accion);
         }
     }
