@@ -134,6 +134,10 @@ public class Jugador {
         this.tratosPendientes.add(trato);
     }
 
+    public void borrarTratoPendiente(Trato trato){
+        this.tratosPendientes.remove(trato);
+    }
+
     public double getDineroInvertido(){
         return this.dineroInvertido;
     }
