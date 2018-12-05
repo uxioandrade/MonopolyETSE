@@ -10,9 +10,9 @@ public class Esfinge extends Avatar{
 
     public void moverCasilla(int valor){
         if(super.getModoAvanzado()){
-            super.moverNormal(valor); //El movimiento avanzado de coche se implementará en la próxima entrega
+            super.moverEnBasico(valor); //El movimiento avanzado de coche se implementará en la próxima entrega
         }else
-            super.moverNormal(valor);
+            super.moverEnBasico(valor);
     }
 
 }

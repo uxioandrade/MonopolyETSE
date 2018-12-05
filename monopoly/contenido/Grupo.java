@@ -1,6 +1,5 @@
 package monopoly.contenido;
 
-import java.util.Iterator;
 import java.util.ArrayList;
 
 
@@ -78,7 +77,7 @@ public class Grupo {
                 if (i == 0) aux += "-,";
                 aux += "\n";
             }
-            aux += "alquiler: " + s.getAlquiler(1) + "\n},\n";
+            aux += "alquiler: " + s.alquiler(1) + "\n},\n";
         }
         int tamanho=this.getCasillas().size();
         System.out.println(aux);
