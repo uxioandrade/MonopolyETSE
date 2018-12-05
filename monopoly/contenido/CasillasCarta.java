@@ -22,10 +22,10 @@ public class CasillasCarta extends Casilla {
 
     private int elegirCarta(){
         while(true) {
-            System.out.println("Indique un número del 1 al 10 para escoger carta");
+            System.out.println("Indique un número del 1 al " + this.cartas.size() + " para escoger carta");
             Scanner scanner= new Scanner(System.in);
             int num = scanner.nextInt();
-            if(num >= 1 && num <= 10)
+            if(num >= 1 && num <= this.cartas.size())
                 return num;
             else
                 System.out.println("El número indicado no está dentro de los límites exigidos");

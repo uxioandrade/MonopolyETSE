@@ -121,13 +121,16 @@ public class Tablero {
         }
     }
 
-
     public void cambiarModo(){
         Iterator<Avatar> av_it = this.avatares.values().iterator();
         while(av_it.hasNext()){
             Avatar av = av_it.next();
             av.switchMode();
         }
+    }
+
+    public void cambiarModo(Jugador jugador){
+        jugador.getAvatar().switchMode();
     }
 
     private void printBarraBaja(){
@@ -238,22 +241,7 @@ public class Tablero {
     public void listarCasillasEdificadas(){
         for(int i =0;i<4;i++){
             for(int j = 0;j < this.edificios.get(i).size();j++){
-                String aux = "";
-                switch (i){
-                    case 0:
-                        aux = "casa";
-                    break;
-                    case 1:
-                        aux = "hotel";
-                    break;
-                    case 2:
-                        aux = "piscina";
-                    break;
-                    case 3:
-                        aux = "pista";
-                    break;
-                }
-                System.out.println("{\n" + "id: " + aux + "-" + (j+1) + ",\npropietario: "
+                System.out.println("{\n" + "id: " +this.edificios.get(i).get(j).getNombre()+ ",\npropietario: "
                         + this.edificios.get(i).get(j).getComprable().getPropietario().getNombre() + ",\ncasilla: "
                         + this.edificios.get(i).get(j).getComprable().getNombre() + ",\ngrupo: "
                         + this.edificios.get(i).get(j).getComprable().getGrupo().getNombre() + ",\ncoste: "

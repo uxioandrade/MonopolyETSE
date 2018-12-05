@@ -1,7 +1,6 @@
 package monopoly.plataforma;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 import monopoly.contenido.*;
@@ -75,6 +74,14 @@ public class Accion {
             return;
         }
 
+        //Caso especial en el que el avatar sea un coche
+        if(jugador.getAvatar() instanceof Coche){
+            if(!((Coche)jugador.getAvatar()).getPoderComprar()){
+                System.out.println("Un coche no puede comprar más de una vez cada turno");
+                return;
+            }
+        }
+
         comprable = (Comprables) jugador.getAvatar().getCasilla();
         //Caso en el que la propiedad ya está adquirida
         if (!comprable.getPropietario().equals(this.tablero.getBanca())) {
@@ -95,6 +102,12 @@ public class Accion {
         jugador.anhadirPropiedad(comprable);
         //Añade el propietario a la casilla
         comprable.setPropietario(jugador);
+
+        //Caso en el que el avatar es un coche: no puede volver a comprar en el turno
+        if(jugador.getAvatar() instanceof Coche){
+            ((Coche)jugador.getAvatar()).setPoderComprar(false);
+        }
+
         System.out.println("Operación realizada con éxito");
         System.out.println("\t" + jugador.getAvatar().getCasilla().getNombre() + " se ha anadido a tu lista de propiedades");
         System.out.println("\tTu saldo actual es de: " + jugador.getDinero() + "€");
@@ -114,14 +127,18 @@ public class Accion {
                     case "casa":
                     case "Casa":
                         if(solarActual.getConstrucciones("Casa").size() < 4) {
+                            if(solarActual.getGrupo().getHotlesGrupo().size()>=solarActual.getGrupo().getCasillas().size() && solarActual.getGrupo().getCasasGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                System.out.println("Operación Cancelada: Si construyes esta casa sobrepasarás el límite de edificaciones del grupo");
+                                return;
+                            }
                             if (jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio()) {
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio());
                                 Casa nuevaCasa = new Casa(Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio(), solarActual);
                                 this.tablero.anhadirEdificio(nuevaCasa);
                                 solarActual.anhadirEdificio(nuevaCasa);
-                                System.out.println("Se ha edificado una casa en Valencia. La fortuna de Pedro\n" +
-                                        "se reduce en 600000€.");
+                                System.out.println("Se ha edificado una casa en " + solarActual.getNombre() + ". La fortuna de " + jugador.getNombre() +"\n" +
+                                        "se reduce en " + Valor.MULTIPLICADOR_INICIAL_CASA * solarActual.getPrecio() + "€.");
                             } else
                                 System.out.println("El jugador " + jugador.getNombre() + " no dispone de dinero suficiente para edificar una casa");
                         }else{
@@ -130,20 +147,24 @@ public class Accion {
                         break;
                     case "hotel":
                     case "Hotel":
-                        if(jugador.getDinero() >= Valor.MULTIPLICADOR_INIIAL_HOTEL*(solarActual.getPrecio())){
+                        if(jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_HOTEL *(solarActual.getPrecio())){
                             if(((Solar) solarActual).getConstrucciones("Casa").size() >= 4) {
+                                if(solarActual.getGrupo().getHotlesGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes este hotel sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 for(int i = 0;i <4;i++){
                                     Casa casaBorrar = ((Casa) solarActual.getConstrucciones("Casa").get(0));
                                     solarActual.getConstrucciones().remove(casaBorrar);
                                     this.tablero.borrarEdificio(casaBorrar);
                                 }
-                                jugador.modificarDinero(-Valor.MULTIPLICADOR_INIIAL_HOTEL * solarActual.getPrecio());
-                                jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INIIAL_HOTEL * solarActual.getPrecio());
-                                Hotel nuevoHotel = new Hotel(Valor.MULTIPLICADOR_INIIAL_HOTEL * solarActual.getPrecio(), solarActual);
+                                jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_HOTEL * solarActual.getPrecio());
+                                jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_HOTEL * solarActual.getPrecio());
+                                Hotel nuevoHotel = new Hotel(Valor.MULTIPLICADOR_INICIAL_HOTEL * solarActual.getPrecio(), solarActual);
                                 solarActual.anhadirEdificio(nuevoHotel);
                                 this.tablero.anhadirEdificio(nuevoHotel);
-                                System.out.println("Se ha edificado una casa en Valencia. La fortuna de Pedro\n" +
-                                        "se reduce en 600000€.");
+                                System.out.println("Se ha edificado un hotel en " + solarActual.getNombre() + ". La fortuna de " + jugador.getNombre() +"\n" +
+                                        "se reduce en " + Valor.MULTIPLICADOR_INICIAL_HOTEL * solarActual.getPrecio() + "€.");
                             }else{
                                 System.out.println("Tienes que tener un mínimo de 4 casas para construir un hotel");
                             }
@@ -154,13 +175,17 @@ public class Accion {
                     case "Piscina":
                         if(jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISCINA*solarActual.getPrecio()){
                             if(solarActual.getConstrucciones("Casa").size() >= 2 && solarActual.getConstrucciones("Hotel").size() >= 1) {
+                                if(solarActual.getGrupo().getPiscinasGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes esta piscina sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISCINA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISCINA * solarActual.getPrecio());
                                 Piscina nuevaPiscina = new Piscina(Valor.MULTIPLICADOR_INICIAL_PISCINA* solarActual.getPrecio(), solarActual);
                                 solarActual.anhadirEdificio(nuevaPiscina);
                                 this.tablero.anhadirEdificio(nuevaPiscina);
-                                System.out.println("Se ha edificado una piscina en Valencia. La fortuna de Pedro\n" +
-                                        "se reduce en 600000€.");
+                                System.out.println("Se ha edificado una piscina en " + solarActual.getNombre() + ". La fortuna de " + jugador.getNombre() +"\n" +
+                                        "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISCINA * solarActual.getPrecio() + "€.");
                             }else{
                                 System.out.println("Tienes que tener un mínimo de 2 casas y un hotel para construir una piscina");
                             }
@@ -171,13 +196,17 @@ public class Accion {
                     case "Pista":
                         if(jugador.getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISTA*solarActual.getPrecio()){
                             if(solarActual.getConstrucciones("Hotel").size() >= 2) {
+                                if(solarActual.getGrupo().getPistaDeportesGrupo().size()>=solarActual.getGrupo().getCasillas().size()){
+                                    System.out.println("Operación Cancelada: Si construyes esta pista de deporte sobrepasarás el límite de edificaciones del grupo");
+                                    return;
+                                }
                                 jugador.modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISTA * solarActual.getPrecio());
                                 jugador.modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISTA * solarActual.getPrecio());
                                 PistaDeporte nuevaPista = new PistaDeporte(Valor.MULTIPLICADOR_INICIAL_PISTA*solarActual.getPrecio(), solarActual);
                                 solarActual.anhadirEdificio(nuevaPista);
                                 this.tablero.anhadirEdificio(nuevaPista);
-                                System.out.println("Se ha edificado una pista de deporte en Valencia. La fortuna de Pedro\n" +
-                                        "se reduce en 600000€.");
+                                System.out.println("Se ha edificado una piscina en " + solarActual.getNombre() + ". La fortuna de " + jugador.getNombre() +"\n" +
+                                        "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISTA * solarActual.getPrecio() + "€.");
                             }else{
                                 System.out.println("Tienes que tener un mínimo de 2 hoteles para construir una pista de deporte");
                             }
@@ -238,14 +267,24 @@ public class Accion {
         }
 
         comprable = (Comprables) propiedad;
-        //Comprueba que el jugador tenga la propiedad actual
-        if (jugActual.getPropiedades().contains(comprable) && !comprable.getHipotecado()) {
-            jugActual.modificarDinero(comprable.getHipoteca());
-            comprable.setHipotecado(true);
-            System.out.println("El jugador " + jugActual.getNombre() + " ha hipotecado la propiedad " + comprable.getNombre());
-        } else {
-            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre());
+        if(!jugActual.getPropiedades().contains(comprable)){
+            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+" porque no le pertenece");
+            return;
         }
+        if(comprable.getHipotecado()){
+            System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+" porque ya está hipotecada");
+            return;
+        }
+        if(propiedad instanceof Solar){
+            if(((Solar)propiedad).getConstrucciones().size()>0){
+                System.out.println("El jugador " + jugActual.getNombre() + " no puede hipotecar la propiedad " + comprable.getNombre()+", antes debe vender los edificios de la misma");
+                return;
+            }
+        }
+        jugActual.modificarDinero(comprable.getHipoteca());
+        comprable.setHipotecado(true);
+        System.out.println("El jugador " + jugActual.getNombre() + " ha hipotecado la propiedad " + comprable.getNombre()+ " recibiendo así "+ comprable.getHipoteca()+"$");
+
     }
 
     public void desHipotecar(Casilla propiedad, Jugador jugActual) {
@@ -257,9 +296,12 @@ public class Accion {
         comprable = (Comprables) propiedad;
         //Comprueba que el jugador tenga la propiedad actual
         if (jugActual.getPropiedades().contains(comprable) && comprable.getHipotecado()) {
-            jugActual.modificarDinero(-1*comprable.getHipoteca());
-            comprable.setHipotecado(false);
-            System.out.println("El jugador " + jugActual.getNombre() + " ha deshipotecado la propiedad " + comprable.getNombre());
+            if(jugActual.getDinero() >= comprable.getHipoteca()*1.1) {
+                jugActual.modificarDinero(-1.1 * comprable.getHipoteca());
+                comprable.setHipotecado(false);
+                System.out.println("El jugador " + jugActual.getNombre() + " ha deshipotecado la propiedad " + comprable.getNombre() + ", aportando un capital de " + 1.1 * comprable.getHipoteca() + "€.");
+            }else
+                System.out.println("El jugador " + jugActual.getNombre() + " no tiene dinero suficiente para deshipotecar la propiedad " + comprable.getNombre());
         } else {
             System.out.println("El jugador " + jugActual.getNombre() + " no puede deshipotecar la propiedad " + propiedad.getNombre());
         }
@@ -283,7 +325,7 @@ public class Accion {
                     }
                     if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
                     else if(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null) {//si existe la casilla
-                        accion.hipotecar(this.tablero.getCasillas().get(partes[1]), jugador);
+                        accion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]), jugador);
                         if(jugador.getDinero() >= deuda){
                             System.out.println("El jugador " + jugador.getNombre() + " ya tiene dinero suficiente para afrontar su deuda");
                             return true;
@@ -292,19 +334,41 @@ public class Accion {
                         }
                     }else System.out.println("La casilla que quieres hipotecar no existe");
                     break;
+                case "vender":
+                    if(partes.length >= 4){
+                        auxCasilla = "";
+                        for(int i = 2; i < partes.length - 2;i++) {
+                            auxCasilla += partes[i] + " ";
+                        }
+                        accion.venderConstrucciones(jugador,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
+                    }else{
+                        System.out.println("Comando incorrecto");
+                    }
+                    break;
+                case "listar":
+                    for(Comprables c: jugador.getPropiedades()){
+                        System.out.println(c);
+                    }
+                    break;
                 case "bancarrota":
                     Comprables comprable;
-                    for(Casilla cas : jugador.getPropiedades()){
-                        comprable = (Comprables) cas;
-                        comprable.setPropietario(this.tablero.getBanca());
-                        comprable.setHipotecado(false);
-                        //Borrar todas las edificaciones del hashmap
-                        jugador.getPropiedades().remove(cas);
+                    for (Comprables cas : jugador.getPropiedades()) { if (cas instanceof Solar) {
+                            for (Edificios ed : ((Solar) cas).getConstrucciones()) {
+                                this.tablero.borrarEdificio(ed);
+                                ((Solar) cas).getConstrucciones().remove(ed);
+                            }
+                        }
+                        cas.setPropietario(this.tablero.getBanca());
+                        cas.setHipotecado(false);
                     }
                     Valor.casillas.get(jugador.getAvatar().getCasilla().getPosicion()).quitarAvatar(jugador.getAvatar());
                     this.tablero.getAvatares().remove(jugador.getAvatar().getId());
                     this.tablero.getJugadores().remove(jugador.getNombre());
                     Menu.turnosJugadores.remove(jugador.getNombre());
+                    if(Menu.turnosJugadores.size() == 1){
+                        System.out.println("Partida acabada!\n Enhorabuena " + Menu.turnosJugadores.get(0) + ", eres el ganador!!!!");
+                        System.exit(0);
+                    }
                     return false;
             }
         }

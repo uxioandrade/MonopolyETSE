@@ -24,7 +24,35 @@ public class Solar extends Comprables{
     }
 
     public double getAlquiler(int valor){
-        return super.getPrecio()*0.1;
+        if(super.getPropietario().getNombre().contains("Banca")) return 0.1*super.getPrecio();
+        double alquiler=0;
+        if(this.construcciones.size()==0) alquiler=0.1*super.getPrecio();
+        else{
+            switch (this.getConstrucciones("casa").size()){
+                case 1:
+                    alquiler+=5*super.getPrecio()*0.1;
+                    break;
+                case 2:
+                    alquiler+=15*super.getPrecio()*0.1;
+                    break;
+                case 3:
+                    alquiler+=35*super.getPrecio()*0.1;
+                    break;
+                case 4:
+                    alquiler+=50*super.getPrecio()*0.1;
+                    break;
+                default:
+
+            }
+            alquiler+=70*this.getConstrucciones("hotel").size()*super.getPrecio()*0.1;
+            alquiler+=25*this.getConstrucciones("piscina").size()*super.getPrecio()*0.1;
+            alquiler+=25*this.getConstrucciones("pista").size()*super.getPrecio()*0.1;
+        }
+
+        if(this.getPropietario().poseeGrupoCompleto(this.grupo)){
+            return 2*alquiler;
+        }
+        return alquiler;
     }
 
     public void anhadirEdificio(Edificios edificio){
@@ -76,7 +104,7 @@ public class Solar extends Comprables{
                 }
                 break;
             default:
-                return null;
+                return construccionesTipo;
         }
         return  construccionesTipo;
     }
@@ -94,7 +122,7 @@ public class Solar extends Comprables{
             this.grupo.sumarRentabilidad(this.getAlquiler(tirada));
         } else {
             System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),super.getPrecio())){
+            if(accion.menuHipotecar(jugador,accion.getTablero(),this.getAlquiler(tirada))){
                 pagarAlquiler(jugador,tirada,accion);
             }
         }

@@ -11,6 +11,7 @@ public class Transporte extends Comprables{
     }
 
     public double getAlquiler(int tirada){
+        if(super.getPropietario().getNombre().contains("Banca")) return Valor.getDineroVuelta()*0.25;
         int count = 0;
         for(Casilla c : super.getPropietario().getPropiedades()){
             if(c instanceof Transporte)
@@ -31,7 +32,7 @@ public class Transporte extends Comprables{
             super.sumarRentabilidad(this.getAlquiler(tirada));
         } else {
             System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),super.getPrecio()))
+            if(accion.menuHipotecar(jugador,accion.getTablero(),this.getAlquiler(tirada)))
                 this.pagarAlquiler(jugador,tirada,accion);
         }
     }
