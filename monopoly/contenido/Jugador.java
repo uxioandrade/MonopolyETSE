@@ -120,13 +120,8 @@ public class Jugador {
         this.propiedades = casillas;
     }
 
-<<<<<<< HEAD
-    public void anhadirPropiedad(Comprables casilla){
-        if(casilla != null){
-=======
     public void anhadirPropiedad(Propiedades casilla){
-        if(casilla != null)
->>>>>>> 82d028ba993e79753dbbb1c04806a0458f488b8d
+        if(casilla != null){
             this.propiedades.add(casilla);
             if(!casilla.getPropietario().equals(this))
                 casilla.setPropietario(this);

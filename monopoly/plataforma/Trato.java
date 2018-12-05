@@ -1,20 +1,20 @@
 package monopoly.plataforma;
 
-import monopoly.contenido.Comprables;
+import monopoly.contenido.Propiedades;
 import monopoly.contenido.Jugador;
 import monopoly.plataforma.*;
 
 import java.util.ArrayList;
 
 public class Trato {
-    private ArrayList<Comprables> propiedadesOfertadas; //Ofertada->0 Recibida->1 No Pagar->2
+    private ArrayList<Propiedades> propiedadesOfertadas; //Ofertada->0 Recibida->1 No Pagar->2
     private Jugador ofertor;
     private Jugador receptor;
     private double cantidad;
     private int turnos;
     private int id;
 
-    public Trato(Comprables ofertada, Comprables recibida){ //Propiedad x propiedad
+    public Trato(Propiedades ofertada, Propiedades recibida){ //Propiedad x propiedad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(ofertada);
         this.propiedadesOfertadas.add(recibida);
@@ -22,7 +22,7 @@ public class Trato {
         this.receptor = recibida.getPropietario();
     }
 
-    public Trato(Jugador ofertor, double cantidadOfertada,Comprables propiedadRecibida){ //Cantidad x propiedad
+    public Trato(Jugador ofertor, double cantidadOfertada,Propiedades propiedadRecibida){ //Cantidad x propiedad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadRecibida);
         this.ofertor = ofertor;
@@ -30,7 +30,7 @@ public class Trato {
         this.receptor.anhadirTratoPendiente(this);
         this.cantidad = cantidadOfertada;
     }
-    public Trato(double cantidadRecibida,Jugador receptor, Comprables propiedadOfertada){ //Propiedad x cantidad
+    public Trato(double cantidadRecibida,Jugador receptor, Propiedades propiedadOfertada){ //Propiedad x cantidad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.ofertor = propiedadOfertada.getPropietario();
@@ -39,7 +39,7 @@ public class Trato {
         this.cantidad = cantidadRecibida;
     }
 
-    public Trato(Comprables propiedadOfertada, double cantidad, Comprables propiedadRecibida){
+    public Trato(Propiedades propiedadOfertada, double cantidad, Propiedades propiedadRecibida){
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.propiedadesOfertadas.add(propiedadRecibida);
@@ -49,7 +49,7 @@ public class Trato {
         this.cantidad = cantidad;
     }
 
-    public Trato(Comprables propiedadOfertada, Comprables propiedadRecibida, Comprables propiedadNoAlquiler, int turnos){
+    public Trato(Propiedades propiedadOfertada, Propiedades propiedadRecibida, Propiedades propiedadNoAlquiler, int turnos){
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.propiedadesOfertadas.add(propiedadRecibida);
