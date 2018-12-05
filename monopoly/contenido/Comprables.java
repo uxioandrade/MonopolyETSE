@@ -17,7 +17,11 @@ public abstract class Comprables extends Casilla {
         return this.propietario;
 }
     public void setPropietario(Jugador propietario){
-        if(propietario != null) this.propietario=propietario;
+        if(propietario != null){
+            this.propietario=propietario;
+            if(!propietario.getPropiedades().contains(this))
+            this.propietario.anhadirPropiedad(this);
+        }
     }
 
     public double getHipoteca(){

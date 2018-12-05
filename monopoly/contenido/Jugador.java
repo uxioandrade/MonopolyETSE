@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.plataforma.Trato;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
 
@@ -19,6 +20,7 @@ public class Jugador {
     private double premiosInversionesOBote;
     private int vecesCarcel;
     private int vecesDados;
+    private ArrayList<Trato> tratosPendientes;
 
     public Jugador(){
         this.avatar = null;
@@ -32,6 +34,7 @@ public class Jugador {
         for(Comprables c : this.propiedades){
             c.setPropietario(this);
         }
+        this.tratosPendientes = new ArrayList<>();
     }
 
     public Jugador(String nombre, String tipo, Tablero tablero){
@@ -39,6 +42,7 @@ public class Jugador {
         this.dinero = Valor.FORTUNA_INICIAL;
         this.propiedades = new ArrayList<>();
         this.nombre = nombre;
+        this.tratosPendientes = new ArrayList<>();
     }
 
     private Avatar generarAvatar(String tipo, Tablero tablero){
@@ -115,8 +119,19 @@ public class Jugador {
     }
 
     public void anhadirPropiedad(Comprables casilla){
-        if(casilla != null)
+        if(casilla != null){
             this.propiedades.add(casilla);
+            if(!casilla.getPropietario().equals(this))
+                casilla.setPropietario(this);
+        }
+    }
+
+    public ArrayList<Trato> getTratosPendientes(){
+        return this.tratosPendientes;
+    }
+
+    public void anhadirTratoPendiente(Trato trato){
+        this.tratosPendientes.add(trato);
     }
 
     public double getDineroInvertido(){
