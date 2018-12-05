@@ -113,7 +113,14 @@ public abstract class Avatar {
         this.modoAvanzado = !this.modoAvanzado;
     }
 
-    public abstract void moverCasilla(int valor);
+    public void moverCasilla(int valor){
+        if(this.modoAvanzado)
+            this.moverEnAvanzado(valor);
+        else
+            this.moverEnBasico(valor);
+    }
+
+    public abstract void moverEnAvanzado(int valor);
 
     public void retrocederCasillas(int valor){
         this.getCasilla().quitarAvatar(this);
@@ -125,7 +132,7 @@ public abstract class Avatar {
         this.getCasilla().anhadirAvatar(this);
     }
 
-    void moverNormal(int valor){ //Acceso a paquete
+    void moverEnBasico(int valor){ //Acceso a paquete
             this.casilla.quitarAvatar(this);
             //Caso en el que el movimiento suponga completar una vuelta
             if(this.casilla.getPosicion() + valor > 39){
@@ -150,6 +157,8 @@ public abstract class Avatar {
             }
             this.casilla.anhadirAvatar(this);
     }
+
+
 
     @Override
     public String toString(){

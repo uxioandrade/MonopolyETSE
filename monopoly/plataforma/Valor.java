@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import monopoly.Carcel;
 import monopoly.contenido.*;
 
 public class Valor {
@@ -70,7 +69,7 @@ public class Valor {
     ));
 
     public final static ArrayList<Casilla> casillas = new ArrayList<>(Arrays.asList(
-            new Salida("Salida",0),
+            new Especiales("Salida",0),
             new Solar("Bag End",1),
             new CasillasCarta("Caja1",2, cartasCajaComunidad),
             new Solar("Farmer Maggot's",3),
@@ -80,7 +79,7 @@ public class Valor {
             new CasillasCarta("Suerte1",7,cartasSuerte),
             new Solar("Weathertop",8),
             new Solar("Ford of Bruinen",9),
-            new Carcel("Carcel",10),
+            new Especiales("Carcel",10),
             new Solar("Rivendell",11),
             new Servicio("Servicio1",12),
             new Solar("Council of Elrond",13),
@@ -90,7 +89,7 @@ public class Valor {
             new CasillasCarta("Caja2",17, cartasCajaComunidad),
             new Solar("Nen Hithoel",18),
             new Solar("Argonath",19),
-            new Parking("Parking",20),
+            new Especiales("Parking",20),
             new Solar("Golden Hall",21),
             new CasillasCarta("Suerte2",22,cartasSuerte),
             new Solar("Edoras",23),
@@ -100,7 +99,7 @@ public class Valor {
             new Solar("Fords of Isen",27),
             new Servicio("Servicio2",28),
             new Solar("Tower of Orthanc",29),
-            new VeCarcel("VeCarcel",30),
+            new Especiales("VeCarcel",30),
             new Solar("Pelennor Fields",31),
             new Solar("Osgiliath",32),
             new CasillasCarta("Caja3",33, cartasCajaComunidad),
@@ -112,11 +111,11 @@ public class Valor {
             new Solar("Mt. Doom",39)
     ));
 
-    public static ArrayList<Comprables> getComprables(){
-        ArrayList<Comprables> comprables = new ArrayList<>();
+    public static ArrayList<Propiedades> getComprables(){
+        ArrayList<Propiedades> comprables = new ArrayList<>();
         for(Casilla c: casillas){
-            if(c instanceof Comprables)
-                comprables.add((Comprables)c);
+            if(c instanceof Propiedades)
+                comprables.add((Propiedades)c);
         }
         return comprables;
     }

@@ -22,7 +22,7 @@ public class CartaPagar extends Carta{
         if(!banca) return this.cantidad*(tablero.getAvatares().size() - 1);
         if(this.cantidad == 0) {
             double totalImpuestos = 0;
-            for(Comprables comp : jugador.getPropiedades()){
+            for(Propiedades comp : jugador.getPropiedades()){
                 if(comp instanceof Solar){
                     totalImpuestos += ((Solar) comp).getConstrucciones("Casa").size() * 4000;
                     totalImpuestos += ((Solar) comp).getConstrucciones("Hotel").size() * 115000;

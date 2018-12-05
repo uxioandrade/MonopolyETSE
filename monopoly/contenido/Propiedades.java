@@ -2,14 +2,14 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
 
-public abstract class Comprables extends Casilla {
+public abstract class Propiedades extends Casilla {
 
     private double precio;
     private boolean hipotecado;
     private Jugador propietario;
     private double rentabilidad;
 
-    public Comprables(String nombre, int posicion){
+    public Propiedades(String nombre, int posicion){
         super(nombre,posicion);
     }
 
@@ -52,12 +52,16 @@ public abstract class Comprables extends Casilla {
         return this.precio;
     }
 
-    public abstract double getAlquiler(int tirada);
+    public abstract double alquiler(int tirada);
 
     public abstract void pagarAlquiler(Jugador jugador, int tirada, Accion accion);
 
     public void accionCaer(Jugador jugador, int tirada, Accion accion) {
         if (!propietario.equals(accion.getTablero().getBanca()) && !propietario.equals(jugador) && !this.hipotecado)
             this.pagarAlquiler(jugador, tirada, accion);
+    }
+
+    public boolean perteneceAJugador(Jugador jugador){
+        return this.propietario.equals(jugador);
     }
 }

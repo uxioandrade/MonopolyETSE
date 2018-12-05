@@ -27,6 +27,7 @@ public class Trato {
         this.propiedadesOfertadas.add(propiedadRecibida);
         this.ofertor = ofertor;
         this.receptor = propiedadRecibida.getPropietario();
+        this.receptor.anhadirTratoPendiente(this);
         this.cantidad = cantidadOfertada;
     }
     public Trato(double cantidadRecibida,Jugador receptor, Comprables propiedadOfertada){ //Propiedad x cantidad
@@ -34,6 +35,7 @@ public class Trato {
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = receptor;
+        this.receptor.anhadirTratoPendiente(this);
         this.cantidad = cantidadRecibida;
     }
 
@@ -43,6 +45,7 @@ public class Trato {
         this.propiedadesOfertadas.add(propiedadRecibida);
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
+        this.receptor.anhadirTratoPendiente(this);
         this.cantidad = cantidad;
     }
 
@@ -53,13 +56,31 @@ public class Trato {
         this.propiedadesOfertadas.add(propiedadNoAlquiler);
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
+        this.receptor.anhadirTratoPendiente(this);
         if(turnos > 0)
             this.turnos = turnos;
     }
 
-    public void aceptar(){
-        if(receptor.getDinero()>this.precio){
-    
+    private void swapPropiedades(){
+        if(this.propiedadesOfertadas.size()>=2){
+            this.propiedadesOfertadas.get(0).setPropietario(this.receptor);
+            this.propiedadesOfertadas.get(1).setPropietario(this.ofertor);
+        }else {
+            if(this.ofertor.getPropiedades().contains(this.propiedadesOfertadas.get(0)))
+                this.propiedadesOfertadas.get(0).setPropietario(this.receptor);
+            else
+                this.propiedadesOfertadas.get(0).setPropietario(this.ofertor);
         }
+    }
+
+    public void aceptar(){
+       if(this.receptor.getDinero()<cantidad){
+           System.out.println("El trato no puede ser aceptado: " + this.receptor.getNombre() + " no dispone de " + -1*cantidad + "€.");
+           return;
+       }
+       this.swapPropiedades();
+       this.receptor.modificarDinero(cantidad);
+       this.ofertor.modificarDinero(-cantidad);
+       this.receptor.borrarTratoPendiente(this);
     }
 }
