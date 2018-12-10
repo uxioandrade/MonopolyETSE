@@ -3,7 +3,7 @@ package monopoly.contenido;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Accion;
 
-public class Servicio extends Propiedades {
+public final class Servicio extends Propiedades {
 
     public Servicio(String nombre, int posicion) {
        super(nombre,posicion);

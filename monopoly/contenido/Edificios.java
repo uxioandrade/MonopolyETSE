@@ -12,7 +12,7 @@ public class Edificios{
     public Edificios(double precio, Solar comprable){
         this.precio = precio;
         this.comprable = comprable;
-        this.nombre = ""+(1+ Valor.getEdificios());
+        this.nombre = ""+Valor.getEdificios();
         Valor.incrementarEdificios();
     }
 

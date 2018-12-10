@@ -4,7 +4,7 @@ import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Valor;
 
-public class Coche extends Avatar{
+public final     class Coche extends Avatar{
 
     private int numTiradas;
     private boolean poderComprar;

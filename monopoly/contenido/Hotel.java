@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-public class Hotel extends Edificios{
+public final class Hotel extends Edificios{
 
     public Hotel(double precio, Solar comprable){
         super(precio, comprable);

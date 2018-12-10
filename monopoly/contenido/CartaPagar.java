@@ -7,7 +7,7 @@ import monopoly.plataforma.Valor;
 
 import java.util.Iterator;
 
-public class CartaPagar extends Carta{
+public final class CartaPagar extends Carta{
 
     private double cantidad; //Positivo => Pagar , Negativo => Cobrar
     private boolean banca; //True => Banca, False => Todos los jugadores

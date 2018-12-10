@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-public class PistaDeporte extends Edificios{
+public final class PistaDeporte extends Edificios{
 
     public PistaDeporte(double precio, Solar comprable){
         super(precio, comprable);

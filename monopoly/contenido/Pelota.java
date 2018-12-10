@@ -5,7 +5,7 @@ import monopoly.plataforma.Tablero;
 
 import java.util.Scanner;
 
-public class Pelota extends Avatar{
+public final class Pelota extends Avatar{
 
     public Pelota(Jugador jug, Tablero tablero){
         super(jug,tablero);

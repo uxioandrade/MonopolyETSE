@@ -5,7 +5,7 @@ import monopoly.plataforma.Accion;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CasillasCarta extends Casilla {
+public final class CasillasCarta extends Casilla {
 
     private ArrayList<Carta> cartas;
 

@@ -10,19 +10,19 @@ import java.util.SplittableRandom;
 
 public interface Comando {
 
-    public void describir(String[] partes, Tablero tablero);
-    public void comprar(Jugador jugadorActual, Accion accion);
-    public void edificar(String[] partes,Jugador jugadorActual, Accion accion);
-    public void vender(String[] partes,Jugador jugadorActual,Tablero tablero, Accion accion);
-    public void hipotecar(String[] partes,Jugador jugadorActual,Tablero tablero, Accion accion);
-    public void deshipotecar(String[] partes,Jugador jugadorActual,Tablero tablero, Accion accion);
-    public void lanzar(String[] partes,Jugador jugadorActual,Tablero tablero, Accion accion, int countTiradas, int tirada, int vecesDobles, Dados dados);
-    public void acabar(String partes[], Jugador jugadorActual,Tablero tablero, int countTiradas, int vecesDobles, int turno, ArrayList<String> turnosJugadores);
-    public void salir(String partes[],Jugador jugadorActual, int countTiradas, Accion accion, Boolean salir);
-    public void listar(String partes[], Tablero tablero);
-    public void jugador(String partes[],Jugador jugadorActual);
-    public void ver(String partes[],Tablero tablero);
-    public void cambiar(String partes[], Tablero tablero, Jugador jugadorActual, int countTiradas);
-    public void estadisticas(String partes[], Tablero tablero, ArrayList<String> turnosJugadores);
+    public void describir(String[] partes);
+    public void comprar();
+    public void edificar(String[] partes);
+    public void vender(String[] partes);
+    public void hipotecar(String[] partes);
+    public void deshipotecar(String[] partes);
+    public void lanzar(String[] partes);
+    public void acabar(String partes[]);
+    public void salir(String partes[]);
+    public void listar(String partes[]);
+    public void jugador(String partes[]);
+    public void ver(String partes[]);
+    public void cambiar(String partes[]);
+    public void estadisticas(String partes[]);
 
 }

@@ -3,7 +3,7 @@ package monopoly.contenido;
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Valor;
 
-public class Impuesto extends Casilla {
+public final class Impuesto extends Casilla {
 
     private double apagar;
 

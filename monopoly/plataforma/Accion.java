@@ -23,7 +23,7 @@ public class Accion {
 
     public void crearJugadores() {
         int empezar = 1; //Almacena el número de jugadores
-        Menu.turnosJugadores = new ArrayList<>();
+        Juego.turnosJugadores = new ArrayList<>();
         while (empezar <= 6) {
             System.out.print("$> ");
             Scanner scanner = new Scanner(System.in);
@@ -40,13 +40,15 @@ public class Accion {
                             //Se añade los jugadores al HashMap de tableros
                             this.tablero.addJugadores(jugadorIntroducir);
                             //Se añade el jugador al ArrayList que almacena el orden de los jugadores
-                            Menu.turnosJugadores.add(jugadorIntroducir.getNombre());
+                            Juego.turnosJugadores.add(jugadorIntroducir.getNombre());
                             //Se aumenta el número de jugadores
                             empezar++;
                             System.out.println(partes[2] + " se ha unido a la partida");
                             System.out.println("Informacion sobre el Jugador");
                             System.out.println(jugadorIntroducir.getDescripcionInicial());
                             this.tablero.imprimirTablero();
+                            if(empezar >= 7)
+                                System.out.println("El número máximo de participantes ha sido alcanzado, la partida, si es menester de todos los jugadores involucrados, será dada comenzamiento");
                         }
                         break;
                     }
@@ -116,7 +118,7 @@ public class Accion {
 
     public void edificar(Jugador jugador, String tipo) {
         if(jugador.getAvatar().getCasilla() instanceof  Solar)
-            ((Solar)jugador.getAvatar().getCasilla()).edificar(tipo);
+            ((Solar)jugador.getAvatar().getCasilla()).edificar(tipo, this.tablero);
         else
             System.out.println("No es un solar");
     }
@@ -261,9 +263,9 @@ public class Accion {
                     Valor.casillas.get(jugador.getAvatar().getCasilla().getPosicion()).quitarAvatar(jugador.getAvatar());
                     this.tablero.getAvatares().remove(jugador.getAvatar().getId());
                     this.tablero.getJugadores().remove(jugador.getNombre());
-                    Menu.turnosJugadores.remove(jugador.getNombre());
-                    if(Menu.turnosJugadores.size() == 1){
-                        System.out.println("Partida acabada!\n Enhorabuena " + Menu.turnosJugadores.get(0) + ", eres el ganador!!!!");
+                    Juego.turnosJugadores.remove(jugador.getNombre());
+                    if(Juego.turnosJugadores.size() == 1){
+                        System.out.println("Partida acabada!\n Enhorabuena " + Juego.turnosJugadores.get(0) + ", eres el ganador!!!!");
                         System.exit(0);
                     }
                     return false;

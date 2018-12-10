@@ -4,7 +4,7 @@ import monopoly.plataforma.Accion;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
 
-public class CartaMovimiento extends Carta{
+public final class CartaMovimiento extends Carta{
 
     private int posicion;
     private boolean accionFinanciera;

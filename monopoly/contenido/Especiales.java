@@ -3,7 +3,7 @@ package monopoly.contenido;
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Valor;
 
-public class Especiales extends Casilla{
+public final class Especiales extends Casilla{
 
     public Especiales(String nombre, int posicion) {
         super(nombre, posicion);

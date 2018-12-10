@@ -22,6 +22,7 @@ public class Jugador {
     private int vecesCarcel;
     private int vecesDados;
     private ArrayList<Trato> tratosPendientes;
+    private ArrayList<Trato> tratosPropuestos;
 
     public Jugador(){
         this.avatar = null;
@@ -36,6 +37,7 @@ public class Jugador {
             c.setPropietario(this);
         }
         this.tratosPendientes = new ArrayList<>();
+        this.tratosPropuestos = new ArrayList<>();
     }
 
     public Jugador(String nombre, String tipo, Tablero tablero){
@@ -44,6 +46,7 @@ public class Jugador {
         this.propiedades = new ArrayList<>();
         this.nombre = nombre;
         this.tratosPendientes = new ArrayList<>();
+        this.tratosPropuestos = new ArrayList<>();
     }
 
     private Avatar generarAvatar(String tipo, Tablero tablero){
@@ -134,10 +137,12 @@ public class Jugador {
 
     public void anhadirTratoPendiente(Trato trato){
         this.tratosPendientes.add(trato);
+        trato.getOfertor().tratosPropuestos.add(trato);
     }
 
     public void borrarTratoPendiente(Trato trato){
         this.tratosPendientes.remove(trato);
+        trato.getOfertor().tratosPropuestos.remove(trato);
     }
 
     //Todos los atributos siguientes no necesitan setters, pues el único momento en el que se les asigna un valor independientemente de su anterior es al crear el jugador, después las modificaciones se hacen a partir de su valor previo
@@ -204,6 +209,9 @@ public class Jugador {
         this.vecesCarcel++;
     }
 
+    public ArrayList<Trato> getTratosPropuestos() {
+        return this.tratosPropuestos;
+    }
 
     public String getDescripcionInicial(){
         String aux = "\t{\n" +
@@ -253,6 +261,12 @@ public class Jugador {
                 "\npremiosInversionesOBote:" + this.getPremiosInversionesOBote() +
                 "\nvecesEnLaCarcel: " + this.getVecesCarcel() + "\n}";
         System.out.println(aux);
+    }
+
+    public void listarTratos(){
+        for(Trato t: this.tratosPropuestos){
+            System.out.println("{\n" + t + "\n},\n");
+        }
     }
 
     @Override

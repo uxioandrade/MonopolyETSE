@@ -127,7 +127,8 @@ public class Valor {
     private static double dineroSalirCarcel = 0.25* dineroVuelta;
     private static double precioServicio = 0.75*dineroVuelta;
 
-    private static int edificios=0;
+    private static int edificios=1; //Contador que almacena el id de todos los edificios construidos
+    private static int tratos=1; //Contador que almacena el id de todos los tratos creados
 
     //Multiplicadores
     public static final double MULTIPLICADOR_INICIAL_CASA = 0.60;
@@ -180,6 +181,8 @@ public class Valor {
     public static int getEdificios(){return edificios;}
     public static void incrementarEdificios(){edificios++;}
 
+    public static int getTratos(){return tratos;}
+    public static void incrementarTratos(){tratos++;}
 
     public static void actualizarVuelta(){
         Iterator<Grupo> grup_i = Valor.getGrupos().values().iterator();

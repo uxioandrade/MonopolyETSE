@@ -158,8 +158,6 @@ public abstract class Avatar {
             this.casilla.anhadirAvatar(this);
     }
 
-
-
     @Override
     public String toString(){
         String aux = "{\n" +

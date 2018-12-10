@@ -2,10 +2,11 @@ package monopoly.contenido;
 
 import java.util.ArrayList;
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
 
-public class Solar extends Propiedades {
+public final class Solar extends Propiedades {
 
     private Grupo grupo;
     private ArrayList<Edificios> construcciones;
@@ -128,7 +129,7 @@ public class Solar extends Propiedades {
         }
     }
 
-    public void edificar(String tipo){
+    public void edificar(String tipo, Tablero tablero){
         if( this.getPropietario().getPropiedades().contains(this)){
             if(this.frecuenciaVisita( this.getPropietario().getAvatar()) > 2 ||  this.getPropietario().poseeGrupoCompleto(this.getGrupo())){
                 switch (tipo){
@@ -143,7 +144,7 @@ public class Solar extends Propiedades {
                                 this.getPropietario().modificarDinero(-Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio());
                                 this.getPropietario().modificarDineroInvertido(Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio());
                                 Casa nuevaCasa = new Casa(Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio(), this);
-                                this.tablero.anhadirEdificio(nuevaCasa);
+                                tablero.anhadirEdificio(nuevaCasa);
                                 this.anhadirEdificio(nuevaCasa);
                                 System.out.println("Se ha edificado una casa en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio() + "€.");
@@ -164,13 +165,13 @@ public class Solar extends Propiedades {
                                 for(int i = 0;i <4;i++){
                                     Casa casaBorrar = ((Casa) this.getConstrucciones("Casa").get(0));
                                     this.getConstrucciones().remove(casaBorrar);
-                                    this.tablero.borrarEdificio(casaBorrar);
+                                    tablero.borrarEdificio(casaBorrar);
                                 }
                                 this.getPropietario().modificarDinero(-Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio());
                                 this.getPropietario().modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio());
                                 Hotel nuevoHotel = new Hotel(Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio(), this);
                                 this.anhadirEdificio(nuevoHotel);
-                                this.tablero.anhadirEdificio(nuevoHotel);
+                                tablero.anhadirEdificio(nuevoHotel);
                                 System.out.println("Se ha edificado un hotel en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio() + "€.");
                             }else{
@@ -191,7 +192,7 @@ public class Solar extends Propiedades {
                                 this.getPropietario().modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISCINA * this.getPrecio());
                                 Piscina nuevaPiscina = new Piscina(Valor.MULTIPLICADOR_INICIAL_PISCINA* this.getPrecio(), this);
                                 this.anhadirEdificio(nuevaPiscina);
-                                this.tablero.anhadirEdificio(nuevaPiscina);
+                                tablero.anhadirEdificio(nuevaPiscina);
                                 System.out.println("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISCINA * this.getPrecio() + "€.");
                             }else{
@@ -212,7 +213,7 @@ public class Solar extends Propiedades {
                                 this.getPropietario().modificarDineroInvertido(-Valor.MULTIPLICADOR_INICIAL_PISTA * this.getPrecio());
                                 PistaDeporte nuevaPista = new PistaDeporte(Valor.MULTIPLICADOR_INICIAL_PISTA*this.getPrecio(), this);
                                 this.anhadirEdificio(nuevaPista);
-                                this.tablero.anhadirEdificio(nuevaPista);
+                                tablero.anhadirEdificio(nuevaPista);
                                 System.out.println("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISTA * this.getPrecio() + "€.");
                             }else{
@@ -231,6 +232,4 @@ public class Solar extends Propiedades {
             System.out.println( this.getPropietario().getNombre() + " no posee la casilla " + this.getNombre());
         }
     }
-    }
-
 }
