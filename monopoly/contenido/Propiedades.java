@@ -1,6 +1,7 @@
 package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 
 import java.util.HashMap;
 
@@ -63,7 +64,7 @@ public abstract class Propiedades extends Casilla {
     public void accionCaer(Jugador jugador, int tirada, Accion accion) {
         if (!propietario.equals(accion.getTablero().getBanca()) && !propietario.equals(jugador) && !this.hipotecado){
             if(this.jugadoresExcluidos.containsKey(jugador)){
-                System.out.println("El jugador " + jugador.getNombre() + " no tiene que pagar este alquiler durante " + this.jugadoresExcluidos.get(jugador) + " turnos.");
+                Juego.consola.imprimir("El jugador " + jugador.getNombre() + " no tiene que pagar este alquiler durante " + this.jugadoresExcluidos.get(jugador) + " turnos.");
             }else
                 this.pagarAlquiler(jugador, tirada, accion);
         }

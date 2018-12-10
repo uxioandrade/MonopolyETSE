@@ -1,6 +1,7 @@
 package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
 
@@ -37,7 +38,7 @@ public final class CartaMovimiento extends Carta{
         //Se resta el alquiler del jugador que ha caído en el servicio
         jugador.modificarDinero(-cantidad);
         jugador.modificarPagoAlquileres(cantidad);
-        System.out.println("Se han pagado " + cantidad + "€ de alquiler.");
+        Juego.consola.imprimir("Se han pagado " + cantidad + "€ de alquiler.");
         //Se aumenta el dinero del propietario
         Propiedades casillaComprable;
         casillaComprable = (Propiedades) jugador.getAvatar().getCasilla();
@@ -64,9 +65,9 @@ public final class CartaMovimiento extends Carta{
         }
 
         if(accionFinanciera)
-            System.out.println(super.getDescripcion() + " " + Valor.getDineroVuelta() + "€.");
+            Juego.consola.imprimir(super.getDescripcion() + " " + Valor.getDineroVuelta() + "€.");
         else
-            System.out.println(super.getDescripcion());
+            Juego.consola.imprimir(super.getDescripcion());
 
         Propiedades casillaComprable;
         Accion accion = new Accion(tablero);
@@ -89,7 +90,7 @@ public final class CartaMovimiento extends Carta{
                     if (jugador.getDinero() >= cantidadDoble) {
                         cobrarAccion(jugador, tablero, cantidadDoble);
                     } else {
-                        System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
+                        Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
                         if (accion.menuHipotecar(jugador, tablero, casillaComprable.alquiler(1) * 2)) {
                             cobrarAccion(jugador, tablero, cantidadDoble);
                         }

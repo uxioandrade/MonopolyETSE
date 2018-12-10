@@ -2,6 +2,7 @@ package monopoly.contenido;
 
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
@@ -43,7 +44,7 @@ public final class CartaPagar extends Carta{
             while (itJug.hasNext()) {
                 Jugador jug = itJug.next();
                 if (!jug.equals(jugador)) {
-                    jug.modificarDinero(-1 * this.cantidad);
+                    jug.modificarDinero( this.cantidad);
                     jug.modificarPremiosInversionesOBote(this.cantidad);
                 }
             }
@@ -54,13 +55,13 @@ public final class CartaPagar extends Carta{
     }
 
     public void accionCarta(Jugador jugador, Tablero tablero){
-        System.out.println(super.getDescripcion());
+        Juego.consola.imprimir(super.getDescripcion());
         double cantidadTotal = this.getCantidad(jugador,tablero);
         Accion accion = new Accion(tablero);
         if(jugador.getDinero() >= cantidadTotal){
             cobrarAccion(jugador,tablero,cantidadTotal);
         }else{
-            System.out.println(jugador.getNombre() + " no tiene dinero suficiente para pagar.");
+            Juego.consola.imprimir(jugador.getNombre() + " no tiene dinero suficiente para pagar.");
             if(accion.menuHipotecar(jugador,tablero,cantidadTotal))
                 cobrarAccion(jugador,tablero,cantidadTotal);
         }

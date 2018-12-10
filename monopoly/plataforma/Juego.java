@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Juego implements Comando{
 
+    public static ConsolaNormal consola;
     private Tablero tablero;
     private Dados dados;
     private int countTiradas;
@@ -21,6 +22,7 @@ public class Juego implements Comando{
     //Tiene acceso a paquete
 
     public Juego() {
+        consola=new ConsolaNormal();
         Valor.crearGrupos();//creamos los grupos almacenados en valor
         this.tablero = new Tablero();
         this.accion = new Accion(this.tablero);
@@ -43,9 +45,10 @@ public class Juego implements Comando{
         this.tirada = 0;
         System.out.println(" El jugador actual es " + jugadorActual.getNombre());
         while (!salir) {
-            System.out.print("$> ");
-            Scanner scanner = new Scanner(System.in);
-            String orden = scanner.nextLine();
+            //System.out.print("$> ");
+            //Scanner scanner = new Scanner(System.in);
+            //String orden = scanner.nextLine();
+            String orden= consola.leer("$> ");
             String[] partes = orden.split(" ");
             String comando = partes[0];
             // Acciones en función del comando introducido
@@ -93,7 +96,7 @@ public class Juego implements Comando{
                     this.estadisticas(partes);
                     break;
                 default:
-                    System.out.println("\nComando incorrecto.");
+                    consola.imprimir("\nComando incorrecto.");
                     break;
             }
         }
@@ -113,25 +116,25 @@ public class Juego implements Comando{
 
     public void describir(String[] partes){
         String auxCasilla;
-        if(partes.length<3) System.out.println("\n Comando incorrecto");
+        if(partes.length<3) consola.imprimir("\n Comando incorrecto");
         else if(partes[1].equals("jugador")) {
             Jugador jugadorDescribir = tablero.getJugadores().get(partes[2]);//buscamos el jugador en el hashmap de jugadores de tablero
-            if (jugadorDescribir != null) System.out.println(jugadorDescribir);//si existe lo imprimimos
-            else System.out.println("\nEl jugador no existe");
+            if (jugadorDescribir != null) consola.imprimir(jugadorDescribir.toString());//si existe lo imprimimos
+            else consola.imprimir("\nEl jugador no existe");
         }else if(partes[1].equals("casilla")){
             auxCasilla = "";
             for(int i = 2; i < partes.length - 1;i++) {
                 auxCasilla += partes[i] + " ";
             }
             Casilla casilla = tablero.getCasillas().get(auxCasilla + partes[partes.length-1]);//buscamos la casilla en el hashmap de casillas del tablero
-            if(casilla!=null) System.out.println(casilla);//si existe la imprimimos
-            else System.out.println("\nLa casilla no existe");
+            if(casilla!=null) consola.imprimir(casilla.toString());//si existe la imprimimos
+            else consola.imprimir("\nLa casilla no existe");
         }else if(partes[1].equals("avatar")){
             Avatar avatar = tablero.getAvatares().get(partes[2]);//buscamos el avatar en el hashmap de avatares del tablero
-            if(avatar!=null) System.out.println(avatar);//si existe lo imprimimos
-            else System.out.println("\nEl avatar no existe.");
+            if(avatar!=null) consola.imprimir(avatar.toString());//si existe lo imprimimos
+            else consola.imprimir("\nEl avatar no existe.");
             System.out.flush();
-        }else System.out.println("\nNo existe el tipo de elemento " + partes[1]);
+        }else consola.imprimir("\nNo existe el tipo de elemento " + partes[1]);
     }
 
     public void comprar(){
@@ -142,7 +145,7 @@ public class Juego implements Comando{
         if(partes.length ==2){
             accion.edificar(jugadorActual,partes[1]);
         }else{
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
         }
     }
 
@@ -155,7 +158,7 @@ public class Juego implements Comando{
             }
             accion.venderConstrucciones(jugadorActual,tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
         }else{
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
         }
     }
 
@@ -165,10 +168,10 @@ public class Juego implements Comando{
         for(int i = 1; i < partes.length - 1;i++) {
             auxCasilla += partes[i] + " ";
         }
-        if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
+        if(partes.length<2 || partes.length >4) consola.imprimir("\n Comando incorrecto");
         else if(tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null)//si existe la casilla
             accion.hipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),jugadorActual);
-        else System.out.println("La casilla que quieres hipotecar no existe :(");
+        else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
     public void deshipotecar(String[] partes) {
@@ -176,10 +179,10 @@ public class Juego implements Comando{
         for (int i = 1; i < partes.length - 1; i++) {
             auxCasilla += partes[i] + " ";
         }
-        if (partes.length < 2 || partes.length > 4) System.out.println("\n Comando incorrecto");
+        if (partes.length < 2 || partes.length > 4) consola.imprimir("\n Comando incorrecto");
         else if (tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]) != null)//si existe la casilla
             accion.desHipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]), jugadorActual);
-        else System.out.println("La casilla que quieres hipotecar no existe :(");
+        else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
     public void lanzar(String[] partes){
@@ -194,10 +197,10 @@ public class Juego implements Comando{
                         if(((Coche) jugadorActual.getAvatar()).getNumTiradas() > 0){
                             ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
                         }else if(((Coche) jugadorActual.getAvatar()).getNumTiradas() == 0) {
-                            System.out.println("El coche ya ha realizado todas las tiradas que podía en su turno");
+                            consola.imprimir("El coche ya ha realizado todas las tiradas que podía en su turno");
                         }else{
                             ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
-                            System.out.println(jugadorActual.getNombre() + " aún le quedan " + (((Coche) jugadorActual.getAvatar()).getNumTiradas()*-1 + 1) + " turnos para poder volver a tirar");
+                            consola.imprimir(jugadorActual.getNombre() + " aún le quedan " + (((Coche) jugadorActual.getAvatar()).getNumTiradas()*-1 + 1) + " turnos para poder volver a tirar");
                         }
                         if(((Coche) jugadorActual.getAvatar()).getNumTiradas() <= 0) countTiradas++;
                         if(jugadorActual.getAvatar().getEncarcelado() != 0){
@@ -211,12 +214,12 @@ public class Juego implements Comando{
                         if (vecesDobles >= 3) {//si saco dobles 3 veces va a la carcel y se cancelan sus acciones pendientes
                             accion.irCarcel(jugadorActual);
                             this.countTiradas++;
-                            System.out.println("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
+                            consola.imprimir("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
                         } else {
                             if(jugadorActual.getAvatar() instanceof Pelota && jugadorActual.getAvatar().getModoAvanzado() && tirada <= 4){
-                                System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " retrocede " + tirada + " posiciones");
+                                consola.imprimir("El avatar " + jugadorActual.getAvatar().getId() + " retrocede " + tirada + " posiciones");
                             }else
-                                System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
+                                consola.imprimir("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
                             jugadorActual.getAvatar().moverCasilla(tirada);
                             if(!(jugadorActual.getAvatar() instanceof Pelota && jugadorActual.getAvatar().getModoAvanzado()))
                                 jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
@@ -230,10 +233,10 @@ public class Juego implements Comando{
                             if (((Coche) jugadorActual.getAvatar()).getNumTiradas() > 0) {
                                 ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
                             } else if (((Coche) jugadorActual.getAvatar()).getNumTiradas() == 0) {
-                                System.out.println("El coche ya ha realizado todas las tiradas que podía en su turno");
+                                consola.imprimir("El coche ya ha realizado todas las tiradas que podía en su turno");
                             } else {
                                 ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
-                                System.out.println(jugadorActual.getNombre() + " aún le quedan " + (((Coche) jugadorActual.getAvatar()).getNumTiradas() * -1 + 1) + " turnos para poder volver a tirar");
+                                consola.imprimir(jugadorActual.getNombre() + " aún le quedan " + (((Coche) jugadorActual.getAvatar()).getNumTiradas() * -1 + 1) + " turnos para poder volver a tirar");
                             }
                             if (((Coche) jugadorActual.getAvatar()).getNumTiradas() <= 0)
                                 this.countTiradas++;
@@ -261,19 +264,19 @@ public class Juego implements Comando{
                             jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
                         }
                         else
-                            System.out.println("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
+                            consola.imprimir("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
                     }
                 }
                 tablero.imprimirTablero();
             } else
-                System.out.println("No puedes tirar más veces en este turno");
+                consola.imprimir("No puedes tirar más veces en este turno");
         }
-        else System.out.println("Comando incorrecto");
+        else consola.imprimir("Comando incorrecto");
     }
 
     public void acabar(String partes[]){
         if(partes.length != 2){
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
         }else{
             if(partes[1].equals("turno")) {//si no hay alquileres por pagar o tiradas pendientes deja finalizar el turno
                 if (this.countTiradas != 0) {
@@ -290,12 +293,12 @@ public class Juego implements Comando{
                     jugadorActual = tablero.getJugadores().get(turnosJugadores.get(this.turno % turnosJugadores.size()));
                     this.countTiradas = 0;
                     this.vecesDobles = 0;
-                    System.out.println("El jugador actual es " + jugadorActual.getNombre());
+                    consola.imprimir("El jugador actual es " + jugadorActual.getNombre());
                 } else {
-                    System.out.println("No se puede finalizar el turno sin haber tirado los dados");
+                    consola.imprimir("No se puede finalizar el turno sin haber tirado los dados");
                 }
             }else{
-                System.out.println("Comando incorrecto");
+                consola.imprimir("Comando incorrecto");
             }
         }
     }
@@ -307,13 +310,13 @@ public class Juego implements Comando{
                 this.countTiradas = 0;
             }else{
                 if(jugadorActual.getAvatar().getEncarcelado()>0)
-                    System.out.println("No puedes pagar para salir de la cárcel una vez que has lanzado los dados");
+                    consola.imprimir("No puedes pagar para salir de la cárcel una vez que has lanzado los dados");
                 else
-                    System.out.println("No estás en la cárcel");
+                    consola.imprimir("No estás en la cárcel");
             }
         }
         else if(partes.length==1){
-            System.out.println("\nGracias por jugar.");
+            consola.imprimir("\nGracias por jugar.");
             salir = true;
         }
     }
@@ -333,28 +336,28 @@ public class Juego implements Comando{
                 if(Valor.getGrupos().containsKey(partes[2]))
                     Valor.getGrupos().get(partes[2]).listarEdificiosGrupo();
                 else
-                    System.out.println("El grupo introducido no existe");
+                    consola.imprimir("El grupo introducido no existe");
             }
             if(partes[1].equals("enventa")){
                 tablero.listarPropiedades();
                 tablero.imprimirTablero();
             }
         }else
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
     }
 
     public void jugador(String partes[]){
         if(partes.length == 1)
-            System.out.println(jugadorActual.getDescripcionInicial());
+            consola.imprimir(jugadorActual.getDescripcionInicial());
         else
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
     }
 
     public void ver(String partes[]){
         if(partes.length==2){
             if(partes[1].equals("tablero")) tablero.imprimirTablero();
         }else
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
     }
 
     public void cambiar(String partes[]){
@@ -362,14 +365,14 @@ public class Juego implements Comando{
             if(this.countTiradas==0) {
                 tablero.cambiarModo(jugadorActual);
                 if (jugadorActual.getAvatar().getModoAvanzado())
-                    System.out.println("El jugador " + jugadorActual.getNombre() + " está ahora en modo avanzado de tipo " + jugadorActual.getAvatar().getTipo());
+                    consola.imprimir("El jugador " + jugadorActual.getNombre() + " está ahora en modo avanzado de tipo " + jugadorActual.getAvatar().getTipo());
                 else
-                    System.out.println("El jugador " + jugadorActual.getNombre() + " ya no está en modo avanzado");
+                    consola.imprimir("El jugador " + jugadorActual.getNombre() + " ya no está en modo avanzado");
             }else{
-                System.out.println("El modo de movimiento debe ser cambiado antes de tirar los dados");
+                consola.imprimir("El modo de movimiento debe ser cambiado antes de tirar los dados");
             }
         }else{
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
         }
     }
 
@@ -380,9 +383,9 @@ public class Juego implements Comando{
             if(turnosJugadores.contains(partes[1])){
                 tablero.getJugadores().get(partes[1]).imprimirEstadisticas();
             }else
-                System.out.println("El jugador introducido no existe");
+                consola.imprimir("El jugador introducido no existe");
         }
         else
-            System.out.println("Comando incorrecto");
+            consola.imprimir("Comando incorrecto");
     }
 }

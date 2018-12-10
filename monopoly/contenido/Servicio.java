@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Accion;
 
@@ -19,13 +20,13 @@ public final class Servicio extends Propiedades {
             //Se resta el alquiler del jugador que ha caído en el servicio
             jugador.modificarDinero(-this.alquiler(tirada));
             jugador.modificarPagoAlquileres(this.alquiler(tirada));
-            System.out.println("Se han pagado " + this.alquiler(tirada) + "€ de servicio.");
+            Juego.consola.imprimir("Se han pagado " + this.alquiler(tirada) + "€ de servicio.");
             //Se aumenta el dinero del propietario
             super.getPropietario().modificarDinero(this.alquiler(tirada));
             super.getPropietario().modificarCobroAlquileres(this.alquiler(tirada));
             super.sumarRentabilidad(this.alquiler(tirada));
         } else {
-            System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
+            Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
             if(accion.menuHipotecar(jugador,accion.getTablero(),this.alquiler(tirada)))
                 this.pagarAlquiler(jugador,tirada,accion);
         }

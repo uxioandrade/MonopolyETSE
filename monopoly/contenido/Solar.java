@@ -2,6 +2,7 @@ package monopoly.contenido;
 
 import java.util.ArrayList;
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
@@ -65,7 +66,7 @@ public final class Solar extends Propiedades {
         if(this.construcciones.contains(edificio))
             this.construcciones.remove(edificio);
         else
-            System.out.println("Este solar no tiene el edificio indicado");
+            Juego.consola.imprimir("Este solar no tiene el edificio indicado");
     }
 
     public ArrayList<Edificios> getConstrucciones(){
@@ -115,14 +116,14 @@ public final class Solar extends Propiedades {
             //Se resta el alquiler del jugador que ha caído en el servicio
             jugador.modificarDinero(-this.alquiler(tirada));
             jugador.modificarPagoAlquileres(this.alquiler(tirada));
-            System.out.println("Se han pagado " + this.alquiler(tirada) + "€ de alquiler.");
+            Juego.consola.imprimir("Se han pagado " + this.alquiler(tirada) + "€ de alquiler.");
             //Se aumenta el dinero del propietario
             super.getPropietario().modificarDinero(this.alquiler(tirada));
             super.getPropietario().modificarCobroAlquileres(this.alquiler(tirada));
             super.sumarRentabilidad(this.alquiler(tirada));
             this.grupo.sumarRentabilidad(this.alquiler(tirada));
         } else {
-            System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
+            Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
             if(accion.menuHipotecar(jugador,accion.getTablero(),this.alquiler(tirada))){
                 pagarAlquiler(jugador,tirada,accion);
             }
@@ -137,7 +138,7 @@ public final class Solar extends Propiedades {
                     case "Casa":
                         if(this.getConstrucciones("Casa").size() < 4) {
                             if(this.getGrupo().getHotlesGrupo().size()>=this.getGrupo().getCasillas().size() && this.getGrupo().getCasasGrupo().size()>=this.getGrupo().getCasillas().size()){
-                                System.out.println("Operación Cancelada: Si construyes esta casa sobrepasarás el límite de edificaciones del grupo");
+                                Juego.consola.imprimir("Operación Cancelada: Si construyes esta casa sobrepasarás el límite de edificaciones del grupo");
                                 return;
                             }
                             if ( this.getPropietario().getDinero() >= Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio()) {
@@ -146,12 +147,12 @@ public final class Solar extends Propiedades {
                                 Casa nuevaCasa = new Casa(Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio(), this);
                                 tablero.anhadirEdificio(nuevaCasa);
                                 this.anhadirEdificio(nuevaCasa);
-                                System.out.println("Se ha edificado una casa en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
+                                Juego.consola.imprimir("Se ha edificado una casa en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_CASA * this.getPrecio() + "€.");
                             } else
-                                System.out.println("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una casa");
+                                Juego.consola.imprimir("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una casa");
                         }else{
-                            System.out.println("No se pueden construir más de 4 casas en cada solar");
+                            Juego.consola.imprimir("No se pueden construir más de 4 casas en cada solar");
                         }
                         break;
                     case "hotel":
@@ -159,7 +160,7 @@ public final class Solar extends Propiedades {
                         if( this.getPropietario().getDinero() >= Valor.MULTIPLICADOR_INICIAL_HOTEL *(this.getPrecio())){
                             if(((Solar) this).getConstrucciones("Casa").size() >= 4) {
                                 if(this.getGrupo().getHotlesGrupo().size()>=this.getGrupo().getCasillas().size()){
-                                    System.out.println("Operación Cancelada: Si construyes este hotel sobrepasarás el límite de edificaciones del grupo");
+                                    Juego.consola.imprimir("Operación Cancelada: Si construyes este hotel sobrepasarás el límite de edificaciones del grupo");
                                     return;
                                 }
                                 for(int i = 0;i <4;i++){
@@ -172,20 +173,20 @@ public final class Solar extends Propiedades {
                                 Hotel nuevoHotel = new Hotel(Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio(), this);
                                 this.anhadirEdificio(nuevoHotel);
                                 tablero.anhadirEdificio(nuevoHotel);
-                                System.out.println("Se ha edificado un hotel en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
+                                Juego.consola.imprimir("Se ha edificado un hotel en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_HOTEL * this.getPrecio() + "€.");
                             }else{
-                                System.out.println("Tienes que tener un mínimo de 4 casas para construir un hotel");
+                                Juego.consola.imprimir("Tienes que tener un mínimo de 4 casas para construir un hotel");
                             }
                         }else
-                            System.out.println("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una casa");
+                            Juego.consola.imprimir("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una casa");
                         break;
                     case "piscina":
                     case "Piscina":
                         if( this.getPropietario().getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISCINA*this.getPrecio()){
                             if(this.getConstrucciones("Casa").size() >= 2 && this.getConstrucciones("Hotel").size() >= 1) {
                                 if(this.getGrupo().getPiscinasGrupo().size()>=this.getGrupo().getCasillas().size()){
-                                    System.out.println("Operación Cancelada: Si construyes esta piscina sobrepasarás el límite de edificaciones del grupo");
+                                    Juego.consola.imprimir("Operación Cancelada: Si construyes esta piscina sobrepasarás el límite de edificaciones del grupo");
                                     return;
                                 }
                                 this.getPropietario().modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISCINA * this.getPrecio());
@@ -193,20 +194,20 @@ public final class Solar extends Propiedades {
                                 Piscina nuevaPiscina = new Piscina(Valor.MULTIPLICADOR_INICIAL_PISCINA* this.getPrecio(), this);
                                 this.anhadirEdificio(nuevaPiscina);
                                 tablero.anhadirEdificio(nuevaPiscina);
-                                System.out.println("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
+                                Juego.consola.imprimir("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISCINA * this.getPrecio() + "€.");
                             }else{
-                                System.out.println("Tienes que tener un mínimo de 2 casas y un hotel para construir una piscina");
+                                Juego.consola.imprimir("Tienes que tener un mínimo de 2 casas y un hotel para construir una piscina");
                             }
                         }else
-                            System.out.println("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una piscina");
+                            Juego.consola.imprimir("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una piscina");
                         break;
                     case "pista":
                     case "Pista":
                         if( this.getPropietario().getDinero() >= Valor.MULTIPLICADOR_INICIAL_PISTA*this.getPrecio()){
                             if(this.getConstrucciones("Hotel").size() >= 2) {
                                 if(this.getGrupo().getPistaDeportesGrupo().size()>=this.getGrupo().getCasillas().size()){
-                                    System.out.println("Operación Cancelada: Si construyes esta pista de deporte sobrepasarás el límite de edificaciones del grupo");
+                                    Juego.consola.imprimir("Operación Cancelada: Si construyes esta pista de deporte sobrepasarás el límite de edificaciones del grupo");
                                     return;
                                 }
                                 this.getPropietario().modificarDinero(-Valor.MULTIPLICADOR_INICIAL_PISTA * this.getPrecio());
@@ -214,22 +215,22 @@ public final class Solar extends Propiedades {
                                 PistaDeporte nuevaPista = new PistaDeporte(Valor.MULTIPLICADOR_INICIAL_PISTA*this.getPrecio(), this);
                                 this.anhadirEdificio(nuevaPista);
                                 tablero.anhadirEdificio(nuevaPista);
-                                System.out.println("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
+                                Juego.consola.imprimir("Se ha edificado una piscina en " + this.getNombre() + ". La fortuna de " +  this.getPropietario().getNombre() +"\n" +
                                         "se reduce en " + Valor.MULTIPLICADOR_INICIAL_PISTA * this.getPrecio() + "€.");
                             }else{
-                                System.out.println("Tienes que tener un mínimo de 2 hoteles para construir una pista de deporte");
+                                Juego.consola.imprimir("Tienes que tener un mínimo de 2 hoteles para construir una pista de deporte");
                             }
                         }else
-                            System.out.println("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una pista de deporte");
+                            Juego.consola.imprimir("El jugador " +  this.getPropietario().getNombre() + " no dispone de dinero suficiente para edificar una pista de deporte");
                         break;
                     default:
-                        System.out.println("El tipo de edificación indicado no existe.");
+                        Juego.consola.imprimir("El tipo de edificación indicado no existe.");
                 }
             }else{
-                System.out.println( this.getPropietario().getNombre() + " no cumple los requisitos necesarios para edificar en la casilla " + this.getNombre());
+                Juego.consola.imprimir( this.getPropietario().getNombre() + " no cumple los requisitos necesarios para edificar en la casilla " + this.getNombre());
             }
         }else{
-            System.out.println( this.getPropietario().getNombre() + " no posee la casilla " + this.getNombre());
+            Juego.consola.imprimir( this.getPropietario().getNombre() + " no posee la casilla " + this.getNombre());
         }
     }
 }

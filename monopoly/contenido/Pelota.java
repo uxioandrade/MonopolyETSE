@@ -1,6 +1,7 @@
 package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 
 import java.util.Scanner;
@@ -13,21 +14,22 @@ public final class Pelota extends Avatar{
 
     private void accionRebote(int valor){
         Accion accion = new Accion(this.getTablero());
-        System.out.println("El jugador " + this.getJugador().getNombre() + " ha rebotado a " + this.getCasilla().getNombre());
+        Juego.consola.imprimir("El jugador " + this.getJugador().getNombre() + " ha rebotado a " + this.getCasilla().getNombre());
         super.getTablero().imprimirTablero();
         this.getCasilla().accionCaer(this.getJugador(),valor,accion);
         if(this.getCasilla() instanceof Propiedades){
             Propiedades comprable = (Propiedades) this.getCasilla();
             if(comprable.getPropietario().getNombre().equals("Banca")){
-                System.out.println("Desea comprar la propiedad " + this.getCasilla().getNombre() + " ? (Si/No)");
-                System.out.print("$> ");
-                Scanner scanner = new Scanner(System.in);
-                String orden = scanner.nextLine();
+                Juego.consola.imprimir("Desea comprar la propiedad " + this.getCasilla().getNombre() + " ? (Si/No)");
+                //System.out.print("$> ");
+                //Scanner scanner = new Scanner(System.in);
+                //String orden = scanner.nextLine();
+                String orden =Juego.consola.leer("$> ");
                 if(orden.equals("Si") || orden.equals("si") || orden.equals("SI")) {
                     if (this.getJugador().getDinero() >= comprable.getPrecio()) {
                         accion.comprar(this.getJugador());
                     }else{
-                        System.out.println("No tienes dinero suficiente para adquirir esta propiedad");
+                       Juego.consola.imprimir("No tienes dinero suficiente para adquirir esta propiedad");
                     }
                 }
             }
@@ -66,6 +68,6 @@ public final class Pelota extends Avatar{
                 this.accionRebote(valor);
             }
         }
-        System.out.println("La pelota ha dejado de rebotar. Volviendo al menú principal");
+        Juego.consola.imprimir("La pelota ha dejado de rebotar. Volviendo al menú principal");
     }
 }

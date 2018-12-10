@@ -1,5 +1,7 @@
 package monopoly.contenido;
 
+import monopoly.plataforma.Juego;
+
 import java.util.Random;
         
 
@@ -49,8 +51,8 @@ public class Dados {
     }
 
     public void getDescripcion(){
-        System.out.print("Dado1 = " + this.dado1 + " Dado2 = " + this.dado2);
-        if(this.sonDobles()) System.out.print(" Son Dobles!! ");
-        System.out.print("\n");
+        Juego.consola.imprimir("Dado1 = " + this.dado1 + " Dado2 = " + this.dado2);
+        if(this.sonDobles()) Juego.consola.imprimir(" Son Dobles!! ");
+        Juego.consola.imprimir("\n");
     }
 }

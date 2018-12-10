@@ -1,5 +1,7 @@
 package monopoly.contenido;
 
+import monopoly.plataforma.Juego;
+
 import java.util.ArrayList;
 
 
@@ -80,19 +82,19 @@ public class Grupo {
             aux += "alquiler: " + s.alquiler(1) + "\n},\n";
         }
         int tamanho=this.getCasillas().size();
-        System.out.println(aux);
+        Juego.consola.imprimir(aux);
         if(this.getPistaDeportesGrupo().size()<tamanho)
-            System.out.println("Aun se pueden construir "+(tamanho-this.getPistaDeportesGrupo().size())+" Pista de Deporte");
-        else System.out.println("Ya no se pueden construir más pistas de deporte.");
+            Juego.consola.imprimir("Aun se pueden construir "+(tamanho-this.getPistaDeportesGrupo().size())+" Pista de Deporte");
+        else Juego.consola.imprimir("Ya no se pueden construir más pistas de deporte.");
         if(this.getPiscinasGrupo().size()<tamanho)
-            System.out.println("Aun se pueden construir "+(tamanho-this.getPiscinasGrupo().size())+" Piscinas");
-        else System.out.println("Ya no se pueden construir más piscinas.");
+            Juego.consola.imprimir("Aun se pueden construir "+(tamanho-this.getPiscinasGrupo().size())+" Piscinas");
+        else Juego.consola.imprimir("Ya no se pueden construir más piscinas.");
         if(this.getHotlesGrupo().size()<tamanho)
-            System.out.println("Aun se pueden construir "+(tamanho-this.getHotlesGrupo().size())+" Hoteles");
-        else System.out.println("Ya no se pueden construir más hoteles.");
+            Juego.consola.imprimir("Aun se pueden construir "+(tamanho-this.getHotlesGrupo().size())+" Hoteles");
+        else Juego.consola.imprimir("Ya no se pueden construir más hoteles.");
         if(this.getCasasGrupo().size()<tamanho || this.getHotlesGrupo().size()<tamanho)
-            System.out.println("Aun se pueden construir casas");
-        else System.out.println("Ya no se pueden construir más casas.");
+            Juego.consola.imprimir("Aun se pueden construir casas");
+        else Juego.consola.imprimir("Ya no se pueden construir más casas.");
     }
     public ArrayList<Edificios> getEdificiosGrupo(){
         ArrayList<Edificios> edificios =new ArrayList<>();

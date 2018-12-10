@@ -1,6 +1,7 @@
 package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
@@ -35,7 +36,7 @@ public final class Esfinge extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, accion);
         }else {
-            System.out.println("Hoteli");
+            Juego.consola.imprimir("Hoteli");
         }
     }
 

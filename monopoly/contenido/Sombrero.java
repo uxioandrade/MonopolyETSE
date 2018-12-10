@@ -1,6 +1,7 @@
 package monopoly.contenido;
 
 import monopoly.plataforma.Accion;
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
@@ -32,7 +33,7 @@ public final class Sombrero extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, accion);
         }else {
-            System.out.println("hola");
+            Juego.consola.imprimir("hola");
         }
     }
 

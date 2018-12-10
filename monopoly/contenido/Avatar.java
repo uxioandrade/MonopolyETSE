@@ -3,6 +3,7 @@ package monopoly.contenido;
 import java.util.Iterator;
 import java.util.Random;
 
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 public abstract class Avatar {
@@ -141,7 +142,7 @@ public abstract class Avatar {
                 this.jugador.modificarDinero(Valor.getDineroVuelta());
                 this.jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
                 this.numVueltas++;
-                System.out.println("El jugador " + this.jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
+                Juego.consola.imprimir("El jugador " + this.jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
                 //Se recorren los avatares para comprobar si es necesario actualizar el dinero de pasar por la casilla de salida
                 Iterator<Avatar> avatar_i = this.tablero.getAvatares().values().iterator();
                 while(avatar_i.hasNext()) {

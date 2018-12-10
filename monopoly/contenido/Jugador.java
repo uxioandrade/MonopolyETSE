@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.plataforma.Juego;
 import monopoly.plataforma.Trato;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
@@ -260,12 +261,12 @@ public class Jugador {
                 "\npasarPorCasillaDeSalida:" + this.getPasarPorCasilla() +
                 "\npremiosInversionesOBote:" + this.getPremiosInversionesOBote() +
                 "\nvecesEnLaCarcel: " + this.getVecesCarcel() + "\n}";
-        System.out.println(aux);
+        Juego.consola.imprimir(aux);
     }
 
     public void listarTratos(){
         for(Trato t: this.tratosPropuestos){
-            System.out.println("{\n" + t + "\n},\n");
+            Juego.consola.imprimir("{\n" + t + "\n},\n");
         }
     }
 
