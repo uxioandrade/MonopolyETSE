@@ -15,6 +15,7 @@ public abstract class Avatar {
     private int numVueltas;
     private int encarcelado;
     private boolean modoAvanzado;
+    protected int numTiradas;
 
     public Avatar(Jugador jug, Tablero tablero){
         //Inicializamos el tipo a un valor arbitrario
@@ -63,6 +64,23 @@ public abstract class Avatar {
             this.casilla = cas;
             this.casilla.anhadirAvatar(this);
         }
+    }
+
+    public int getNumTiradas() {
+        return this.numTiradas;
+    }
+
+    public void setNumTiradas(int tiradas){
+        if(tiradas >= -2)
+            this.numTiradas = tiradas;
+    }
+
+    public void restarNumTiradas(){
+        this.numTiradas--;
+    }
+
+    public void sumarNumTirada(){
+        this.numTiradas++;
     }
 
     public Jugador getJugador(){

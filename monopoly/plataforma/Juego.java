@@ -5,6 +5,8 @@ import monopoly.contenido.*;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import monopoly.excepciones.*;
+
 
 public class Juego implements Comando{
 
@@ -72,7 +74,11 @@ public class Juego implements Comando{
                     this.deshipotecar(partes);
                     break;
                 case "lanzar":
-                    this.lanzar(partes);
+                    try {
+                        this.lanzar(partes);
+                    }catch(ExcepcionesDinamicaTurno ex){
+                        consola.imprimir(ex.getMensaje());
+                    }
                     break;
                 case "acabar":
                     this.acabar(partes);
@@ -185,7 +191,7 @@ public class Juego implements Comando{
         else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
-    public void lanzar(String[] partes){
+    public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno{
         if(partes.length>=2 && partes[1].equals("dados")) {
             if (this.countTiradas == 0) {//si tienes tiradas pendientes te muestra la tirada
                 this.dados.lanzarDados();
@@ -194,19 +200,30 @@ public class Juego implements Comando{
                 this.dados.getDescripcion();
                 if (jugadorActual.getAvatar().getEncarcelado() == 0) {//si no esta encarcelado
                     if(jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()) {
-                        if(((Coche) jugadorActual.getAvatar()).getNumTiradas() > 0){
-                            ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
-                        }else if(((Coche) jugadorActual.getAvatar()).getNumTiradas() == 0) {
+                        if(jugadorActual.getAvatar().getNumTiradas() > 0){
+                            jugadorActual.getAvatar().moverCasilla(tirada);
+                        }else if(jugadorActual.getAvatar().getNumTiradas() == 0) {
                             consola.imprimir("El coche ya ha realizado todas las tiradas que podía en su turno");
                         }else{
-                            ((Coche) jugadorActual.getAvatar()).moverCasilla(tirada);
-                            consola.imprimir(jugadorActual.getNombre() + " aún le quedan " + (((Coche) jugadorActual.getAvatar()).getNumTiradas()*-1 + 1) + " turnos para poder volver a tirar");
+                            jugadorActual.getAvatar().moverCasilla(tirada);
+                            consola.imprimir(jugadorActual.getNombre() + " aún le quedan " + ( jugadorActual.getAvatar().getNumTiradas()*-1 + 1) + " turnos para poder volver a tirar");
                         }
-                        if(((Coche) jugadorActual.getAvatar()).getNumTiradas() <= 0) countTiradas++;
+                        if(jugadorActual.getAvatar().getNumTiradas() <= 0) countTiradas++;
                         if(jugadorActual.getAvatar().getEncarcelado() != 0){
                             this.countTiradas++;
-                            ((Coche) jugadorActual.getAvatar()).setNumTiradas(0);
+                            jugadorActual.getAvatar().setNumTiradas(0);
                         }
+                    }else if((jugadorActual.getAvatar() instanceof Esfinge || jugadorActual.getAvatar() instanceof Sombrero )&& jugadorActual.getAvatar().getModoAvanzado()){
+                        if(jugadorActual.getAvatar().getNumTiradas() > 0 && jugadorActual.getAvatar().getEncarcelado() == 0) {
+                            jugadorActual.getAvatar().moverCasilla(tirada);
+                            jugadorActual.getAvatar().restarNumTiradas();
+                        }else if (jugadorActual.getAvatar().getEncarcelado() != 0){
+                            this.countTiradas++;
+                            jugadorActual.getAvatar().setNumTiradas(0);
+                        }else if(jugadorActual.getAvatar().getNumTiradas() == 0) {
+                            consola.imprimir("El avatar ya ha realizado todas las tiradas que podía en su turno");
+                        }
+                        if(jugadorActual.getAvatar().getNumTiradas() <= 0) countTiradas++;
                     }else {
                         if (!dados.sonDobles())
                             this.countTiradas++;//si no son dobles aumentamos una tirada si fuesen dobles no se aumenta porque tendria derecho a volver a tirar
@@ -269,7 +286,7 @@ public class Juego implements Comando{
                 }
                 tablero.imprimirTablero();
             } else
-                consola.imprimir("No puedes tirar más veces en este turno");
+                throw new ExcepcionesDinamicaTurno("No puedes tirar más veces en este turno");
         }
         else consola.imprimir("Comando incorrecto");
     }
@@ -283,9 +300,11 @@ public class Juego implements Comando{
                     this.turno++;
                     if(jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()) {
                         ((Coche) jugadorActual.getAvatar()).setPoderComprar(true);
-                        ((Coche) jugadorActual.getAvatar()).anhadirTirada();
+                        ((Coche) jugadorActual.getAvatar()).sumarNumTirada();
                         if(jugadorActual.getAvatar().getEncarcelado() != 0)
                             ((Coche) jugadorActual.getAvatar()).setNumTiradas(1);
+                     }else if((jugadorActual.getAvatar() instanceof Esfinge || jugadorActual.getAvatar() instanceof Sombrero) && jugadorActual.getAvatar().getModoAvanzado()){
+                        jugadorActual.getAvatar().setNumTiradas(3);
                     }
                     for(Propiedades p: Valor.getComprables()){
                        p.reducirTurnosTratos(jugadorActual);
@@ -387,5 +406,21 @@ public class Juego implements Comando{
         }
         else
             consola.imprimir("Comando incorrecto");
+    }
+
+    public void trato(String partes[]){
+        if(partes.length >= 5){
+            if(partes.length == 5){
+
+            }else if(partes.length == 7){
+
+            }else if(partes.length == 9){
+
+            }else{
+                
+            }
+        }else{
+            consola.imprimir("Comando incorrecto");
+        }
     }
 }

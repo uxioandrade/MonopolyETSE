@@ -11,10 +11,12 @@ public final class Esfinge extends Avatar{
 
     private double historialDinero; //Revisa
     private ArrayList<Propiedades> historialCompras;
+    private int numTiradas;
 
     public Esfinge(Jugador jug, Tablero tablero){
         super(jug,tablero);
         this.historialCompras = new ArrayList<>();
+        super.numTiradas = 3;
     }
 
     public double getHistorialDinero() {
@@ -36,31 +38,42 @@ public final class Esfinge extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, accion);
         }else {
-            Juego.consola.imprimir("Hoteli");
+            super.numTiradas = 0;
+            Juego.consola.imprimir("La esfinge ya ha acabado sus tiradas este turno");
         }
     }
+
+    private void moverACasilla(int valor){
+        this.getCasilla().quitarAvatar(this);
+        this.setCasilla(Valor.casillas.get(valor));
+        this.getCasilla().anhadirAvatar(this);
+    }
+
+
 
     private void moverZigZag(int valor) {
         if (this.getCasilla().getPosicion() < 10){
             if(valor % 2 == 0)
-                this.moverEnBasico(valor + this.getCasilla().getPosicion() % 10);
+                this.moverACasilla((valor + this.getCasilla().getPosicion()) % 10);
             else
-                this.moverEnBasico(30 - (valor + this.getCasilla().getPosicion() % 10));
+                this.moverACasilla(30 - ((valor + this.getCasilla().getPosicion()) % 10));
         } else if (this.getCasilla().getPosicion() < 20) {
-            this.getCasilla().quitarAvatar(this);
-            this.setCasilla(Valor.casillas.get(21));
-            this.getCasilla().anhadirAvatar(this);
-            this.moverZigZag(valor - 1);
+            this.moverACasilla(21);
+            if(valor % 2 == 0)
+                this.moverACasilla(20 + ((valor - 1 + this.getCasilla().getPosicion() - 20) % 10));
+            else
+                this.moverACasilla(10 - ((valor - 1 + this.getCasilla().getPosicion() -20 ) % 10));
         } else if (this.getCasilla().getPosicion() < 30) {
             if(valor % 2 == 0)
-                this.moverEnBasico(20 + ((valor + this.getCasilla().getPosicion() - 20) % 10));
+                this.moverACasilla(20 + ((valor + this.getCasilla().getPosicion() - 20) % 10));
             else
-                this.moverEnBasico(9 - ((valor + this.getCasilla().getPosicion() -20 ) % 10));
+                this.moverACasilla(10 - ((valor + this.getCasilla().getPosicion() -20 ) % 10));
         } else {
-            this.getCasilla().quitarAvatar(this);
-            this.setCasilla(Valor.casillas.get(1));
-            this.getCasilla().anhadirAvatar(this);
-            this.moverZigZag(valor - 1);
+            this.moverACasilla(1);
+            if(valor % 2 == 0)
+                this.moverACasilla((valor - 1 + this.getCasilla().getPosicion()) % 10);
+            else
+                this.moverACasilla(30 - ((valor - 1 + this.getCasilla().getPosicion()) % 10));
         }
     }
 }

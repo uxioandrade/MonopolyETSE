@@ -11,10 +11,25 @@ public final class Sombrero extends Avatar{
 
     private double historialDinero;
     private ArrayList<Propiedades> historialCompras;
+    private int numTiradas;
 
     public Sombrero(Jugador jug, Tablero tablero){
         super(jug,tablero);
         this.historialCompras = new ArrayList<>();
+        super.numTiradas = 3;
+    }
+
+    public int getNumTiradas() {
+        return this.numTiradas;
+    }
+
+    public void setNumTiradas(int tiradas){
+        if(tiradas >= 0)
+            this.numTiradas = tiradas;
+    }
+
+    public void restarNumTiradas(){
+        this.numTiradas--;
     }
 
     public double getHistorialDinero() {
@@ -33,31 +48,40 @@ public final class Sombrero extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, accion);
         }else {
-            Juego.consola.imprimir("hola");
+            super.numTiradas = 0;
+            Juego.consola.imprimir("El sombrero ya ha acabado sus tiradas este turno");
         }
+    }
+
+    private void moverACasilla(int valor){
+        this.getCasilla().quitarAvatar(this);
+        this.setCasilla(Valor.casillas.get(valor));
+        this.getCasilla().anhadirAvatar(this);
     }
 
     private void moverZigZag(int valor) {
         if (this.getCasilla().getPosicion() < 10){
-            this.getCasilla().quitarAvatar(this);
-            this.setCasilla(Valor.casillas.get(11));
-            this.getCasilla().anhadirAvatar(this);
-            this.moverZigZag(valor - 1);
+            this.moverACasilla(11);
+            if(valor % 2 == 0)
+                this.moverACasilla(20 + ((valor - 1 + this.getCasilla().getPosicion() - 10) % 10));
+            else
+                this.moverACasilla(39 - ((valor - 1 + this.getCasilla().getPosicion() - 10) % 10));
         } else if (this.getCasilla().getPosicion() < 20) {
             if(valor % 2 == 0)
-                this.moverEnBasico(20 + ((valor + this.getCasilla().getPosicion() - 10) % 10));
+                this.moverACasilla(20 + ((valor + this.getCasilla().getPosicion() - 10) % 10));
             else
-                this.moverEnBasico(39 - ((valor + this.getCasilla().getPosicion() - 10) % 10));
+                this.moverACasilla(39 - ((valor + this.getCasilla().getPosicion() - 10) % 10));
         } else if (this.getCasilla().getPosicion() < 30) {
-            this.getCasilla().quitarAvatar(this);
-            this.setCasilla(Valor.casillas.get(31));
-            this.getCasilla().anhadirAvatar(this);
-            this.moverZigZag(valor - 1);
+            this.moverACasilla(31);
+            if(valor % 2 == 0)
+                this.moverACasilla(30 + ((valor - 1 + this.getCasilla().getPosicion() - 30) % 10));
+            else
+                this.moverACasilla(20 - ((valor - 1+ this.getCasilla().getPosicion() - 30 ) % 10));
         } else {
             if(valor % 2 == 0)
-                this.moverEnBasico(30 + ((valor + this.getCasilla().getPosicion() - 30) % 10));
+                this.moverACasilla(30 + ((valor + this.getCasilla().getPosicion() - 30) % 10));
             else
-                this.moverEnBasico(19 - ((valor + this.getCasilla().getPosicion() - 30 ) % 10));
+                this.moverACasilla(20 - ((valor + this.getCasilla().getPosicion() - 30 ) % 10));
         }
     }
 

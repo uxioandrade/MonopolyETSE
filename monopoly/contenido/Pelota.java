@@ -10,6 +10,7 @@ public final class Pelota extends Avatar{
 
     public Pelota(Jugador jug, Tablero tablero){
         super(jug,tablero);
+        super.numTiradas = 1;
     }
 
     private void accionRebote(int valor){

@@ -2,6 +2,7 @@ package monopoly.plataforma;
 
 import monopoly.contenido.Dados;
 import monopoly.contenido.Jugador;
+import monopoly.excepciones.*;
 import monopoly.plataforma.Accion;
 import monopoly.plataforma.Tablero;
 
@@ -16,7 +17,7 @@ public interface Comando {
     public void vender(String[] partes);
     public void hipotecar(String[] partes);
     public void deshipotecar(String[] partes);
-    public void lanzar(String[] partes);
+    public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno;
     public void acabar(String partes[]);
     public void salir(String partes[]);
     public void listar(String partes[]);
@@ -24,5 +25,6 @@ public interface Comando {
     public void ver(String partes[]);
     public void cambiar(String partes[]);
     public void estadisticas(String partes[]);
+    public void trato(String partes[]);
 
 }
