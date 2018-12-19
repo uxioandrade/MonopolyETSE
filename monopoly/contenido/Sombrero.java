@@ -11,7 +11,8 @@ public final class Sombrero extends Avatar{
 
     private double historialDinero;
     private ArrayList<Propiedades> historialCompras;
-    private int numTiradas;
+
+    public String getTipo(){ return "Sombrero";}
 
     public Sombrero(Jugador jug, Tablero tablero){
         super(jug,tablero);
@@ -19,17 +20,9 @@ public final class Sombrero extends Avatar{
         super.numTiradas = 3;
     }
 
-    public int getNumTiradas() {
-        return this.numTiradas;
-    }
-
     public void setNumTiradas(int tiradas){
         if(tiradas >= 0)
-            this.numTiradas = tiradas;
-    }
-
-    public void restarNumTiradas(){
-        this.numTiradas--;
+            super.numTiradas = tiradas;
     }
 
     public double getHistorialDinero() {

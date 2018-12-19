@@ -16,7 +16,7 @@ public final class CartaPagar extends Carta{
     public CartaPagar(double cantidad, boolean banca, String descripcion){
         this.cantidad = cantidad;
         this.banca = banca;
-        super.setDescripcion(descripcion);
+        super.Carta(descripcion);
     }
 
     public double getCantidad(Jugador jugador, Tablero tablero){

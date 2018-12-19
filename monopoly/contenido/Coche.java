@@ -55,4 +55,6 @@ public final class Coche extends Avatar{
         this.poderComprar = valor;
     }
 
+    public String getTipo(){ return "Coche";}
+
 }

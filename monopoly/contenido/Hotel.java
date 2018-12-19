@@ -10,4 +10,5 @@ public final class Hotel extends Edificios{
         super.setPrecio(precio*0.6);
     }
 
+    public String getNombre(){return "Hotel-"+super.nombre;}
 }

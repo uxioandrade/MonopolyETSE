@@ -69,4 +69,5 @@ public final class Pelota extends Avatar{
         }
         Juego.consola.imprimir("La pelota ha dejado de rebotar. Volviendo al menú principal");
     }
+    public String getTipo(){ return "Pelota";}
 }

@@ -17,7 +17,7 @@ public final class CartaMovimiento extends Carta{
         this.accionFinanciera = accionFinanciera;
         if(alquiler >= 0 && alquiler <= 2)
             this.alquiler = alquiler;
-        super.setDescripcion(descripcion);
+        super.Carta(descripcion);
     }
 
     public int getPosicion(){

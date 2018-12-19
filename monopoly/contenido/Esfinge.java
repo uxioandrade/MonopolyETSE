@@ -13,7 +13,6 @@ public final class Esfinge extends Avatar{
     private double historialCompras;
     private ArrayList<Propiedades> historialCompradas;
     private double historialSalida;
-    private int numTiradas;
 
     public Esfinge(Jugador jug, Tablero tablero){
         super(jug,tablero);
@@ -42,7 +41,7 @@ public final class Esfinge extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, operacion);
         }else {
-            if(this.numTiradas==3){
+            if(super.numTiradas==3){
                 this.deshacerHistorial();
             }
             super.numTiradas = 0;
@@ -101,4 +100,7 @@ public final class Esfinge extends Avatar{
          */
         resetHistorial();
     }
+
+    public String getTipo(){ return "Esfinge";}
+
 }

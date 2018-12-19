@@ -10,4 +10,6 @@ public final class Casa extends Edificios{
         super.setPrecio(precio*0.6);
     }
 
-}
+    public String getNombre(){return "Casa-"+super.nombre;}
+
+    }

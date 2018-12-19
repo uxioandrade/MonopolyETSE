@@ -7,11 +7,11 @@ import java.util.HashMap;
 
 public abstract class Propiedades extends Casilla {
 
-    private double precio;
-    private boolean hipotecado;
-    private Jugador propietario;
-    private double rentabilidad;
-    private HashMap<Jugador,Integer> jugadoresExcluidos;
+    protected double precio;
+    protected boolean hipotecado;
+    protected Jugador propietario;
+    protected double rentabilidad;
+    protected HashMap<Jugador,Integer> jugadoresExcluidos;
 
     public Propiedades(String nombre, int posicion){
         super(nombre,posicion);

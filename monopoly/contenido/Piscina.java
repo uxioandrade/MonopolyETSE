@@ -9,4 +9,6 @@ public final class Piscina extends Edificios{
     public void setPrecio(double precio){
         super.setPrecio(precio*0.4);
     }
+
+    public  String getNombre(){return "Piscina-"+this.nombre;}
 }
