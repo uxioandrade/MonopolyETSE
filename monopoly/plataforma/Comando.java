@@ -1,13 +1,6 @@
 package monopoly.plataforma;
 
-import monopoly.contenido.Dados;
-import monopoly.contenido.Jugador;
 import monopoly.excepciones.*;
-import monopoly.plataforma.Accion;
-import monopoly.plataforma.Tablero;
-
-import java.util.ArrayList;
-import java.util.SplittableRandom;
 
 public interface Comando {
 

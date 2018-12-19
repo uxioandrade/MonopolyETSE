@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
@@ -43,10 +43,10 @@ public final class Sombrero extends Avatar{
     public void resetHistorialCompras(){}
 
     public void moverEnAvanzado(int valor){
-        Accion accion = new Accion(super.getTablero());
+        Operacion operacion = new Operacion(super.getTablero());
         if(valor > 4){
             this.moverZigZag(valor);
-            this.getCasilla().accionCaer(this.getJugador(), valor, accion);
+            this.getCasilla().accionCaer(this.getJugador(), valor, operacion);
         }else {
             super.numTiradas = 0;
             Juego.consola.imprimir("El sombrero ya ha acabado sus tiradas este turno");

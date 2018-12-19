@@ -2,7 +2,7 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Valor;
 
 public final class Coche extends Avatar{
@@ -16,7 +16,7 @@ public final class Coche extends Avatar{
     }
 
     public void moverEnAvanzado(int valor){
-        Accion accion = new Accion(this.getTablero());
+        Operacion operacion = new Operacion(this.getTablero());
         if(super.numTiradas > 0) {
             if (valor > 4) {
                 if (super.numTiradas == 1) {
@@ -31,11 +31,11 @@ public final class Coche extends Avatar{
                 }
                 Juego.consola.imprimir("El avatar " + this.getId() + " avanza " + valor + " posiciones, desde " + this.getCasilla().getNombre() + " hasta " + Valor.casillas.get((this.getCasilla().getPosicion() + valor) % 40).getNombre());
                 this.moverEnBasico(valor);
-                this.getCasilla().accionCaer(this.getJugador(), valor, accion);
+                this.getCasilla().accionCaer(this.getJugador(), valor, operacion);
             } else {
                 if (super.numTiradas == 1) {
                     this.retrocederCasillas(valor);
-                    this.getCasilla().accionCaer(this.getJugador(), valor, accion);
+                    this.getCasilla().accionCaer(this.getJugador(), valor, operacion);
                     super.numTiradas = -2;
                     Juego.consola.imprimir("El coche ha obtenido un valor menor o igual de 4, retrocede " + valor + " casillas y estará 2 turnos sin poder tirar");
                 } else {

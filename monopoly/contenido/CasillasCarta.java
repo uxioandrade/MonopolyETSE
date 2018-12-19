@@ -1,12 +1,11 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public final class CasillasCarta extends Casilla {
+public final class CasillasCarta extends Accion {
 
     private ArrayList<Carta> cartas;
 
@@ -33,10 +32,9 @@ public final class CasillasCarta extends Casilla {
         }
     }
 
-    public void accionCaer(Jugador jugador,int tirada, Accion accion){
+    public void accionCaer(Jugador jugador,int tirada, Operacion operacion){
         ArrayList<Carta> casCaja = barajarCartas(this.cartas);
         Carta cartaEscogida = casCaja.get(elegirCarta()-1);
-        cartaEscogida.accionCarta(jugador,accion.getTablero());
+        cartaEscogida.accionCarta(jugador, operacion.getTablero());
     }
-
 }

@@ -5,10 +5,10 @@ import java.util.Scanner;
 
 import monopoly.contenido.*;
 
-public class Accion {
+public class Operacion {
     private Tablero tablero;
 
-    public Accion(Tablero tablero) {
+    public Operacion(Tablero tablero) {
         if (tablero != null) {
             this.tablero = tablero;
         }
@@ -208,7 +208,7 @@ public class Accion {
 
     public boolean menuHipotecar(Jugador jugador,Tablero tablero, double deuda){ //Devuelve true si el jugador ya ha afrontado su deuda
         System.out.println(jugador.getNombre() + " entró en el menú hipotecar");
-        Accion accion = new Accion(tablero);
+        Operacion operacion = new Operacion(tablero);
         while(true) {
             System.out.print("$> ");
             Scanner scanner = new Scanner(System.in);
@@ -224,7 +224,7 @@ public class Accion {
                     }
                     if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
                     else if(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null) {//si existe la casilla
-                        accion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]), jugador);
+                        operacion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]), jugador);
                         if(jugador.getDinero() >= deuda){
                             System.out.println("El jugador " + jugador.getNombre() + " ya tiene dinero suficiente para afrontar su deuda");
                             return true;
@@ -239,7 +239,7 @@ public class Accion {
                         for(int i = 2; i < partes.length - 2;i++) {
                             auxCasilla += partes[i] + " ";
                         }
-                        accion.venderConstrucciones(jugador,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
+                        operacion.venderConstrucciones(jugador,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
                     }else{
                         System.out.println("Comando incorrecto");
                     }

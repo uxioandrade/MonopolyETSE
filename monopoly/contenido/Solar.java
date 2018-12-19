@@ -1,7 +1,7 @@
 package monopoly.contenido;
 
 import java.util.ArrayList;
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
@@ -111,11 +111,13 @@ public final class Solar extends Propiedades {
         return  construccionesTipo;
     }
 
-    public void pagarAlquiler(Jugador jugador, int tirada, Accion accion){
+    public void pagarAlquiler(Jugador jugador, int tirada, Operacion operacion){
         if (jugador.getDinero() >= this.alquiler(tirada)){
             //Se resta el alquiler del jugador que ha caído en el servicio
             jugador.modificarDinero(-this.alquiler(tirada));
             jugador.modificarPagoAlquileres(this.alquiler(tirada));
+            if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+                ((Esfinge)jugador.getAvatar()).setHistorialAlquileres(this.alquiler(tirada));
             Juego.consola.imprimir("Se han pagado " + this.alquiler(tirada) + "€ de alquiler.");
             //Se aumenta el dinero del propietario
             super.getPropietario().modificarDinero(this.alquiler(tirada));
@@ -124,8 +126,8 @@ public final class Solar extends Propiedades {
             this.grupo.sumarRentabilidad(this.alquiler(tirada));
         } else {
             Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),this.alquiler(tirada))){
-                pagarAlquiler(jugador,tirada,accion);
+            if(operacion.menuHipotecar(jugador, operacion.getTablero(),this.alquiler(tirada))){
+                pagarAlquiler(jugador,tirada, operacion);
             }
         }
     }
@@ -232,5 +234,32 @@ public final class Solar extends Propiedades {
         }else{
             Juego.consola.imprimir( this.getPropietario().getNombre() + " no posee la casilla " + this.getNombre());
         }
+    }
+    @Override
+    public String toString(){
+        String aux =super.toString().substring(0,super.toString().length()-2);
+        aux+="Tipo: Solar\n" +
+             "Grupo: " + ((Solar) this).getGrupo().getNombre() + "\n" +
+             "Precio: " + ((Solar) this).getPrecio() + "€\n" +
+             "Alquiler Actual: " + ((Solar) this).alquiler(1) + "€\n" +
+             "Alquiler Básico: " + ((Solar) this).getPrecio() * 0.1 + "€\n" +
+             "Casas: " + ((Solar) this).getConstrucciones("casa").size() +  " | valor casa " + Valor.MULTIPLICADOR_INICIAL_CASA * ((Solar) this).getPrecio() + "€\n" +
+             "Hoteles: " + ((Solar) this).getConstrucciones("hotel").size() + " | valor hotel " + Valor.MULTIPLICADOR_INICIAL_HOTEL * ((Solar) this).getPrecio() + "€\n" +
+             "Piscinas: " + ((Solar) this).getConstrucciones("piscina").size() +  " | valor piscina " + Valor.MULTIPLICADOR_INICIAL_PISCINA * ((Solar) this).getPrecio() + "€\n" +
+             "Pistas de Deporte: " + ((Solar) this).getConstrucciones("pista").size() + " | valor pista de deporte " + Valor.MULTIPLICADOR_INICIAL_PISTA* ((Solar) this).getPrecio() + "€\n" +
+             "Alquiler una casa: " + 5*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler dos casas: " + 15*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler tres casas: " + 35*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler cuatro casas: " + 50*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler hotel: " + 70*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler piscina: " + 25*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Alquiler pista de deporte: " + 25*((Solar) this).getPrecio()*0.1 + "€\n" +
+             "Hipoteca: " + ((Solar) this).getHipoteca() + "€\n";
+        if(super.getPropietario().getNombre().equals("Banca"))
+            aux += "Propietario: " + super.getPropietario().getNombre() + "\n";
+        if(super.getHipotecado())
+            aux += "Solar hipotecado, paga " + 1.1*super.getHipoteca() + " para deshipotecar" + "\n";
+        aux+="}\n";
+        return aux;
     }
 }

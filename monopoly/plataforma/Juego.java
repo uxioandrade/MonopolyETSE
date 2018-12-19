@@ -2,9 +2,8 @@ package monopoly.plataforma;
 
 import monopoly.contenido.*;
 
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 import monopoly.excepciones.*;
 
 
@@ -17,7 +16,7 @@ public class Juego implements Comando{
     private int vecesDobles;
     private int tirada;
     private int turno;
-    private Accion accion;
+    private Operacion operacion;
     private Boolean salir;
     private Jugador jugadorActual;
     static ArrayList<String> turnosJugadores;//ArrayList que guarda el orden de los jugadores (0-primero)...
@@ -27,13 +26,13 @@ public class Juego implements Comando{
         consola=new ConsolaNormal();
         Valor.crearGrupos();//creamos los grupos almacenados en valor
         this.tablero = new Tablero();
-        this.accion = new Accion(this.tablero);
+        this.operacion = new Operacion(this.tablero);
         // Inicializar valores
         System.out.println("Bienvenido a MonopolyETSE");
         System.out.println("Antes de comezar a jugar debeis introducir los jugadores de la siguiente forma:");
         System.out.println("\nintroducir jugador <nombre> <tipo>");
 
-        this.accion.crearJugadores();//antes de empezar el menu de partida creamos los jugadores
+        this.operacion.crearJugadores();//antes de empezar el menu de partida creamos los jugadores
 
         this.tablero.imprimirTablero();
         this.dados = new Dados();
@@ -144,12 +143,12 @@ public class Juego implements Comando{
     }
 
     public void comprar(){
-        this.accion.comprar(jugadorActual);
+        this.operacion.comprar(jugadorActual);
     }
 
     public void edificar(String[] partes){
         if(partes.length ==2){
-            accion.edificar(jugadorActual,partes[1]);
+            operacion.edificar(jugadorActual,partes[1]);
         }else{
             consola.imprimir("Comando incorrecto");
         }
@@ -162,7 +161,7 @@ public class Juego implements Comando{
             for(int i = 2; i < partes.length - 2;i++) {
                 auxCasilla += partes[i] + " ";
             }
-            accion.venderConstrucciones(jugadorActual,tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
+            operacion.venderConstrucciones(jugadorActual,tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
         }else{
             consola.imprimir("Comando incorrecto");
         }
@@ -176,7 +175,7 @@ public class Juego implements Comando{
         }
         if(partes.length<2 || partes.length >4) consola.imprimir("\n Comando incorrecto");
         else if(tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null)//si existe la casilla
-            accion.hipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),jugadorActual);
+            operacion.hipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),jugadorActual);
         else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
@@ -187,7 +186,7 @@ public class Juego implements Comando{
         }
         if (partes.length < 2 || partes.length > 4) consola.imprimir("\n Comando incorrecto");
         else if (tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]) != null)//si existe la casilla
-            accion.desHipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]), jugadorActual);
+            operacion.desHipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]), jugadorActual);
         else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
@@ -229,7 +228,7 @@ public class Juego implements Comando{
                             this.countTiradas++;//si no son dobles aumentamos una tirada si fuesen dobles no se aumenta porque tendria derecho a volver a tirar
                         else vecesDobles++;//si son dobles incrementamos veces dobles
                         if (vecesDobles >= 3) {//si saco dobles 3 veces va a la carcel y se cancelan sus acciones pendientes
-                            accion.irCarcel(jugadorActual);
+                            operacion.irCarcel(jugadorActual);
                             this.countTiradas++;
                             consola.imprimir("El jugador " + jugadorActual.getNombre() + " ha sacado dobles 3 veces.");
                         } else {
@@ -239,7 +238,7 @@ public class Juego implements Comando{
                                 consola.imprimir("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
                             jugadorActual.getAvatar().moverCasilla(tirada);
                             if(!(jugadorActual.getAvatar() instanceof Pelota && jugadorActual.getAvatar().getModoAvanzado()))
-                                jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
+                                jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, operacion);
                             if (jugadorActual.getAvatar().getEncarcelado() != 0) countTiradas++;
                         }
                     }
@@ -263,14 +262,14 @@ public class Juego implements Comando{
                             }
                         }
                         jugadorActual.getAvatar().moverCasilla(tirada);
-                        jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada,accion);
+                        jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, operacion);
                         this.countTiradas++;
                     } else {
                         jugadorActual.getAvatar().modificarEncarcelado(1);
                         this.countTiradas++;
                         if (jugadorActual.getAvatar().getEncarcelado() > 3) {
                             this.countTiradas = 0;
-                            accion.salirCarcel(jugadorActual);
+                            operacion.salirCarcel(jugadorActual);
                             //System.out.println("El avatar " + jugadorActual.getAvatar().getId() + " avanza " + tirada + " posiciones, desde " + this.jugadorActual.getAvatar().getCasilla().getNombre() + " hasta " + Valor.casillas.get((jugadorActual.getAvatar().getCasilla().getPosicion() + tirada) % 40).getNombre());
                             jugadorActual.getAvatar().moverCasilla(tirada);
                             if(jugadorActual.getAvatar() instanceof Coche && jugadorActual.getAvatar().getModoAvanzado()){
@@ -278,7 +277,7 @@ public class Juego implements Comando{
                                     ((Coche) jugadorActual.getAvatar()).setNumTiradas(3);
                             }
                             countTiradas++;
-                            jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, accion);
+                            jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, operacion);
                         }
                         else
                             consola.imprimir("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
@@ -325,7 +324,7 @@ public class Juego implements Comando{
     public void salir(String partes[]){
         if(partes.length==2 && partes[1].equals("carcel")){
             if(countTiradas == 0){
-                accion.salirCarcel(jugadorActual);
+                operacion.salirCarcel(jugadorActual);
                 this.countTiradas = 0;
             }else{
                 if(jugadorActual.getAvatar().getEncarcelado()>0)

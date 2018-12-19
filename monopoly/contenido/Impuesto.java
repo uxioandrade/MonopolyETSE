@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 
@@ -20,7 +20,7 @@ public final class Impuesto extends Casilla {
         return apagar;
     }
 
-    public void pagarImpuesto(Jugador jugador, Accion accion) {
+    public void pagarImpuesto(Jugador jugador, Operacion operacion) {
         Juego.consola.imprimir(jugador.getNombre() + ",debes pagar un impuesto de " + apagar + " debido a " + jugador.getAvatar().getCasilla().getNombre());
         //Comprueba que el jugador tenga dinero suficiente para pagar
         if (apagar <= jugador.getDinero()) {
@@ -30,12 +30,21 @@ public final class Impuesto extends Casilla {
             jugador.modificarPagoImpuestos(apagar);
         } else {
             Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if (accion.menuHipotecar(jugador, accion.getTablero(), apagar))
-                pagarImpuesto(jugador,accion);
+            if (operacion.menuHipotecar(jugador, operacion.getTablero(), apagar))
+                pagarImpuesto(jugador, operacion);
         }
     }
 
-    public void accionCaer(Jugador jugador, int tirada, Accion accion){
-        this.pagarImpuesto(jugador,accion);
+    public void accionCaer(Jugador jugador, int tirada, Operacion operacion){
+        this.pagarImpuesto(jugador, operacion);
+    }
+
+    @Override
+    public String toString(){
+        String aux =super.toString().substring(0,super.toString().length()-2);
+        aux += "Tipo: " + "Impuestos" + "\n" +
+                "A pagar: " + ((Impuesto)this).getApagar() + "\n";
+        aux+="}\n";
+        return aux;
     }
 }
