@@ -468,7 +468,15 @@ public class Juego implements Comando{
                     if (parte2.charAt(0) >= 48 && parte2.charAt(0) <= 57) {
                         Trato trato = new Trato(jugadorActual, Integer.parseInt(parte2), (Propiedades) tablero.getCasillas().get(parte1));
                     } else {
-                        Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1), (Propiedades) tablero.getCasillas().get(parte2));
+                        if (parte1.charAt(0) >= 48 && parte2.charAt(0) <= 57) {
+                            Trato trato = new Trato(jugadorActual, Integer.parseInt(parte1), (Propiedades) tablero.getCasillas().get(parte2));
+                        } else {
+                            if (jugadorActual.getPropiedades().contains((Propiedades) tablero.getCasillas().get(parte1))) {
+                                Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1), (Propiedades) tablero.getCasillas().get(parte2));
+                            } else {
+                                Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte2), (Propiedades) tablero.getCasillas().get(parte1));
+                            }
+                        }
                     }
                 }else{
                     Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1),(Propiedades) tablero.getCasillas().get(parte2),(Propiedades) tablero.getCasillas().get(parte3),turnos);
