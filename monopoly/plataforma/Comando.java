@@ -11,12 +11,12 @@ public interface Comando {
     public void hipotecar(String[] partes);
     public void deshipotecar(String[] partes);
     public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno;
-    public void acabar(String partes[]);
+    public void acabar(String partes[]) throws ExcepcionesDinamicaTurno;
     public void salir(String partes[]);
     public void listar(String partes[]);
     public void jugador(String partes[]);
     public void ver(String partes[]);
-    public void cambiar(String partes[]);
+    public void cambiar(String partes[]) throws ExcepcionesDinamicaTurno;
     public void estadisticas(String partes[]);
     public void trato(String partes[]);
     public void aceptarTrato(String partes[]);

@@ -80,7 +80,11 @@ public class Juego implements Comando{
                     }
                     break;
                 case "acabar":
-                    this.acabar(partes);
+                    try {
+                        this.acabar(partes);
+                    }catch(ExcepcionesDinamicaTurno ex){
+                        consola.imprimir(ex.getMensaje());
+                    }
                     break;
                 case "jugador"://describe al jugador actual
                     this.jugador(partes);
@@ -95,7 +99,11 @@ public class Juego implements Comando{
                     this.ver(partes);
                     break;
                 case "cambiar":
-                    this.cambiar(partes);
+                    try {
+                        this.cambiar(partes);
+                    }catch(ExcepcionesDinamicaTurno ex){
+                        consola.imprimir(ex.getMensaje());
+                    }
                     break;
                 case "estadisticas":
                     this.estadisticas(partes);
@@ -300,7 +308,7 @@ public class Juego implements Comando{
         else consola.imprimir("Comando incorrecto");
     }
 
-    public void acabar(String partes[]){
+    public void acabar(String partes[]) throws ExcepcionesDinamicaTurno{
         if(partes.length != 2){
             consola.imprimir("Comando incorrecto");
         }else{
@@ -323,7 +331,7 @@ public class Juego implements Comando{
                     this.vecesDobles = 0;
                     consola.imprimir("El jugador actual es " + jugadorActual.getNombre());
                 } else {
-                    consola.imprimir("No se puede finalizar el turno sin haber tirado los dados");
+                    throw new ExcepcionesDinamicaTurno("No se puede finalizar el turno sin haber tirado los dados");
                 }
             }else{
                 consola.imprimir("Comando incorrecto");
@@ -388,7 +396,7 @@ public class Juego implements Comando{
             consola.imprimir("Comando incorrecto");
     }
 
-    public void cambiar(String partes[]){
+    public void cambiar(String partes[]) throws ExcepcionesDinamicaTurno{
         if(partes.length==2 && partes[1].equals("modo")){
             if(this.countTiradas==0) {
                 tablero.cambiarModo(jugadorActual);
@@ -397,7 +405,7 @@ public class Juego implements Comando{
                 else
                     consola.imprimir("El jugador " + jugadorActual.getNombre() + " ya no está en modo avanzado");
             }else{
-                consola.imprimir("El modo de movimiento debe ser cambiado antes de tirar los dados");
+                throw new ExcepcionesDinamicaTurno("El modo de movimiento debe ser cambiado antes de tirar los dados");
             }
         }else{
             consola.imprimir("Comando incorrecto");
