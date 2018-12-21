@@ -8,13 +8,13 @@ import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 public abstract class Avatar {
 
-    private String id;
-    private Casilla casilla;
-    private Jugador jugador;
-    private Tablero tablero;
-    private int numVueltas;
-    private int encarcelado;
-    private boolean modoAvanzado;
+    protected String id;
+    protected Casilla casilla;
+    protected Jugador jugador;
+    protected Tablero tablero;
+    protected int numVueltas;
+    protected int encarcelado;
+    protected boolean modoAvanzado;
     protected int numTiradas;
 
     public Avatar(Jugador jug, Tablero tablero){
@@ -111,12 +111,7 @@ public abstract class Avatar {
         return this.numVueltas;
     }
 
-    public String getTipo(){
-        if (this instanceof Pelota) return "Pelota";
-        if (this instanceof Sombrero) return "Sombrero";
-        if (this instanceof Coche) return "Coche";
-        return "Esfinge";
-    }
+    public abstract String getTipo();
 
     //No es necesario el setter de numvueltas, ya que este solo se puede modificar de 1 en 1 cuando se completa una vuelta
 

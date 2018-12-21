@@ -1,10 +1,8 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
-
-import java.util.Scanner;
 
 public final class Pelota extends Avatar{
 
@@ -14,10 +12,10 @@ public final class Pelota extends Avatar{
     }
 
     private void accionRebote(int valor){
-        Accion accion = new Accion(this.getTablero());
+        Operacion operacion = new Operacion(this.getTablero());
         Juego.consola.imprimir("El jugador " + this.getJugador().getNombre() + " ha rebotado a " + this.getCasilla().getNombre());
         super.getTablero().imprimirTablero();
-        this.getCasilla().accionCaer(this.getJugador(),valor,accion);
+        this.getCasilla().accionCaer(this.getJugador(),valor, operacion);
         if(this.getCasilla() instanceof Propiedades){
             Propiedades comprable = (Propiedades) this.getCasilla();
             if(comprable.getPropietario().getNombre().equals("Banca")){
@@ -28,7 +26,7 @@ public final class Pelota extends Avatar{
                 String orden =Juego.consola.leer("$> ");
                 if(orden.equals("Si") || orden.equals("si") || orden.equals("SI")) {
                     if (this.getJugador().getDinero() >= comprable.getPrecio()) {
-                        accion.comprar(this.getJugador());
+                        operacion.comprar(this.getJugador());
                     }else{
                        Juego.consola.imprimir("No tienes dinero suficiente para adquirir esta propiedad");
                     }
@@ -71,4 +69,5 @@ public final class Pelota extends Avatar{
         }
         Juego.consola.imprimir("La pelota ha dejado de rebotar. Volviendo al menú principal");
     }
+    public String getTipo(){ return "Pelota";}
 }

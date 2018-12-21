@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
@@ -17,7 +17,7 @@ public final class CartaMovimiento extends Carta{
         this.accionFinanciera = accionFinanciera;
         if(alquiler >= 0 && alquiler <= 2)
             this.alquiler = alquiler;
-        super.setDescripcion(descripcion);
+        super.Carta(descripcion);
     }
 
     public int getPosicion(){
@@ -70,7 +70,7 @@ public final class CartaMovimiento extends Carta{
             Juego.consola.imprimir(super.getDescripcion());
 
         Propiedades casillaComprable;
-        Accion accion = new Accion(tablero);
+        Operacion operacion = new Operacion(tablero);
         //Siempre se cae en una casilla que tiene un alquiler asociado
         if(this.accionFinanciera && this.posicion <= jugador.getAvatar().getCasilla().getPosicion()) {
             jugador.modificarDinero(Valor.getDineroVuelta());
@@ -83,7 +83,7 @@ public final class CartaMovimiento extends Carta{
                 case 0:
                     break;
                 case 1:
-                    casillaComprable.accionCaer(jugador, 1, accion);
+                    casillaComprable.accionCaer(jugador, 1, operacion);
                     break;
                 case 2:
                     double cantidadDoble = casillaComprable.alquiler(1) * 2;
@@ -91,14 +91,14 @@ public final class CartaMovimiento extends Carta{
                         cobrarAccion(jugador, tablero, cantidadDoble);
                     } else {
                         Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-                        if (accion.menuHipotecar(jugador, tablero, casillaComprable.alquiler(1) * 2)) {
+                        if (operacion.menuHipotecar(jugador, tablero, casillaComprable.alquiler(1) * 2)) {
                             cobrarAccion(jugador, tablero, cantidadDoble);
                         }
                     }
                     break;
             }
         }else{
-            jugador.getAvatar().getCasilla().accionCaer(jugador,1,accion);
+            jugador.getAvatar().getCasilla().accionCaer(jugador,1, operacion);
         }
     }
 }

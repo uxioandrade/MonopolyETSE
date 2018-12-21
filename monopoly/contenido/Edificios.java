@@ -2,12 +2,12 @@ package monopoly.contenido;
 
 import monopoly.plataforma.Valor;
 
-public class Edificios{
+public abstract class Edificios{
 
-    private Solar comprable;
-    private double precio;
-    private double modificadorAlquiler;
-    private String nombre;
+    protected Solar comprable;
+    protected double precio;
+    protected double modificadorAlquiler;
+    protected String nombre;
 
     public Edificios(double precio, Solar comprable){
         this.precio = precio;
@@ -31,11 +31,6 @@ public class Edificios{
             this.precio = precio;
     }
 
-    public String getNombre(){
-        if (this instanceof Casa) return "Casa-"+this.nombre;
-        if (this instanceof Hotel) return "Hotel-"+this.nombre;
-        if (this instanceof Piscina) return "Piscina-"+this.nombre;
-        return "Pista de Deporte-"+this.nombre;
-    }
+    public abstract String getNombre();
 
 }

@@ -9,4 +9,7 @@ public final class PistaDeporte extends Edificios{
     public void setPrecio(double precio){
         super.setPrecio(precio*0.6);
     }
+
+    public  String getNombre(){return "Pista de Deporte-"+this.nombre;}
+
 }

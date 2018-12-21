@@ -1,6 +1,6 @@
 package monopoly.contenido;
 
-import monopoly.plataforma.Accion;
+import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 
@@ -21,11 +21,13 @@ public final class Transporte extends Propiedades {
             return Valor.getDineroVuelta()*0.25*count;
     }
 
-    public void pagarAlquiler(Jugador jugador, int tirada, Accion accion){
+    public void pagarAlquiler(Jugador jugador, int tirada, Operacion operacion){
         if (jugador.getDinero() >= this.alquiler(tirada)){
             //Se resta el alquiler del jugador que ha caído en el transporte
             jugador.modificarDinero(-this.alquiler(tirada));
             jugador.modificarPagoAlquileres(this.alquiler(tirada));
+            if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+                ((Esfinge)jugador.getAvatar()).setHistorialAlquileres(this.alquiler(tirada));
             Juego.consola.imprimir("Se han pagado " + this.alquiler(tirada) + "€ de transporte.");
             //Se aumenta el dinero del propietario
             super.getPropietario().modificarDinero(this.alquiler(tirada));
@@ -33,8 +35,23 @@ public final class Transporte extends Propiedades {
             super.sumarRentabilidad(this.alquiler(tirada));
         } else {
             Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if(accion.menuHipotecar(jugador,accion.getTablero(),this.alquiler(tirada)))
-                this.pagarAlquiler(jugador,tirada,accion);
+            if(operacion.menuHipotecar(jugador, operacion.getTablero(),this.alquiler(tirada)))
+                this.pagarAlquiler(jugador,tirada, operacion);
         }
+    }
+    @Override
+    public String toString(){
+        String aux =super.toString().substring(0,super.toString().length()-2);
+        aux += "Tipo: " + "Transporte" + "\n" +
+                "Precio: " + ((Transporte) this).getPrecio() + "€\n" +
+                "Uso Transporte Actual: " + ((Transporte) this).alquiler(1) + "€\n" +
+                "Uso Transporte Básico: " + Valor.getDineroVuelta() * 0.25 + "€\n" +
+                "Hipoteca: " + ((Transporte) this).getHipoteca() + "€\n";
+        if(super.getPropietario().getNombre().equals("Banca"))
+            aux += "Propietario: " + super.getPropietario().getNombre() + "\n";
+        if(super.getHipotecado())
+            aux += "Transporte hipotecado, paga " + 1.1*super.getHipoteca() + " para deshipotecar" + "\n";
+        aux+="}\n";
+        return aux;
     }
 }
