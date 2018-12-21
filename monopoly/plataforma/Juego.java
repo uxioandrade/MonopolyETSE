@@ -463,8 +463,6 @@ public class Juego implements Comando{
 
             if(parentesis){
                 if(parte3.equals("")) {
-                    System.out.println(parte2.charAt(0));
-                    System.out.println(parte2.charAt(0) - '0');
                     if (parte2.charAt(0) >= 48 && parte2.charAt(0) <= 57) {
                         Trato trato = new Trato(jugadorActual, Integer.parseInt(parte2), (Propiedades) tablero.getCasillas().get(parte1));
                     } else {
