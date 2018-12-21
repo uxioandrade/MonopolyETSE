@@ -101,6 +101,12 @@ public class Juego implements Comando{
                 case "estadisticas":
                     this.estadisticas(partes);
                     break;
+                case "trato":
+                    this.trato(partes);
+                    break;
+                case "aceptar":
+                    this.aceptarTrato(partes);
+                    break;
                 default:
                     consola.imprimir("\nComando incorrecto.");
                     break;
@@ -221,6 +227,7 @@ public class Juego implements Comando{
                             this.countTiradas++;
                             jugadorActual.getAvatar().setNumTiradas(0);
                         }else if(jugadorActual.getAvatar().getNumTiradas() == 0) {
+                            consola.imprimir("hola");
                             consola.imprimir("El avatar ya ha realizado todas las tiradas que podía en su turno");
                         }
                         if(jugadorActual.getAvatar().getNumTiradas() <= 0) countTiradas++;
@@ -409,18 +416,76 @@ public class Juego implements Comando{
     }
 
     public void trato(String partes[]){
-        if(partes.length >= 5){
-            if(partes.length == 5){
+        String parte1 = "",parte2 = "",parte3 = "";
+        int turnos=0;
+        boolean aux1 = false;
+        boolean aux2 = false;
+        boolean parentesis = false;
+        boolean skip = false;
+        int count = 2;
+        if(partes.length >= 5 && partes[2].equals("cambiar")){
+            partes[3] = partes[3].substring(1);
+            for(int i = 3; i < partes.length; i++){
+                if(!aux1) {
+                    parte1 += " " + partes[i];
+                    if (partes[i].contains(",")) {
+                        parte1 = parte1.substring(1, parte1.length()-1);
+                        aux1 = true;
+                    }
+                }else if(!aux2){
+                   if(!partes[i].equals("y")){
+                       parte2 += " " + partes[i];
+                       if(partes[i].contains(")")) {
+                           parte2 = parte2.substring(1, parte2.length()-1);
+                           parentesis = true;
+                       }
+                   }else
+                        aux2 = true;
+                }else if(parentesis){
+                    count--;
+                    if(count == 0){
+                        parte3 = partes[i].substring(1);
+                    }else if(count < 0){
+                        parte3 += " " + partes[i];
+                        if (partes[i].contains(",")) {
+                            parte3 = parte3.substring(1, parte3.length()-1);
+                            turnos = partes[i+1].charAt(0) - 48;
+                        }
+                    }
+                }else if(aux2){
+                    parte3 = partes[i].substring(0,partes[i].length()-1);
+                }
+            }
+            if(parte2.contains(" "))
+                parte2 = parte2.substring(1);
 
-            }else if(partes.length == 7){
-
-            }else if(partes.length == 9){
-
+            if(parentesis){
+                if(parte3.equals("")) {
+                    System.out.println(parte2.charAt(0));
+                    System.out.println(parte2.charAt(0) - '0');
+                    if (parte2.charAt(0) >= 48 && parte2.charAt(0) <= 57) {
+                        Trato trato = new Trato(jugadorActual, Integer.parseInt(parte2), (Propiedades) tablero.getCasillas().get(parte1));
+                    } else {
+                        Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1), (Propiedades) tablero.getCasillas().get(parte2));
+                    }
+                }else{
+                    Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1),(Propiedades) tablero.getCasillas().get(parte2),(Propiedades) tablero.getCasillas().get(parte3),turnos);
+                }
             }else{
-                
+                Trato trato = new Trato((Propiedades) tablero.getCasillas().get(parte1),Integer.parseInt(parte3),(Propiedades) tablero.getCasillas().get(parte2));
             }
         }else{
             consola.imprimir("Comando incorrecto");
         }
+    }
+
+    public void aceptarTrato(String partes[]){
+        int idTrato = Integer.parseInt(partes[1].substring(5));
+        for(Trato t: jugadorActual.getTratosPendientes()){
+            if(t.getId() == idTrato)
+                t.aceptar();
+                return;
+        }
+        System.out.println("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
     }
 }

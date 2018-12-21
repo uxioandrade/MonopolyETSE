@@ -23,6 +23,10 @@ public abstract class Propiedades extends Casilla {
 }
     public void setPropietario(Jugador propietario){
         if(propietario != null){
+            if(this.propietario != null) {
+                if (!this.propietario.getNombre().equals("Banca"))
+                    this.propietario.borrarPropiedad(this);
+            }
             this.propietario=propietario;
             if(!propietario.getPropiedades().contains(this))
             this.propietario.anhadirPropiedad(this);

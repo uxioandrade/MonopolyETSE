@@ -26,5 +26,6 @@ public interface Comando {
     public void cambiar(String partes[]);
     public void estadisticas(String partes[]);
     public void trato(String partes[]);
+    public void aceptarTrato(String partes[]);
 
 }

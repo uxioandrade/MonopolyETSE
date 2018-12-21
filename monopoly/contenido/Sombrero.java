@@ -17,6 +17,7 @@ public final class Sombrero extends Avatar{
         super(jug,tablero);
         this.historialCompras = new ArrayList<>();
         super.numTiradas = 3;
+        this.numTiradas = 3;
     }
 
     public int getNumTiradas() {
@@ -48,7 +49,7 @@ public final class Sombrero extends Avatar{
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, accion);
         }else {
-            super.numTiradas = 0;
+            this.numTiradas = 0;
             Juego.consola.imprimir("El sombrero ya ha acabado sus tiradas este turno");
         }
     }
@@ -61,25 +62,25 @@ public final class Sombrero extends Avatar{
 
     private void moverZigZag(int valor) {
         if (this.getCasilla().getPosicion() < 10){
-            this.moverACasilla(11);
-            if(valor % 2 == 0)
-                this.moverACasilla(20 + ((valor - 1 + this.getCasilla().getPosicion() - 10) % 10));
+            this.moverACasilla(12);
+            if(valor % 2 == 1)
+                this.moverACasilla(10 + ((valor - 1 + this.getCasilla().getPosicion() - 2 - 10) % 10));
             else
-                this.moverACasilla(39 - ((valor - 1 + this.getCasilla().getPosicion() - 10) % 10));
+                this.moverACasilla(39 - ((valor - 3 + this.getCasilla().getPosicion() - 10) % 10));
         } else if (this.getCasilla().getPosicion() < 20) {
             if(valor % 2 == 0)
-                this.moverACasilla(20 + ((valor + this.getCasilla().getPosicion() - 10) % 10));
+                this.moverACasilla(10 + ((valor + this.getCasilla().getPosicion() - 10) % 10));
             else
                 this.moverACasilla(39 - ((valor + this.getCasilla().getPosicion() - 10) % 10));
         } else if (this.getCasilla().getPosicion() < 30) {
-            this.moverACasilla(31);
-            if(valor % 2 == 0)
-                this.moverACasilla(30 + ((valor - 1 + this.getCasilla().getPosicion() - 30) % 10));
+            this.moverACasilla(32);
+            if(valor % 2 == 1)
+                this.moverACasilla(30 + ((valor - 1 + this.getCasilla().getPosicion() - 2 - 30) % 10));
             else
-                this.moverACasilla(20 - ((valor - 1+ this.getCasilla().getPosicion() - 30 ) % 10));
+                this.moverACasilla(20 - ((valor - 1 + this.getCasilla().getPosicion() - 30 ) % 10));
         } else {
             if(valor % 2 == 0)
-                this.moverACasilla(30 + ((valor + this.getCasilla().getPosicion() - 30) % 10));
+                this.moverACasilla(31 + ((valor + this.getCasilla().getPosicion() - 30) % 10));
             else
                 this.moverACasilla(20 - ((valor + this.getCasilla().getPosicion() - 30 ) % 10));
         }

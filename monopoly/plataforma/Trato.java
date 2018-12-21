@@ -20,6 +20,7 @@ public class Trato {
         this.propiedadesOfertadas.add(recibida);
         this.ofertor = ofertada.getPropietario();
         this.receptor = recibida.getPropietario();
+        this.receptor.anhadirTratoPendiente(this);
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
     }
@@ -85,10 +86,11 @@ public class Trato {
             this.propiedadesOfertadas.get(0).setPropietario(this.receptor);
             this.propiedadesOfertadas.get(1).setPropietario(this.ofertor);
         }else {
-            if(this.ofertor.getPropiedades().contains(this.propiedadesOfertadas.get(0)))
+            if (this.ofertor.getPropiedades().contains(this.propiedadesOfertadas.get(0))){
                 this.propiedadesOfertadas.get(0).setPropietario(this.receptor);
-            else
+            }else{
                 this.propiedadesOfertadas.get(0).setPropietario(this.ofertor);
+            }
         }
     }
 

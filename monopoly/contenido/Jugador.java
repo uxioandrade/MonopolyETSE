@@ -132,6 +132,12 @@ public class Jugador {
         }
     }
 
+    public void borrarPropiedad(Propiedades casilla){
+        if(casilla != null){
+                this.propiedades.remove(casilla);
+        }
+    }
+
     public ArrayList<Trato> getTratosPendientes(){
         return this.tratosPendientes;
     }
