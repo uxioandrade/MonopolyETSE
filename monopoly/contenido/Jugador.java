@@ -220,6 +220,14 @@ public class Jugador {
         return this.tratosPropuestos;
     }
 
+    public void anhadirTratoPropuesto(Trato t){
+        this.tratosPropuestos.add(t);
+    }
+
+    public void borrarTratosPropuesto(Trato t){
+        this.tratosPropuestos.remove(t);
+    }
+
     public String getDescripcionInicial(){
         String aux = "\t{\n" +
                 "\t\tNombre: " + this.nombre + "\n" +

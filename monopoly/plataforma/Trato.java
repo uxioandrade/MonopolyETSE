@@ -21,6 +21,7 @@ public class Trato {
         this.ofertor = ofertada.getPropietario();
         this.receptor = recibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
     }
@@ -31,6 +32,7 @@ public class Trato {
         this.ofertor = ofertor;
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidadOfertada;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
@@ -41,6 +43,7 @@ public class Trato {
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = receptor;
         this.receptor.anhadirTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidadRecibida;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
@@ -53,6 +56,7 @@ public class Trato {
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidad;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
@@ -66,6 +70,7 @@ public class Trato {
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         if(turnos > 0)
@@ -107,10 +112,12 @@ public class Trato {
        this.receptor.modificarDinero(cantidad);
        this.ofertor.modificarDinero(-cantidad);
        this.receptor.borrarTratoPendiente(this);
+        this.ofertor.anhadirTratoPropuesto(this);
     }
 
     public void eliminar(){
         this.receptor.borrarTratoPendiente(this); //Dentro de este arraylist ya se borra el ofertor
+        this.ofertor.anhadirTratoPropuesto(this);
         System.out.println("Se ha eliminado el trato" + this.id + ".");
     }
 }

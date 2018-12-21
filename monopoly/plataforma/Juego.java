@@ -106,6 +106,9 @@ public class Juego implements Comando{
                 case "aceptar":
                     this.aceptarTrato(partes);
                     break;
+                case "eliminar":
+
+                    break;
                 default:
                     consola.imprimir("\nComando incorrecto.");
                     break;
@@ -484,6 +487,16 @@ public class Juego implements Comando{
             if(t.getId() == idTrato)
                 t.aceptar();
                 return;
+        }
+        System.out.println("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
+    }
+
+    public void borrarTrato(String partes[]){
+        int idTrato = Integer.parseInt(partes[1].substring(5));
+        for(Trato t: jugadorActual.getTratosPendientes()){
+            if(t.getId() == idTrato)
+                t.eliminar();
+            return;
         }
         System.out.println("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
     }
