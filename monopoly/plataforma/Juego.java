@@ -42,9 +42,9 @@ public class Juego implements Comando{
         this.tablero = new Tablero();
         this.operacion = new Operacion(this.tablero);
         // Inicializar valores
-        System.out.println("Bienvenido a MonopolyETSE");
-        System.out.println("Antes de comezar a jugar debeis introducir los jugadores de la siguiente forma:");
-        System.out.println("\nintroducir jugador <nombre> <tipo>");
+        Juego.consola.imprimir("Bienvenido a MonopolyETSE");
+        Juego.consola.imprimir("Antes de comezar a jugar debeis introducir los jugadores de la siguiente forma:");
+        Juego.consola.imprimir("\nintroducir jugador <nombre> <tipo>");
 
         this.operacion.crearJugadores();//antes de empezar el menu de partida creamos los jugadores
 
@@ -58,7 +58,7 @@ public class Juego implements Comando{
         this.countTiradas = 0;
         this.vecesDobles = 0;
         this.tirada = 0;
-        System.out.println(" El jugador actual es " + jugadorActual.getNombre());
+        Juego.consola.imprimir(" El jugador actual es " + jugadorActual.getNombre());
         while (!salir) {
             try {
                 String orden = consola.leer("$> ");

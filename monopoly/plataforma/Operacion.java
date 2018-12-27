@@ -38,16 +38,14 @@ public class Operacion {
         int empezar = 1; //Almacena el número de jugadores
         Juego.turnosJugadores = new ArrayList<>();
         while (empezar <= 6) {
-            System.out.print("$> ");
-            Scanner scanner = new Scanner(System.in);
-            String orden = scanner.nextLine();
+            String orden = Juego.consola.leer("$>");
             String[] partes = orden.split(" ");
             String comando = partes[0];
             switch (comando) {
                 case "introducir":
                     if (partes.length == 4 && partes[1].equals("jugador")) {
                         if (this.tablero.getJugadores().containsKey(partes[2])) {
-                            System.out.println("Error: No puede haber dos jugadores con el mismo nombre");
+                            Juego.consola.imprimir("Error: No puede haber dos jugadores con el mismo nombre");
                         } else {
                             Jugador jugadorIntroducir = new Jugador(partes[2], partes[3], this.tablero);
                             //Se añade los jugadores al HashMap de tableros
@@ -223,7 +221,7 @@ public class Operacion {
                         for (int i = 1; i < partes.length - 1; i++) {
                             auxCasilla += partes[i] + " ";
                         }
-                        if (partes.length < 2 || partes.length > 4) System.out.println("\n Comando incorrecto");
+                        if (partes.length < 2 || partes.length > 4) throw new ExcepcionNumeroPartesComando("\n Comando incorrecto");
                         else if (this.tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]) != null) {//si existe la casilla
                             operacion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]), jugador);
                             if (jugador.getDinero() >= deuda) {

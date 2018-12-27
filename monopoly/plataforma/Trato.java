@@ -108,6 +108,7 @@ public class Trato {
        if(this.receptor.getDinero()<cantidad){
            throw new ExcepcionDineroVoluntario("El trato no puede ser aceptado: " + this.receptor.getNombre() + " no dispone de " + -1*cantidad + "€.");
        }
+       Juego.consola.imprimir("trato" + this.getId() + " aceptado");
        this.swapPropiedades();
        this.receptor.modificarDinero(cantidad);
        this.ofertor.modificarDinero(-cantidad);

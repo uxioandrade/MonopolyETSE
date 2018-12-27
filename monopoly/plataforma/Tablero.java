@@ -242,14 +242,14 @@ public class Tablero {
         Iterator<Avatar> ava_i = this.avatares.values().iterator();
         while(ava_i.hasNext()) {
             Avatar ava = ava_i.next();
-            System.out.println(ava.toString());
+            Juego.consola.imprimir(ava.toString());
         }
     }
 
     public void listarCasillasEdificadas(){
         for(int i =0;i<4;i++){
             for(int j = 0;j < this.edificios.get(i).size();j++){
-                System.out.println("{\n" + "id: " +this.edificios.get(i).get(j).getNombre()+ ",\npropietario: "
+                Juego.consola.imprimir("{\n" + "id: " +this.edificios.get(i).get(j).getNombre()+ ",\npropietario: "
                         + this.edificios.get(i).get(j).getComprable().getPropietario().getNombre() + ",\ncasilla: "
                         + this.edificios.get(i).get(j).getComprable().getNombre() + ",\ngrupo: "
                         + this.edificios.get(i).get(j).getComprable().getGrupo().getNombre() + ",\ncoste: "
@@ -261,7 +261,7 @@ public class Tablero {
     public void listarPropiedades(){
         for(Propiedades cas: Valor.getComprables()){
             if(cas.getPropietario().getNombre().equals("Banca") && cas.getPrecio()>0){
-                System.out.println(cas.toString());
+                Juego.consola.imprimir(cas.toString());
             }
         }
     }
@@ -372,6 +372,6 @@ public class Tablero {
                 "jugadorMasVueltas: " + this.getJugadorMasVueltas() + ",\n" +
                 "jugadorMasVecesDados: " + this.getMaxVecesDados() + ",\n" +
                 "jugadorEnCabeza: " + this.getJugadorCabeza() + "\n}";
-        System.out.println(aux);
+        Juego.consola.imprimir(aux);
     }
 }
