@@ -1,5 +1,13 @@
 package monopoly.plataforma;
 import monopoly.contenido.*;
+import monopoly.contenido.avatares.Avatar;
+import monopoly.contenido.casillas.Casilla;
+import monopoly.contenido.edificios.Casa;
+import monopoly.contenido.edificios.Edificios;
+import monopoly.contenido.casillas.propiedades.Propiedades;
+import monopoly.contenido.casillas.propiedades.Solar;
+import monopoly.contenido.edificios.Hotel;
+import monopoly.contenido.edificios.Piscina;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +19,7 @@ public class Tablero {
     public final static int LONGITUDCASILLA = 20;
     private HashMap<String, Casilla> casillas;
     private HashMap<String,Jugador> jugadores;
-    private HashMap<String,Avatar> avatares;
+    private HashMap<String, Avatar> avatares;
     private ArrayList<ArrayList<Edificios>> edificios;
     private Jugador banca;
     private int vueltas;
@@ -227,7 +235,7 @@ public class Tablero {
         Iterator<Jugador> jug_i = this.jugadores.values().iterator();
         while(jug_i.hasNext()) {
             Jugador jug = jug_i.next();
-            System.out.println(jug.toString());
+            Juego.consola.imprimir(jug.toString());
         }
     }
     public void listarAvatares(){

@@ -1,10 +1,8 @@
 package monopoly.plataforma;
 
-import monopoly.contenido.Propiedades;
+import monopoly.contenido.casillas.propiedades.Propiedades;
 import monopoly.contenido.Jugador;
-import monopoly.excepciones.ExcepcionDineroDeuda;
-import monopoly.excepciones.ExcepcionDineroVoluntario;
-import monopoly.plataforma.*;
+import monopoly.excepciones.dinero.ExcepcionDineroVoluntario;
 
 import java.util.ArrayList;
 
@@ -15,56 +13,57 @@ public class Trato {
     private double cantidad;
     private int turnos;
     private int id;
+    private String descripcion;
 
-    public Trato(Propiedades ofertada, Propiedades recibida){ //Propiedad x propiedad
+    public Trato(Propiedades ofertada, Propiedades recibida, String descripcion){ //Propiedad x propiedad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(ofertada);
         this.propiedadesOfertadas.add(recibida);
         this.ofertor = ofertada.getPropietario();
         this.receptor = recibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
+        this.descripcion = descripcion;
     }
 
-    public Trato(Jugador ofertor, double cantidadOfertada,Propiedades propiedadRecibida){ //Cantidad x propiedad
+    public Trato(Jugador ofertor, double cantidadOfertada,Propiedades propiedadRecibida,String descripcion){ //Cantidad x propiedad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadRecibida);
         this.ofertor = ofertor;
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidadOfertada;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
+        this.descripcion = descripcion;
     }
-    public Trato(double cantidadRecibida,Jugador receptor, Propiedades propiedadOfertada){ //Propiedad x cantidad
+    public Trato(double cantidadRecibida,Jugador receptor, Propiedades propiedadOfertada,String descripcion){ //Propiedad x cantidad
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = receptor;
         this.receptor.anhadirTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidadRecibida;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
+        this.descripcion = descripcion;
     }
 
-    public Trato(Propiedades propiedadOfertada, double cantidad, Propiedades propiedadRecibida){
+    public Trato(Propiedades propiedadOfertada, double cantidad, Propiedades propiedadRecibida,String descripcion){
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.propiedadesOfertadas.add(propiedadRecibida);
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
         this.cantidad = cantidad;
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
+        this.descripcion = descripcion;
     }
 
-    public Trato(Propiedades propiedadOfertada, Propiedades propiedadRecibida, Propiedades propiedadNoAlquiler, int turnos){
+    public Trato(Propiedades propiedadOfertada, Propiedades propiedadRecibida, Propiedades propiedadNoAlquiler, int turnos,String descripcion){
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.propiedadesOfertadas.add(propiedadRecibida);
@@ -72,12 +71,12 @@ public class Trato {
         this.ofertor = propiedadOfertada.getPropietario();
         this.receptor = propiedadRecibida.getPropietario();
         this.receptor.anhadirTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         if(turnos > 0)
             this.turnos = turnos;
         propiedadNoAlquiler.anhadirJugadorExcluido(this.receptor,this.turnos);
+        this.descripcion = descripcion;
     }
 
     public Jugador getOfertor() {
@@ -113,12 +112,17 @@ public class Trato {
        this.receptor.modificarDinero(cantidad);
        this.ofertor.modificarDinero(-cantidad);
        this.receptor.borrarTratoPendiente(this);
-        this.ofertor.anhadirTratoPropuesto(this);
+       this.ofertor.borrarTratosPropuesto(this);
     }
 
     public void eliminar(){
         this.receptor.borrarTratoPendiente(this); //Dentro de este arraylist ya se borra el ofertor
-        this.ofertor.anhadirTratoPropuesto(this);
+        this.ofertor.borrarTratosPropuesto(this);
         Juego.consola.imprimir("Se ha eliminado el trato" + this.id + ".");
+    }
+
+    @Override
+    public String toString(){
+        return "{\n" + "jugadorPropone: " + this.ofertor.getNombre() + ",\ntrato: " + this.descripcion + "\n}";
     }
 }

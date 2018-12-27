@@ -1,6 +1,6 @@
 package monopoly.excepciones;
 
-public abstract class ExcepcionMonopoly extends Exception{
+public abstract class ExcepcionMonopoly extends Exception{ //La clase raíz de una jerarquía no se debería instanciar, por eso es abstracta
 
     private final String mensaje;
 

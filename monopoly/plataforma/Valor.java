@@ -6,6 +6,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import monopoly.contenido.*;
+import monopoly.contenido.cartas.Carta;
+import monopoly.contenido.cartas.CartaMovimiento;
+import monopoly.contenido.cartas.CartaPagar;
+import monopoly.contenido.casillas.*;
+import monopoly.contenido.casillas.accion.Accion;
+import monopoly.contenido.casillas.accion.CasillasCarta;
+import monopoly.contenido.casillas.propiedades.Propiedades;
+import monopoly.contenido.casillas.propiedades.Servicio;
+import monopoly.contenido.casillas.propiedades.Solar;
+import monopoly.contenido.casillas.propiedades.Transporte;
 
 public class Valor {
 
@@ -89,7 +99,7 @@ public class Valor {
             new CasillasCarta("Caja2",17, cartasCajaComunidad),
             new Solar("Nen Hithoel",18),
             new Solar("Argonath",19),
-            new Especiales("Parking",20),
+            new Accion("Parking",20),
             new Solar("Golden Hall",21),
             new CasillasCarta("Suerte2",22,cartasSuerte),
             new Solar("Edoras",23),

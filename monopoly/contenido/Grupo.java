@@ -1,5 +1,8 @@
 package monopoly.contenido;
 
+import monopoly.contenido.casillas.Casilla;
+import monopoly.contenido.edificios.Edificios;
+import monopoly.contenido.casillas.propiedades.Solar;
 import monopoly.plataforma.Juego;
 
 import java.util.ArrayList;

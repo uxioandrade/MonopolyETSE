@@ -1,5 +1,10 @@
 package monopoly.contenido;
 
+import monopoly.contenido.avatares.*;
+import monopoly.contenido.casillas.Casilla;
+import monopoly.contenido.edificios.Edificios;
+import monopoly.contenido.casillas.propiedades.Propiedades;
+import monopoly.contenido.casillas.propiedades.Solar;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Trato;
 import monopoly.plataforma.Valor;
@@ -278,9 +283,15 @@ public class Jugador {
         Juego.consola.imprimir(aux);
     }
 
-    public void listarTratos(){
+    public void listarTratosPendientes(){
+        for(Trato t: this.tratosPendientes){
+            Juego.consola.imprimir("trato" + t.getId() + ":{\n" + t + "\n},\n");
+        }
+    }
+
+    public void listarTratosPropuestos(){
         for(Trato t: this.tratosPropuestos){
-            Juego.consola.imprimir("{\n" + t + "\n},\n");
+            Juego.consola.imprimir("trato" + t.getId() + ":{\n" + t + "\n},\n");
         }
     }
 
