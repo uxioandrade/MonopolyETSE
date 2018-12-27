@@ -2,6 +2,8 @@ package monopoly.plataforma;
 
 import monopoly.contenido.Propiedades;
 import monopoly.contenido.Jugador;
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionDineroVoluntario;
 import monopoly.plataforma.*;
 
 import java.util.ArrayList;
@@ -103,10 +105,9 @@ public class Trato {
         return this.id;
     }
 
-    public void aceptar(){
+    public void aceptar() throws ExcepcionDineroVoluntario {
        if(this.receptor.getDinero()<cantidad){
-           System.out.println("El trato no puede ser aceptado: " + this.receptor.getNombre() + " no dispone de " + -1*cantidad + "€.");
-           return;
+           throw new ExcepcionDineroVoluntario("El trato no puede ser aceptado: " + this.receptor.getNombre() + " no dispone de " + -1*cantidad + "€.");
        }
        this.swapPropiedades();
        this.receptor.modificarDinero(cantidad);
@@ -118,6 +119,6 @@ public class Trato {
     public void eliminar(){
         this.receptor.borrarTratoPendiente(this); //Dentro de este arraylist ya se borra el ofertor
         this.ofertor.anhadirTratoPropuesto(this);
-        System.out.println("Se ha eliminado el trato" + this.id + ".");
+        Juego.consola.imprimir("Se ha eliminado el trato" + this.id + ".");
     }
 }

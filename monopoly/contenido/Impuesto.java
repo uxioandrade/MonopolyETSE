@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
@@ -20,22 +21,24 @@ public final class Impuesto extends Casilla {
         return apagar;
     }
 
-    public void pagarImpuesto(Jugador jugador, Operacion operacion) {
+    public void pagarImpuesto(Jugador jugador, Operacion operacion) throws ExcepcionDineroDeuda {
         Juego.consola.imprimir(jugador.getNombre() + ",debes pagar un impuesto de " + apagar + " debido a " + jugador.getAvatar().getCasilla().getNombre());
         //Comprueba que el jugador tenga dinero suficiente para pagar
         if (apagar <= jugador.getDinero()) {
-            jugador.modificarDinero(apagar);
+            jugador.modificarDinero(-apagar);
             Juego.consola.imprimir("Se han pagado " + apagar + "€ de impuesto");
+            if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+                ((Esfinge)jugador.getAvatar()).modificarHistorialImpuestos(apagar);
+            if(jugador.getAvatar() instanceof Sombrero && jugador.getAvatar().getModoAvanzado())
+                ((Sombrero)jugador.getAvatar()).modificarHistorialImpuestos(apagar);
             Valor.actualizarDineroAcumulado(apagar);
             jugador.modificarPagoImpuestos(apagar);
         } else {
-            Juego.consola.imprimir("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
-            if (operacion.menuHipotecar(jugador, operacion.getTablero(), apagar))
-                pagarImpuesto(jugador, operacion);
+            throw new ExcepcionDineroDeuda("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades, a negociar o declararte en bancarrota");
         }
     }
 
-    public void accionCaer(Jugador jugador, int tirada, Operacion operacion){
+    public void accionCaer(Jugador jugador, int tirada, Operacion operacion) throws ExcepcionDineroDeuda{
         this.pagarImpuesto(jugador, operacion);
     }
 

@@ -62,52 +62,70 @@ public class Juego implements Comando{
                     }
                     break;
                 case "comprar":
-                    this.comprar();
+                    try {
+                        this.comprar();
+                    }catch(ExcepcionDineroVoluntario | ExcepcionRestriccionComprar ex){
+                        consola.imprimir(ex.getMensaje());
+                    }
                     break;
                 case "edificar":
                     try {
                         this.edificar(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionDineroVoluntario | ExcepcionRestriccionEdificar ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "vender":
                     try {
                         this.vender(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionEdificar ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "hipotecar":
                     try {
                         this.hipotecar(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionHipotecar ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "deshipotecar":
                     try {
                         this.deshipotecar(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionHipotecar | ExcepcionDineroVoluntario ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "lanzar":
                     try {
                         this.lanzar(partes);
-                    }catch(ExcepcionesDinamicaTurno ex){
+                    }catch(ExcepcionesDinamicaTurno | ExcepcionNumeroPartesComando | ExcepcionesDinamicaEncarcelamiento | ExcepcionRestriccionHipotecar | ExcepcionDineroVoluntario | ExcepcionRestriccionComprar  ex){
                         consola.imprimir(ex.getMensaje());
-                    }catch(ExcepcionNumeroPartesComando ex2){
+                    }catch(ExcepcionDineroDeuda | ExcepcionRestriccionEdificar ex2){
                         consola.imprimir(ex2.getMensaje());
+                        if(jugadorActual.getAvatar().getCasilla() instanceof Impuesto) {
+                            try {
+                                if (operacion.menuHipotecar(jugadorActual, operacion.getTablero(), ((Impuesto) jugadorActual.getAvatar().getCasilla()).getApagar()))
+                                    ((Impuesto) jugadorActual.getAvatar().getCasilla()).pagarImpuesto(jugadorActual, operacion);
+                            }catch(ExcepcionDineroDeuda | ExcepcionRestriccionHipotecar | ExcepcionNumeroPartesComando | ExcepcionRestriccionEdificar ex3){
+                                consola.imprimir(ex3.getMensaje());
+                            }
+                        }else if(jugadorActual.getAvatar().getCasilla() instanceof Propiedades) {
+                            try {
+                                if (operacion.menuHipotecar(jugadorActual, operacion.getTablero(), ((Propiedades) jugadorActual.getAvatar().getCasilla()).alquiler(tirada))) {
+                                    ((Propiedades) jugadorActual.getAvatar().getCasilla()).pagarAlquiler(jugadorActual, tirada, operacion);
+                                }
+                            }catch(ExcepcionDineroDeuda | ExcepcionRestriccionHipotecar | ExcepcionNumeroPartesComando | ExcepcionRestriccionEdificar ex3){
+                                consola.imprimir(ex3.getMensaje());
+                            }
+                        }
                     }
                     break;
                 case "acabar":
                     try {
                         this.acabar(partes);
-                    }catch(ExcepcionesDinamicaTurno ex){
+                    }catch(ExcepcionesDinamicaTurno | ExcepcionNumeroPartesComando ex){
                         consola.imprimir(ex.getMensaje());
-                    }catch(ExcepcionNumeroPartesComando ex2){
-                        consola.imprimir(ex2.getMensaje());
                     }
                     break;
                 case "jugador"://describe al jugador actual
@@ -120,7 +138,7 @@ public class Juego implements Comando{
                 case "salir":
                     try {
                         this.salir(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionHipotecar | ExcepcionRestriccionEdificar ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
@@ -141,10 +159,8 @@ public class Juego implements Comando{
                 case "cambiar":
                     try {
                         this.cambiar(partes);
-                    }catch(ExcepcionesDinamicaTurno ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionDinamicaModoMovimiento ex){
                         consola.imprimir(ex.getMensaje());
-                    }catch(ExcepcionNumeroPartesComando ex2){
-                        consola.imprimir(ex2.getMensaje());
                     }
                     break;
                 case "estadisticas":
@@ -157,21 +173,21 @@ public class Juego implements Comando{
                 case "trato":
                     try {
                         this.trato(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionPropiedades ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "aceptar":
                     try {
                         this.aceptarTrato(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionPropiedades | ExcepcionDineroVoluntario ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
                 case "eliminar":
                     try {
                         this.borrarTrato(partes);
-                    }catch(ExcepcionNumeroPartesComando ex){
+                    }catch(ExcepcionNumeroPartesComando | ExcepcionRestriccionPropiedades ex){
                         consola.imprimir(ex.getMensaje());
                     }
                     break;
@@ -217,11 +233,11 @@ public class Juego implements Comando{
         }else consola.imprimir("\nNo existe el tipo de elemento " + partes[1]);
     }
 
-    public void comprar(){
+    public void comprar() throws ExcepcionDineroVoluntario, ExcepcionRestriccionComprar{
         this.operacion.comprar(jugadorActual);
     }
 
-    public void edificar(String[] partes) throws ExcepcionNumeroPartesComando{
+    public void edificar(String[] partes) throws ExcepcionNumeroPartesComando, ExcepcionDineroVoluntario, ExcepcionRestriccionEdificar{
         if(partes.length ==2){
             operacion.edificar(jugadorActual,partes[1]);
         }else{
@@ -229,7 +245,7 @@ public class Juego implements Comando{
         }
     }
 
-    public void vender(String[] partes) throws ExcepcionNumeroPartesComando{
+    public void vender(String[] partes) throws ExcepcionNumeroPartesComando , ExcepcionRestriccionEdificar{
         String auxCasilla = "";
         if(partes.length >= 4){
             auxCasilla = "";
@@ -242,7 +258,7 @@ public class Juego implements Comando{
         }
     }
 
-    public void hipotecar(String[] partes) throws ExcepcionNumeroPartesComando{
+    public void hipotecar(String[] partes) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionHipotecar{
         String auxCasilla = "";
         auxCasilla = "";
         for(int i = 1; i < partes.length - 1;i++) {
@@ -251,10 +267,10 @@ public class Juego implements Comando{
         if(partes.length<2 || partes.length >4) throw new ExcepcionNumeroPartesComando("Comando incorrecto");
         else if(tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null)//si existe la casilla
             operacion.hipotecar(tablero.getCasillas().get(auxCasilla + partes[partes.length-1]),jugadorActual);
-        else consola.imprimir("La casilla que quieres hipotecar no existe :(");
+        else throw new ExcepcionRestriccionHipotecar("La casilla que quieres hipotecar no existe :(");
     }
 
-    public void deshipotecar(String[] partes) throws ExcepcionNumeroPartesComando{
+    public void deshipotecar(String[] partes) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionHipotecar, ExcepcionDineroVoluntario{
         String auxCasilla = "";
         for (int i = 1; i < partes.length - 1; i++) {
             auxCasilla += partes[i] + " ";
@@ -265,10 +281,16 @@ public class Juego implements Comando{
         else consola.imprimir("La casilla que quieres hipotecar no existe :(");
     }
 
-    public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno, ExcepcionNumeroPartesComando{
+    public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionesDinamicaEncarcelamiento, ExcepcionRestriccionHipotecar, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         if(partes.length>=2 && partes[1].equals("dados")) {
             if (this.countTiradas == 0) {//si tienes tiradas pendientes te muestra la tirada
-                this.dados.lanzarDados();
+                //this.dados.lanzarDados();
+                String leerDados;
+                leerDados = Juego.consola.leer("dados");
+                String[] partesDados = leerDados.split(" ");
+                if(leerDados.length() >= 2)
+                    this.dados = new Dados(Integer.parseInt(partesDados[0]),Integer.parseInt(partesDados[1]));
+                else this.dados.lanzarDados();
                 this.jugadorActual.anhadirVecesDados();
                 this.tirada = dados.getSuma();
                 this.dados.getDescripcion();
@@ -291,11 +313,14 @@ public class Juego implements Comando{
                         if(jugadorActual.getAvatar().getNumTiradas() > 0 && jugadorActual.getAvatar().getEncarcelado() == 0) {
                             jugadorActual.getAvatar().moverCasilla(tirada);
                             jugadorActual.getAvatar().restarNumTiradas();
+                            if(jugadorActual.getAvatar().getEncarcelado() != 0){
+                                this.countTiradas++;
+                                jugadorActual.getAvatar().setNumTiradas(0);
+                            }
                         }else if (jugadorActual.getAvatar().getEncarcelado() != 0){
                             this.countTiradas++;
                             jugadorActual.getAvatar().setNumTiradas(0);
                         }else if(jugadorActual.getAvatar().getNumTiradas() == 0) {
-                            consola.imprimir("hola");
                             consola.imprimir("El avatar ya ha realizado todas las tiradas que podía en su turno");
                         }
                         if(jugadorActual.getAvatar().getNumTiradas() <= 0) countTiradas++;
@@ -336,7 +361,8 @@ public class Juego implements Comando{
                                 this.countTiradas++;
                                 ((Coche) jugadorActual.getAvatar()).setNumTiradas(0);
                             }
-                        }
+                        }else if((jugadorActual.getAvatar() instanceof Esfinge || jugadorActual.getAvatar() instanceof Sombrero )&& jugadorActual.getAvatar().getModoAvanzado())
+                            jugadorActual.getAvatar().setNumTiradas(3);
                         jugadorActual.getAvatar().moverCasilla(tirada);
                         jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, operacion);
                         this.countTiradas++;
@@ -356,7 +382,7 @@ public class Juego implements Comando{
                             jugadorActual.getAvatar().getCasilla().accionCaer(jugadorActual, tirada, operacion);
                         }
                         else
-                            consola.imprimir("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
+                            throw new ExcepcionesDinamicaEncarcelamiento("El jugador " + jugadorActual.getNombre() + " sigue en la cárcel");
                     }
                 }
                 tablero.imprimirTablero();
@@ -397,7 +423,7 @@ public class Juego implements Comando{
         }
     }
 
-    public void salir(String partes[]) throws ExcepcionNumeroPartesComando{
+    public void salir(String partes[]) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionHipotecar, ExcepcionRestriccionEdificar{
         if(partes.length==2 && partes[1].equals("carcel")){
             if(countTiradas == 0){
                 operacion.salirCarcel(jugadorActual);
@@ -456,7 +482,7 @@ public class Juego implements Comando{
             throw new ExcepcionNumeroPartesComando("Comando incorrecto");
     }
 
-    public void cambiar(String partes[]) throws ExcepcionesDinamicaTurno, ExcepcionNumeroPartesComando{
+    public void cambiar(String partes[]) throws ExcepcionDinamicaModoMovimiento, ExcepcionNumeroPartesComando{
         if(partes.length==2 && partes[1].equals("modo")){
             if(this.countTiradas==0) {
                 tablero.cambiarModo(jugadorActual);
@@ -465,7 +491,7 @@ public class Juego implements Comando{
                 else
                     consola.imprimir("El jugador " + jugadorActual.getNombre() + " ya no está en modo avanzado");
             }else{
-                throw new ExcepcionesDinamicaTurno("El modo de movimiento debe ser cambiado antes de tirar los dados");
+                throw new ExcepcionDinamicaModoMovimiento("El modo de movimiento debe ser cambiado antes de tirar los dados");
             }
         }else{
             throw new ExcepcionNumeroPartesComando("Comando incorrecto");
@@ -485,7 +511,7 @@ public class Juego implements Comando{
             throw new ExcepcionNumeroPartesComando("Comando incorrecto");
     }
 
-    public void trato(String partes[]) throws ExcepcionNumeroPartesComando{
+    public void trato(String partes[]) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionPropiedades{
         String parte1 = "",parte2 = "",parte3 = "";
         int turnos=0;
         boolean aux1 = false;
@@ -555,7 +581,7 @@ public class Juego implements Comando{
         }
     }
 
-    public void aceptarTrato(String partes[]) throws ExcepcionNumeroPartesComando{
+    public void aceptarTrato(String partes[]) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionPropiedades, ExcepcionDineroVoluntario{
         if(partes.length == 2) {
             int idTrato = Integer.parseInt(partes[1].substring(5));
             for (Trato t : jugadorActual.getTratosPendientes()) {
@@ -563,13 +589,13 @@ public class Juego implements Comando{
                     t.aceptar();
                 return;
             }
-            System.out.println("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
+            throw new ExcepcionRestriccionPropiedades("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
         }else{
             throw new ExcepcionNumeroPartesComando("Comando incorrecto");
         }
     }
 
-    public void borrarTrato(String partes[]) throws ExcepcionNumeroPartesComando{
+        public void borrarTrato(String partes[]) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionPropiedades{
         if(partes.length == 2) {
             int idTrato = Integer.parseInt(partes[1].substring(5));
             for(Trato t: jugadorActual.getTratosPendientes()){
@@ -577,7 +603,7 @@ public class Juego implements Comando{
                     t.eliminar();
                 return;
             }
-            System.out.println("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
+             throw new ExcepcionRestriccionPropiedades("El jugador " + jugadorActual.getNombre() + " no tiene ese trato pendiente");
         }else{
             throw new ExcepcionNumeroPartesComando("Comando incorrecto");
         }

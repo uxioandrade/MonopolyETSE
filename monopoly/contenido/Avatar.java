@@ -3,6 +3,7 @@ package monopoly.contenido;
 import java.util.Iterator;
 import java.util.Random;
 
+import monopoly.excepciones.*;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
@@ -127,14 +128,14 @@ public abstract class Avatar {
         this.modoAvanzado = !this.modoAvanzado;
     }
 
-    public void moverCasilla(int valor){
+    public void moverCasilla(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar  {
         if(this.modoAvanzado)
             this.moverEnAvanzado(valor);
         else
             this.moverEnBasico(valor);
     }
 
-    public abstract void moverEnAvanzado(int valor);
+    public abstract void moverEnAvanzado(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar  ;
 
     public void retrocederCasillas(int valor){
         this.getCasilla().quitarAvatar(this);
@@ -146,7 +147,7 @@ public abstract class Avatar {
         this.getCasilla().anhadirAvatar(this);
     }
 
-    void moverEnBasico(int valor){ //Acceso a paquete
+    void moverEnBasico(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar { //Acceso a paquete
             this.casilla.quitarAvatar(this);
             //Caso en el que el movimiento suponga completar una vuelta
             if(this.casilla.getPosicion() + valor > 39){

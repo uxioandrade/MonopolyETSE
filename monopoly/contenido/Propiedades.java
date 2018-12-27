@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 
@@ -63,9 +64,9 @@ public abstract class Propiedades extends Casilla {
 
     public abstract double alquiler(int tirada);
 
-    public abstract void pagarAlquiler(Jugador jugador, int tirada, Operacion operacion);
+    public abstract void pagarAlquiler(Jugador jugador, int tirada, Operacion operacion) throws ExcepcionDineroDeuda;
 
-    public void accionCaer(Jugador jugador, int tirada, Operacion operacion) {
+    public void accionCaer(Jugador jugador, int tirada, Operacion operacion) throws ExcepcionDineroDeuda{
         if (!propietario.equals(operacion.getTablero().getBanca()) && !propietario.equals(jugador) && !this.hipotecado){
             if(this.jugadoresExcluidos.containsKey(jugador)){
                 Juego.consola.imprimir("El jugador " + jugador.getNombre() + " no tiene que pagar este alquiler durante " + this.jugadoresExcluidos.get(jugador) + " turnos.");

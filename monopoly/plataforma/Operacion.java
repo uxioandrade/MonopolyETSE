@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import monopoly.contenido.*;
+import monopoly.excepciones.*;
 
 public class Operacion {
     private Tablero tablero;
@@ -69,32 +70,28 @@ public class Operacion {
 
     }
 
-    public void comprar(Jugador jugador) {
+    public void comprar(Jugador jugador) throws ExcepcionDineroVoluntario, ExcepcionRestriccionComprar{
         Propiedades comprable;
         if(!(jugador.getAvatar().getCasilla() instanceof Propiedades)){
-            System.out.println("Esta casilla no se puede comprar");
-            return;
+            throw new ExcepcionRestriccionComprar("Esta casilla no se puede comprar");
         }
 
         //Caso especial en el que el avatar sea un coche
         if(jugador.getAvatar() instanceof Coche && jugador.getAvatar().getModoAvanzado()){
             if(!((Coche)jugador.getAvatar()).getPoderComprar()){
-                System.out.println("Un coche no puede comprar más de una vez cada turno");
-                return;
+                throw new ExcepcionRestriccionComprar("Un coche no puede comprar más de una vez cada turno");
             }
         }
 
         comprable = (Propiedades) jugador.getAvatar().getCasilla();
         //Caso en el que la propiedad ya está adquirida
         if (!comprable.getPropietario().equals(this.tablero.getBanca())) {
-            System.out.println("Error. Propiedad ya adquirida, para comprarla debes negociar con " + comprable.getPropietario().getNombre());
-            return;
+            throw new ExcepcionRestriccionComprar("Error. Propiedad ya adquirida, para comprarla debes negociar con " + comprable.getPropietario().getNombre());
         }
 
         //Caso en el que el jugador tiene menos dinero que el precio del solar
         if (comprable.getPrecio() > jugador.getDinero()) {
-            System.out.println("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades o a declararte en bancarrota");
-            return;
+            throw new ExcepcionDineroVoluntario("No dispones de capital suficiente para efectuar esta operación. Prueba a hipotecar tus propiedades o a declararte en bancarrota");
         }
         //Caso en el que se compra la propiedad
         //Se disminuye el dinero del jugador
@@ -105,6 +102,14 @@ public class Operacion {
         //Añade el propietario a la casilla
         comprable.setPropietario(jugador);
 
+        if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado()) {
+            ((Esfinge) jugador.getAvatar()).modificarHistorialCompras(comprable.getPrecio());
+            ((Esfinge) jugador.getAvatar()).anhadirHistorialCompradas(comprable);
+        }
+        if(jugador.getAvatar() instanceof Sombrero && jugador.getAvatar().getModoAvanzado()) {
+            ((Sombrero) jugador.getAvatar()).modificarHistorialCompras(comprable.getPrecio());
+            ((Sombrero) jugador.getAvatar()).anhadirHistorialCompradas(comprable);
+        }
         //Caso en el que el avatar es un coche: no puede volver a comprar en el turno
         if(jugador.getAvatar() instanceof Coche){
             ((Coche)jugador.getAvatar()).setPoderComprar(false);
@@ -116,25 +121,23 @@ public class Operacion {
         System.out.println("\tEl jugador " + jugador.getNombre() + " compra la casilla " + jugador.getAvatar().getCasilla().getNombre() + " por " + comprable.getPrecio() + "€.");
     }
 
-    public void edificar(Jugador jugador, String tipo) {
+    public void edificar(Jugador jugador, String tipo) throws ExcepcionDineroVoluntario, ExcepcionRestriccionEdificar {
         if(jugador.getAvatar().getCasilla() instanceof  Solar)
             ((Solar)jugador.getAvatar().getCasilla()).edificar(tipo, this.tablero);
         else
-            System.out.println("No es un solar");
+            throw new ExcepcionRestriccionEdificar("No es un solar");
     }
 
-    public void venderConstrucciones(Jugador vendedor, Casilla propiedad, String tipo, int num) {
+    public void venderConstrucciones(Jugador vendedor, Casilla propiedad, String tipo, int num) throws ExcepcionRestriccionEdificar {
         int vendidas = 0;
         double total = 0;
         int i = 0;
         if(!(propiedad instanceof Solar)){
-            System.out.println("Esta casilla no puede contener edificaciones");
-            return;
+            throw new ExcepcionRestriccionEdificar("Esta casilla no puede contener edificaciones");
         }
         if((vendedor.getPropiedades().contains((Propiedades)propiedad))){
             if(((Solar) propiedad).getConstrucciones(tipo)==null){
-                System.out.println("Ese tipo de construcciones no existe");
-                return;
+                throw new ExcepcionRestriccionEdificar("Ese tipo de construcciones no existe");
             }
             int tamanho = ((Solar) propiedad).getConstrucciones(tipo).size();
             for(i = 0; i<tamanho && i<num;i++){
@@ -143,18 +146,17 @@ public class Operacion {
                 this.tablero.borrarEdificio(((Solar) propiedad).getConstrucciones(tipo).remove(0));
                 ((Solar) propiedad).getConstrucciones().remove(((Solar) propiedad).getConstrucciones(tipo).remove(0));
             }
-            System.out.println(i);
             if(i == 0)
-                System.out.println(vendedor.getNombre() + " no ha vendido " + tipo + " en " + propiedad.getNombre() + " porque no ha construido");
+                Juego.consola.imprimir(vendedor.getNombre() + " no ha vendido " + tipo + " en " + propiedad.getNombre() + " porque no ha construido");
             else if(i==num)
-                System.out.println(vendedor.getNombre() + " ha vendido " + num + " " + tipo + " en " + propiedad.getNombre() +
+                Juego.consola.imprimir(vendedor.getNombre() + " ha vendido " + num + " " + tipo + " en " + propiedad.getNombre() +
                         ", recibiendo " + total + "€. En la propiedad queda" + ((Solar) propiedad).getConstrucciones(tipo).size() + " " + tipo + ".");
             else
-                System.out.println(vendedor.getNombre() + " solamente ha podido vender " + i + " " + tipo + " en " + propiedad.getNombre() +
+                Juego.consola.imprimir(vendedor.getNombre() + " solamente ha podido vender " + i + " " + tipo + " en " + propiedad.getNombre() +
                     ", recibiendo " + total + "€. ");
 
         }else{
-            System.out.println("EL jugador "+ vendedor.getNombre() + " no posee la casilla "+propiedad.getNombre());
+            throw new ExcepcionRestriccionEdificar("EL jugador "+ vendedor.getNombre() + " no posee la casilla "+propiedad.getNombre());
         }
     }
 
@@ -186,11 +188,10 @@ public class Operacion {
 
     }
 
-    public void desHipotecar(Casilla propiedad, Jugador jugActual) {
+    public void desHipotecar(Casilla propiedad, Jugador jugActual) throws ExcepcionRestriccionHipotecar, ExcepcionDineroVoluntario{
         Propiedades comprable;
         if(!(propiedad instanceof Propiedades)){
-            System.out.println("Esta casilla no se puede deshipotecar");
-            return;
+            throw new ExcepcionRestriccionHipotecar("Esta casilla no se puede deshipotecar");
         }
         comprable = (Propiedades) propiedad;
         //Comprueba que el jugador tenga la propiedad actual
@@ -200,13 +201,13 @@ public class Operacion {
                 comprable.setHipotecado(false);
                 System.out.println("El jugador " + jugActual.getNombre() + " ha deshipotecado la propiedad " + comprable.getNombre() + ", aportando un capital de " + 1.1 * comprable.getHipoteca() + "€.");
             }else
-                System.out.println("El jugador " + jugActual.getNombre() + " no tiene dinero suficiente para deshipotecar la propiedad " + comprable.getNombre());
+               throw new ExcepcionDineroVoluntario("El jugador " + jugActual.getNombre() + " no tiene dinero suficiente para deshipotecar la propiedad " + comprable.getNombre());
         } else {
-            System.out.println("El jugador " + jugActual.getNombre() + " no puede deshipotecar la propiedad " + propiedad.getNombre());
+            throw new ExcepcionRestriccionHipotecar("El jugador " + jugActual.getNombre() + " no puede deshipotecar la propiedad " + propiedad.getNombre());
         }
     }
 
-    public boolean menuHipotecar(Jugador jugador,Tablero tablero, double deuda){ //Devuelve true si el jugador ya ha afrontado su deuda
+    public boolean menuHipotecar(Jugador jugador,Tablero tablero, double deuda) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionRestriccionEdificar{ //Devuelve true si el jugador ya ha afrontado su deuda
         System.out.println(jugador.getNombre() + " entró en el menú hipotecar");
         Operacion operacion = new Operacion(tablero);
         while(true) {
@@ -215,65 +216,69 @@ public class Operacion {
             String orden = scanner.nextLine();
             String[] partes = orden.split(" ");
             String comando = partes[0];
-
-            switch(comando){
-                case "hipotecar":
-                    String auxCasilla = "";
-                    for(int i = 1; i < partes.length - 1;i++) {
-                        auxCasilla += partes[i] + " ";
-                    }
-                    if(partes.length<2 || partes.length >4) System.out.println("\n Comando incorrecto");
-                    else if(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1])!=null) {//si existe la casilla
-                        operacion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length-1]), jugador);
-                        if(jugador.getDinero() >= deuda){
-                            System.out.println("El jugador " + jugador.getNombre() + " ya tiene dinero suficiente para afrontar su deuda");
-                            return true;
-                        }else{
-                            System.out.println("El jugador " + jugador.getNombre() + " aún no tiene dinero suficiente");
-                        }
-                    }else System.out.println("La casilla que quieres hipotecar no existe");
-                    break;
-                case "vender":
-                    if(partes.length >= 4){
-                        auxCasilla = "";
-                        for(int i = 2; i < partes.length - 2;i++) {
+            try {
+                switch (comando) {
+                    case "hipotecar":
+                        String auxCasilla = "";
+                        for (int i = 1; i < partes.length - 1; i++) {
                             auxCasilla += partes[i] + " ";
                         }
-                        operacion.venderConstrucciones(jugador,this.tablero.getCasillas().get(auxCasilla + partes[partes.length-2]),partes[1],partes[partes.length-1].toCharArray()[0] - '0');
-                    }else{
-                        System.out.println("Comando incorrecto");
-                    }
-                    break;
-                case "listar":
-                    for(Propiedades c: jugador.getPropiedades()){
-                        System.out.println(c);
-                    }
-                    break;
-                case "bancarrota":
-                    Propiedades comprable;
-                    for (Propiedades cas : jugador.getPropiedades()) { if (cas instanceof Solar) {
-                            for (Edificios ed : ((Solar) cas).getConstrucciones()) {
-                                this.tablero.borrarEdificio(ed);
-                                ((Solar) cas).getConstrucciones().remove(ed);
+                        if (partes.length < 2 || partes.length > 4) System.out.println("\n Comando incorrecto");
+                        else if (this.tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]) != null) {//si existe la casilla
+                            operacion.hipotecar(this.tablero.getCasillas().get(auxCasilla + partes[partes.length - 1]), jugador);
+                            if (jugador.getDinero() >= deuda) {
+                                Juego.consola.imprimir("El jugador " + jugador.getNombre() + " ya tiene dinero suficiente para afrontar su deuda");
+                                return true;
+                            } else {
+                                Juego.consola.imprimir("El jugador " + jugador.getNombre() + " aún no tiene dinero suficiente");
                             }
+                        } else throw new ExcepcionRestriccionHipotecar("La casilla que quieres hipotecar no existe");
+                        break;
+                    case "vender":
+                        if (partes.length >= 4) {
+                            auxCasilla = "";
+                            for (int i = 2; i < partes.length - 2; i++) {
+                                auxCasilla += partes[i] + " ";
+                            }
+                            operacion.venderConstrucciones(jugador, this.tablero.getCasillas().get(auxCasilla + partes[partes.length - 2]), partes[1], partes[partes.length - 1].toCharArray()[0] - '0');
+                        } else {
+                            throw new ExcepcionNumeroPartesComando("Comando incorrecto");
                         }
-                        cas.setPropietario(this.tablero.getBanca());
-                        cas.setHipotecado(false);
-                    }
-                    Valor.casillas.get(jugador.getAvatar().getCasilla().getPosicion()).quitarAvatar(jugador.getAvatar());
-                    this.tablero.getAvatares().remove(jugador.getAvatar().getId());
-                    this.tablero.getJugadores().remove(jugador.getNombre());
-                    Juego.turnosJugadores.remove(jugador.getNombre());
-                    if(Juego.turnosJugadores.size() == 1){
-                        System.out.println("Partida acabada!\n Enhorabuena " + Juego.turnosJugadores.get(0) + ", eres el ganador!!!!");
-                        System.exit(0);
-                    }
-                    return false;
+                        break;
+                    case "listar":
+                        for (Propiedades c : jugador.getPropiedades()) {
+                            Juego.consola.imprimir(c.toString());
+                        }
+                        break;
+                    case "bancarrota":
+                        Propiedades comprable;
+                        for (Propiedades cas : jugador.getPropiedades()) {
+                            if (cas instanceof Solar) {
+                                for (Edificios ed : ((Solar) cas).getConstrucciones()) {
+                                    this.tablero.borrarEdificio(ed);
+                                    ((Solar) cas).getConstrucciones().remove(ed);
+                                }
+                            }
+                            cas.setPropietario(this.tablero.getBanca());
+                            cas.setHipotecado(false);
+                        }
+                        Valor.casillas.get(jugador.getAvatar().getCasilla().getPosicion()).quitarAvatar(jugador.getAvatar());
+                        this.tablero.getAvatares().remove(jugador.getAvatar().getId());
+                        this.tablero.getJugadores().remove(jugador.getNombre());
+                        Juego.turnosJugadores.remove(jugador.getNombre());
+                        if (Juego.turnosJugadores.size() == 1) {
+                            Juego.consola.imprimir("Partida acabada!\n Enhorabuena " + Juego.turnosJugadores.get(0) + ", eres el ganador!!!!");
+                            System.exit(0);
+                        }
+                        return false;
+                }
+            }catch(ExcepcionRestriccionHipotecar | ExcepcionNumeroPartesComando ex2){
+                Juego.consola.imprimir(ex2.getMensaje());
             }
         }
     }
 
-    public void salirCarcel(Jugador jugador){
+    public void salirCarcel(Jugador jugador) throws ExcepcionNumeroPartesComando, ExcepcionRestriccionHipotecar, ExcepcionRestriccionEdificar{
         //Comprueba que el jugador esté en la cárcel
         if(jugador.getAvatar().getEncarcelado()>0 && jugador.getAvatar().getEncarcelado()<3){
             //Comprueba que el jugador tenga dinero para pagar la fianza

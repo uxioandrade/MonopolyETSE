@@ -1,9 +1,15 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionNumeroPartesComando;
+import monopoly.excepciones.ExcepcionRestriccionEdificar;
+import monopoly.excepciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Tablero;
+
+import java.util.Iterator;
 
 public final class CartaMovimiento extends Carta{
 
@@ -43,9 +49,34 @@ public final class CartaMovimiento extends Carta{
         Propiedades casillaComprable;
         casillaComprable = (Propiedades) jugador.getAvatar().getCasilla();
         casillaComprable.getPropietario().modificarDinero(cantidad);
+        if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+            ((Esfinge)jugador.getAvatar()).modificarHistorialAlquileres(cantidad);
+        if(jugador.getAvatar() instanceof Sombrero && jugador.getAvatar().getModoAvanzado())
+            ((Sombrero)jugador.getAvatar()).modificarHistorialAlquileres(cantidad);
     }
 
-    public void accionCarta(Jugador jugador, Tablero tablero){
+    private void actualizarVueltaAvanzado(Jugador jugador, Tablero tablero){
+        jugador.modificarDinero(Valor.getDineroVuelta());
+        jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
+        jugador.getAvatar().sumarNumTirada();
+        Juego.consola.imprimir("El jugador " + jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
+        //Se recorren los avatares para comprobar si es necesario actualizar el dinero de pasar por la casilla de salida
+        Iterator<Avatar> avatar_i = tablero.getAvatares().values().iterator();
+        while(avatar_i.hasNext()) {
+            Avatar avatar = avatar_i.next();
+            if(avatar.numVueltas <= tablero.getVueltas() + 3) {
+                return;
+            }
+        }
+        tablero.modificarVueltas(4);
+        Valor.actualizarVuelta();
+        if(jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+            ((Esfinge)jugador.getAvatar()).modificarHistorialSalida(Valor.getDineroVuelta());
+        if(jugador.getAvatar() instanceof Sombrero && jugador.getAvatar().getModoAvanzado())
+            ((Sombrero)jugador.getAvatar()).modificarHistorialSalida(Valor.getDineroVuelta());
+    }
+
+    public void accionCarta(Jugador jugador, Tablero tablero) throws ExcepcionDineroDeuda, ExcepcionNumeroPartesComando, ExcepcionRestriccionHipotecar, ExcepcionRestriccionEdificar {
         if(this.posicion == -1) {
             if(jugador.getAvatar().getCasilla().getPosicion() - 3 >= 0){
                 this.posicion = jugador.getAvatar().getCasilla().getPosicion() - 3;
@@ -73,8 +104,7 @@ public final class CartaMovimiento extends Carta{
         Operacion operacion = new Operacion(tablero);
         //Siempre se cae en una casilla que tiene un alquiler asociado
         if(this.accionFinanciera && this.posicion <= jugador.getAvatar().getCasilla().getPosicion()) {
-            jugador.modificarDinero(Valor.getDineroVuelta());
-            jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
+            this.actualizarVueltaAvanzado(jugador,operacion.getTablero());
         }
         jugador.getAvatar().setCasilla(Valor.casillas.get(this.posicion));
         if(jugador.getAvatar().getCasilla() instanceof Propiedades) {

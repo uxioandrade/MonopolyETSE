@@ -1,24 +1,29 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.*;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public final class Sombrero extends Avatar{
 
-    private double historialDinero;
-    private ArrayList<Propiedades> historialCompras;
+    private double historialAlquileres; //Revisa
+    private double historialCompras;
+    private ArrayList<Propiedades> historialCompradas;
+    private double historialSalida;
+    private double historialPremios;
+    private double historialImpuestos;
 
     public String getTipo(){ return "Sombrero";}
 
     public Sombrero(Jugador jug, Tablero tablero){
         super(jug,tablero);
-        this.historialCompras = new ArrayList<>();
+        this.historialCompradas = new ArrayList<>();
         super.numTiradas = 3;
-        this.numTiradas = 3;
     }
 
     public void setNumTiradas(int tiradas){
@@ -26,23 +31,58 @@ public final class Sombrero extends Avatar{
             super.numTiradas = tiradas;
     }
 
-    public double getHistorialDinero() {
-        return this.historialDinero;
-    }
-
-    public ArrayList<Propiedades> getHistorialCompras() {
+    public double getHistorialCompras() {
         return this.historialCompras;
     }
 
-    public void resetHistorialCompras(){}
+    public void setHistorialAlquileres(double alquiler){
+        if(alquiler>0) this.historialAlquileres=alquiler;
+    }
 
-    public void moverEnAvanzado(int valor){
+    public void modificarHistorialCompras(double valor){
+        this.historialCompras += valor;
+    }
+
+    public void modificarHistorialImpuestos(double valor){
+        this.historialImpuestos += valor;
+    }
+
+    public void modificarHistorialAlquileres(double valor){
+        this.historialAlquileres += valor;
+    }
+
+    public void modificarHistorialSalida(double valor){
+        this.historialSalida += valor;
+    }
+
+    public void modificarHistorialPremios(double valor){
+        this.historialPremios += valor;
+    }
+
+    public void anhadirHistorialCompradas(Propiedades p){
+        this.historialCompradas.add(p);
+    }
+
+    public void resetHistorial(){
+        this.historialAlquileres=0; //Revisa
+        this.historialCompras=0;
+        this.historialSalida=0;
+        this.historialImpuestos = 0;
+        this.historialPremios = 0;
+        this.historialCompradas.clear();
+    }
+
+    public void moverEnAvanzado(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         Operacion operacion = new Operacion(super.getTablero());
         if(valor > 4){
+            this.resetHistorial();
             this.moverZigZag(valor);
             this.getCasilla().accionCaer(this.getJugador(), valor, operacion);
         }else {
-            this.numTiradas = 0;
+            if(super.numTiradas==3){
+                this.deshacerHistorial();
+            }
+            super.numTiradas = 0;
             Juego.consola.imprimir("El sombrero ya ha acabado sus tiradas este turno");
         }
     }
@@ -51,6 +91,24 @@ public final class Sombrero extends Avatar{
         this.getCasilla().quitarAvatar(this);
         this.setCasilla(Valor.casillas.get(valor));
         this.getCasilla().anhadirAvatar(this);
+    }
+
+    private void actualizarVueltaAvanzado(){
+        this.jugador.modificarDinero(Valor.getDineroVuelta());
+        this.jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
+        this.numVueltas++;
+        Juego.consola.imprimir("El jugador " + this.jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
+        //Se recorren los avatares para comprobar si es necesario actualizar el dinero de pasar por la casilla de salida
+        Iterator<Avatar> avatar_i = this.tablero.getAvatares().values().iterator();
+        while(avatar_i.hasNext()) {
+            Avatar avatar = avatar_i.next();
+            if(avatar.numVueltas <= this.tablero.getVueltas() + 3) {
+                return;
+            }
+        }
+        this.tablero.modificarVueltas(4);
+        Valor.actualizarVuelta();
+        this.historialSalida += Valor.getDineroVuelta();
     }
 
     private void moverZigZag(int valor) {
@@ -67,6 +125,9 @@ public final class Sombrero extends Avatar{
                 this.moverACasilla(39 - ((valor + this.getCasilla().getPosicion() - 10) % 10));
         } else if (this.getCasilla().getPosicion() < 30) {
             this.moverACasilla(32);
+            if(valor + this.getCasilla().getPosicion() > 39){
+                this.actualizarVueltaAvanzado();
+            }
             if(valor % 2 == 1)
                 this.moverACasilla(30 + ((valor - 1 + this.getCasilla().getPosicion() - 30) % 10));
             else
@@ -79,4 +140,50 @@ public final class Sombrero extends Avatar{
         }
     }
 
+    private void deshacerHistorial(){
+        Juego.consola.imprimir("Se desharán las acciones realizadas en la tirada anterior:");
+        if(this.historialAlquileres>0) {
+            super.getJugador().modificarDinero(this.historialAlquileres);
+            super.getJugador().modificarPagoAlquileres(-this.historialAlquileres);
+            Juego.consola.imprimir("Se ha deshecho la accion pagar alquiler.");
+            Juego.consola.imprimir("Recuperas "+this.historialAlquileres+ ", tu fortuna aumenta a "+super.getJugador().getDinero());
+        }
+        if(this.historialSalida>0) {
+            super.getJugador().modificarDinero(-this.historialSalida);
+            super.getJugador().modificarPasarPorCasilla(-this.historialSalida);
+            Juego.consola.imprimir("Se ha deshecho la accion pasar por la casilla de salida.");
+            Juego.consola.imprimir("Pierdes "+ this.historialSalida+ ", tu fortuna se reduce a "+super.getJugador().getDinero());
+        }
+        if(this.historialImpuestos>0) {
+            super.getJugador().modificarDinero(this.historialImpuestos);
+            super.getJugador().modificarPagoImpuestos(-this.historialImpuestos);
+            Juego.consola.imprimir("Se ha deshecho la accion pagar impuesto.");
+            Juego.consola.imprimir("Recuperas "+this.historialImpuestos+ ", tu fortuna aumenta a "+super.getJugador().getDinero());
+        }
+        if(this.historialCompradas.size() >= 1){
+            for(Propiedades p: this.historialCompradas) {
+                super.getJugador().borrarPropiedad(p);
+                Juego.consola.imprimir("Se ha retirado la casilla " +  p.getNombre());
+            }
+            super.getJugador().modificarDinero(this.historialCompras);
+            Juego.consola.imprimir("Se han devuelto "  + this.historialCompras + "€.");
+        }
+
+        if(this.historialPremios != 0){
+            if(this.historialPremios > 0) {
+                super.getJugador().modificarDinero(-this.historialPremios);
+                super.getJugador().modificarPremiosInversionesOBote(-this.historialPremios);
+                Juego.consola.imprimir("Se ha deshecho la accion pagar premio.");
+                Juego.consola.imprimir("Pierdes " + this.historialPremios + ", tu fortuna disminuie en " + super.getJugador().getDinero());
+            }else{
+                super.getJugador().modificarDinero(-this.historialPremios);
+                super.getJugador().modificarPremiosInversionesOBote(-this.historialPremios);
+                Juego.consola.imprimir("Se ha deshecho la accion cobrar premio.");
+                Juego.consola.imprimir("Recuperas " + this.historialPremios + ", tu fortuna aumenta a " + super.getJugador().getDinero());
+
+            }
+        }
+
+        resetHistorial();
+    }
 }

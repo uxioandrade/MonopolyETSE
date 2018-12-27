@@ -1,5 +1,9 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionNumeroPartesComando;
+import monopoly.excepciones.ExcepcionRestriccionEdificar;
+import monopoly.excepciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 
@@ -32,7 +36,7 @@ public final class CasillasCarta extends Accion {
         }
     }
 
-    public void accionCaer(Jugador jugador,int tirada, Operacion operacion){
+    public void accionCaer(Jugador jugador,int tirada, Operacion operacion) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar {
         ArrayList<Carta> casCaja = barajarCartas(this.cartas);
         Carta cartaEscogida = casCaja.get(elegirCarta()-1);
         cartaEscogida.accionCarta(jugador, operacion.getTablero());

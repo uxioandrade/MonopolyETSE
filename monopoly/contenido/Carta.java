@@ -1,5 +1,9 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionNumeroPartesComando;
+import monopoly.excepciones.ExcepcionRestriccionEdificar;
+import monopoly.excepciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Tablero;
 
 public abstract class Carta{
@@ -16,5 +20,5 @@ public abstract class Carta{
         return this.descripcion;
     }
 
-    public abstract void  accionCarta(Jugador jugador, Tablero tablero);
+    public abstract void  accionCarta(Jugador jugador, Tablero tablero) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda,ExcepcionRestriccionEdificar;
 }

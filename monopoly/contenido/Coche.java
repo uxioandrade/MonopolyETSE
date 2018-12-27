@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.*;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Operacion;
@@ -15,7 +16,7 @@ public final class Coche extends Avatar{
         this.poderComprar = true;
     }
 
-    public void moverEnAvanzado(int valor){
+    public void moverEnAvanzado(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         Operacion operacion = new Operacion(this.getTablero());
         if(super.numTiradas > 0) {
             if (valor > 4) {

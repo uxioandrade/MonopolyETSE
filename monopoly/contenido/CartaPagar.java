@@ -1,6 +1,10 @@
 package monopoly.contenido;
 
 
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionNumeroPartesComando;
+import monopoly.excepciones.ExcepcionRestriccionEdificar;
+import monopoly.excepciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
@@ -49,12 +53,17 @@ public final class CartaPagar extends Carta{
                 }
             }
         }else{
-            if(cantidad > 0)
+            if(cantidad > 0) {
                 Valor.actualizarDineroAcumulado(cantidad);
+            }
         }
+        if (jugador.getAvatar() instanceof Esfinge && jugador.getAvatar().getModoAvanzado())
+            ((Esfinge) jugador.getAvatar()).modificarHistorialPremios(cantidad);
+        if (jugador.getAvatar() instanceof Sombrero && jugador.getAvatar().getModoAvanzado())
+            ((Sombrero) jugador.getAvatar()).modificarHistorialPremios(cantidad);
     }
 
-    public void accionCarta(Jugador jugador, Tablero tablero){
+        public void accionCarta(Jugador jugador, Tablero tablero) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar {
         Juego.consola.imprimir(super.getDescripcion());
         double cantidadTotal = this.getCantidad(jugador,tablero);
         Operacion operacion = new Operacion(tablero);

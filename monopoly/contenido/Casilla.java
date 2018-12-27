@@ -1,4 +1,8 @@
 package monopoly.contenido;
+import monopoly.excepciones.ExcepcionDineroDeuda;
+import monopoly.excepciones.ExcepcionNumeroPartesComando;
+import monopoly.excepciones.ExcepcionRestriccionEdificar;
+import monopoly.excepciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Valor;
 import monopoly.plataforma.Operacion;
 
@@ -72,7 +76,7 @@ public abstract class Casilla {
         return total;
     }
 
-    public abstract void accionCaer(Jugador jugador,int tirada, Operacion operacion);
+    public abstract void accionCaer(Jugador jugador,int tirada, Operacion operacion) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar;
 
     public boolean estaAvatar(Avatar av){
         return this.avatares.contains(av);

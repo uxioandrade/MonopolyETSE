@@ -1,5 +1,6 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.*;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
@@ -11,7 +12,7 @@ public final class Pelota extends Avatar{
         super.numTiradas = 1;
     }
 
-    private void accionRebote(int valor){
+    private void accionRebote(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar , ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         Operacion operacion = new Operacion(this.getTablero());
         Juego.consola.imprimir("El jugador " + this.getJugador().getNombre() + " ha rebotado a " + this.getCasilla().getNombre());
         super.getTablero().imprimirTablero();
@@ -35,7 +36,7 @@ public final class Pelota extends Avatar{
         }
     }
 
-    public void moverEnAvanzado(int valor) {
+    public void moverEnAvanzado(int valor)throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar , ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         if (valor > 4) {
             super.moverEnBasico(5);
             this.accionRebote(valor);

@@ -1,11 +1,13 @@
 package monopoly.contenido;
 
+import monopoly.excepciones.*;
 import monopoly.plataforma.Operacion;
 import monopoly.plataforma.Juego;
 import monopoly.plataforma.Tablero;
 import monopoly.plataforma.Valor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public final class Esfinge extends Avatar{
 
@@ -13,6 +15,8 @@ public final class Esfinge extends Avatar{
     private double historialCompras;
     private ArrayList<Propiedades> historialCompradas;
     private double historialSalida;
+    private double historialImpuestos;
+    private double historialPremios;
 
     public Esfinge(Jugador jug, Tablero tablero){
         super(jug,tablero);
@@ -27,14 +31,40 @@ public final class Esfinge extends Avatar{
         if(alquiler>0) this.historialAlquileres=alquiler;
     }
 
+    public void modificarHistorialCompras(double valor){
+        this.historialCompras += valor;
+    }
+
+    public void modificarHistorialImpuestos(double valor){
+        this.historialImpuestos += valor;
+    }
+
+    public void modificarHistorialAlquileres(double valor){
+        this.historialAlquileres += valor;
+    }
+
+    public void modificarHistorialPremios(double valor){
+        this.historialPremios += valor;
+    }
+
+    public void modificarHistorialSalida(double valor){
+        this.historialSalida += valor;
+    }
+
+    public void anhadirHistorialCompradas(Propiedades p){
+        this.historialCompradas.add(p);
+    }
+
     public void resetHistorial(){
         this.historialAlquileres=0; //Revisa
         this.historialCompras=0;
         this.historialSalida=0;
+        this.historialPremios = 0;
+        this.historialImpuestos = 0;
         this.historialCompradas.clear();
     }
 
-    public void moverEnAvanzado(int valor){
+    public void moverEnAvanzado(int valor) throws ExcepcionRestriccionHipotecar, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         Operacion operacion = new Operacion(super.getTablero());
         if(valor > 4){
             this.resetHistorial();
@@ -55,8 +85,29 @@ public final class Esfinge extends Avatar{
         this.getCasilla().anhadirAvatar(this);
     }
 
+    private void actualizarVueltaAvanzado(){
+        this.jugador.modificarDinero(Valor.getDineroVuelta());
+        this.jugador.modificarPasarPorCasilla(Valor.getDineroVuelta());
+        this.numVueltas++;
+        Juego.consola.imprimir("El jugador " + this.jugador.getNombre() + " recibe " + Valor.getDineroVuelta() + "€ por haber cruzado la salida.");
+        //Se recorren los avatares para comprobar si es necesario actualizar el dinero de pasar por la casilla de salida
+        Iterator<Avatar> avatar_i = this.tablero.getAvatares().values().iterator();
+        while(avatar_i.hasNext()) {
+            Avatar avatar = avatar_i.next();
+            if(avatar.numVueltas <= this.tablero.getVueltas() + 3) {
+                return;
+            }
+        }
+        this.tablero.modificarVueltas(4);
+        Valor.actualizarVuelta();
+        this.historialSalida += Valor.getDineroVuelta();
+    }
+
     private void moverZigZag(int valor) {
         if (this.getCasilla().getPosicion() < 10){
+            if(valor + this.getCasilla().getPosicion() > 10){
+                this.actualizarVueltaAvanzado();
+            }
             if(valor % 2 == 0)
                 this.moverACasilla((valor + this.getCasilla().getPosicion()) % 10);
             else
@@ -82,7 +133,7 @@ public final class Esfinge extends Avatar{
     }
 
     private void deshacerHistorial(){
-        Juego.consola.imprimir("Se deshrán las acciones realizadas en el turno anterior:");
+        Juego.consola.imprimir("Se desharán las acciones realizadas en la tirada anterior:");
         if(this.historialAlquileres>0) {
             super.getJugador().modificarDinero(this.historialAlquileres);
             super.getJugador().modificarPagoAlquileres(-this.historialAlquileres);
@@ -93,11 +144,38 @@ public final class Esfinge extends Avatar{
             super.getJugador().modificarDinero(-this.historialSalida);
             super.getJugador().modificarPasarPorCasilla(-this.historialSalida);
             Juego.consola.imprimir("Se ha deshecho la accion pasar por la casilla de salida.");
-            Juego.consola.imprimir("Pierdes "+this.historialSalida+ ", tu fortuna se reduce a "+super.getJugador().getDinero());
+            Juego.consola.imprimir("Pierdes "+ this.historialSalida+ ", tu fortuna se reduce a "+super.getJugador().getDinero());
         }
-        /*
-        DESHACER COMPRAS O EDIFICACIONES SI LO PONE PENIN EN EL FAQ
-         */
+        if(this.historialImpuestos>0) {
+            super.getJugador().modificarDinero(this.historialImpuestos);
+            super.getJugador().modificarPagoImpuestos(-this.historialImpuestos);
+            Juego.consola.imprimir("Se ha deshecho la accion pagar impuesto.");
+            Juego.consola.imprimir("Recuperas "+this.historialImpuestos+ ", tu fortuna aumenta a "+super.getJugador().getDinero());
+        }
+        if(this.historialCompradas.size() >= 1){
+            for(Propiedades p: this.historialCompradas) {
+                super.getJugador().borrarPropiedad(p);
+                Juego.consola.imprimir("Se ha retirado la casilla " +  p.getNombre());
+            }
+            super.getJugador().modificarDinero(this.historialCompras);
+            Juego.consola.imprimir("Se han devuelto "  + this.historialCompras + "€.");
+        }
+
+        if(this.historialPremios != 0){
+            if(this.historialPremios > 0) {
+                super.getJugador().modificarDinero(-this.historialPremios);
+                super.getJugador().modificarPremiosInversionesOBote(-this.historialPremios);
+                Juego.consola.imprimir("Se ha deshecho la accion pagar premio.");
+                Juego.consola.imprimir("Pierdes " + this.historialPremios + ", tu fortuna disminuie en " + super.getJugador().getDinero());
+            }else{
+                super.getJugador().modificarDinero(-this.historialPremios);
+                super.getJugador().modificarPremiosInversionesOBote(-this.historialPremios);
+                Juego.consola.imprimir("Se ha deshecho la accion cobrar premio.");
+                Juego.consola.imprimir("Recuperas " + this.historialPremios + ", tu fortuna aumenta a " + super.getJugador().getDinero());
+
+            }
+        }
+
         resetHistorial();
     }
 
