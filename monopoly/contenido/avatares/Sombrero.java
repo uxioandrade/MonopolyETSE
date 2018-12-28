@@ -1,6 +1,7 @@
 package monopoly.contenido.avatares;
 
 import monopoly.contenido.Jugador;
+import monopoly.contenido.casillas.Casilla;
 import monopoly.contenido.casillas.propiedades.Propiedades;
 import monopoly.excepciones.comandos.ExcepcionNumeroPartesComando;
 import monopoly.excepciones.dinero.ExcepcionDineroDeuda;
@@ -119,31 +120,34 @@ public final class Sombrero extends Avatar{ //Las clases hoja de una jerarquía 
     }
 
     private void moverZigZag(int valor) {
-        if (this.getCasilla().getPosicion() < 10){
-            this.moverACasilla(12);
-            if(valor % 2 == 1)
+        if (this.getCasilla().getPosicion() > 0 && this.getCasilla().getPosicion() < 10){
+            this.moverACasilla(11);
+            if(valor % 2 == 0)
                 this.moverACasilla(10 + ((valor - 1 + this.getCasilla().getPosicion() - 10) % 10));
             else
                 this.moverACasilla(39 - ((valor - 2 + this.getCasilla().getPosicion() - 10) % 10));
-        } else if (this.getCasilla().getPosicion() < 20) {
+        } else if (this.getCasilla().getPosicion() > 0 && this.getCasilla().getPosicion() < 20) {
             if(valor % 2 == 0)
                 this.moverACasilla(10 + ((valor + this.getCasilla().getPosicion() - 10) % 10));
             else
-                this.moverACasilla(39 - ((valor + this.getCasilla().getPosicion() - 10) % 10));
-        } else if (this.getCasilla().getPosicion() < 30) {
-            this.moverACasilla(32);
+                this.moverACasilla(39 - ((valor + 1 + this.getCasilla().getPosicion() - 10) % 10));
+        } else if (this.getCasilla().getPosicion() > 0 && this.getCasilla().getPosicion() < 30) {
+            this.moverACasilla(31);
             if(valor + this.getCasilla().getPosicion() > 39){
                 this.actualizarVueltaAvanzado();
             }
-            if(valor % 2 == 1)
+            if(valor % 2 == 0)
                 this.moverACasilla(30 + ((valor - 1 + this.getCasilla().getPosicion() - 30) % 10));
             else
                 this.moverACasilla(20 - ((valor - 1 + this.getCasilla().getPosicion() - 30 ) % 10));
         } else {
+            Casilla casillaEste = this.getCasilla();
+            if(this.getCasilla().getPosicion() == 0)
+                casillaEste = tablero.getCasillas().get("VeCarcel");
             if(valor % 2 == 0)
-                this.moverACasilla(30 + ((valor + this.getCasilla().getPosicion() - 30) % 10));
+                this.moverACasilla(30 + ((valor + casillaEste.getPosicion() - 30) % 10));
             else
-                this.moverACasilla(20 - ((valor + this.getCasilla().getPosicion() - 30 ) % 10));
+                this.moverACasilla(20 - ((valor + casillaEste.getPosicion() - 30 ) % 10));
         }
     }
 

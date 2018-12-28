@@ -502,7 +502,7 @@ public class Juego implements Comando{
     public void cambiar(String partes[]) throws ExcepcionDinamicaModoMovimiento, ExcepcionNumeroPartesComando{
         if(partes.length==2 && partes[1].equals("modo")){
             if(this.countTiradas==0) {
-                if(jugadorActual.getAvatar().getEncarcelado()!= 0) {
+                if(jugadorActual.getAvatar().getEncarcelado() == 0) {
                     tablero.cambiarModo(jugadorActual);
                     if (jugadorActual.getAvatar().getModoAvanzado())
                         consola.imprimir("El jugador " + jugadorActual.getNombre() + " está ahora en modo avanzado de tipo " + jugadorActual.getAvatar().getTipo());
