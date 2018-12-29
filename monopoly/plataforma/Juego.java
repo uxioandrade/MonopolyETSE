@@ -298,13 +298,7 @@ public class Juego implements Comando{
     public void lanzar(String[] partes) throws ExcepcionesDinamicaTurno, ExcepcionNumeroPartesComando, ExcepcionDineroDeuda, ExcepcionesDinamicaEncarcelamiento, ExcepcionRestriccionHipotecar, ExcepcionRestriccionEdificar, ExcepcionDineroVoluntario, ExcepcionRestriccionComprar {
         if(partes.length>=2 && partes[1].equals("dados")) {
             if (this.countTiradas == 0) {//si tienes tiradas pendientes te muestra la tirada
-                //this.dados.lanzarDados();
-                String leerDados;
-                leerDados = Juego.consola.leer("dados");
-                String[] partesDados = leerDados.split(" ");
-                if(leerDados.length() >= 2)
-                    this.dados = new Dados(Integer.parseInt(partesDados[0]),Integer.parseInt(partesDados[1]));
-                else this.dados.lanzarDados();
+                this.dados.lanzarDados();
                 this.jugadorActual.anhadirVecesDados();
                 this.tirada = dados.getSuma();
                 this.dados.getDescripcion();
