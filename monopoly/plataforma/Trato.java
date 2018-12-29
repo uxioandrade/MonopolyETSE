@@ -25,6 +25,7 @@ public class Trato {
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         this.descripcion = descripcion;
+        Juego.consola.imprimir(this.receptor.getNombre() + ", ¿te doy " + ofertada.getNombre() + " y tú me das " + recibida.getNombre() + "?");
     }
 
     public Trato(Jugador ofertor, double cantidadOfertada,Propiedades propiedadRecibida,String descripcion){ //Cantidad x propiedad
@@ -37,8 +38,10 @@ public class Trato {
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         this.descripcion = descripcion;
+        Juego.consola.imprimir(this.receptor.getNombre() + ", ¿te doy " + cantidadOfertada + "€ y tú me das " + propiedadRecibida.getNombre() + "?");
     }
     public Trato(double cantidadRecibida,Jugador receptor, Propiedades propiedadOfertada,String descripcion){ //Propiedad x cantidad
+        cantidadRecibida = cantidadRecibida*-1;
         this.propiedadesOfertadas = new ArrayList<>();
         this.propiedadesOfertadas.add(propiedadOfertada);
         this.ofertor = propiedadOfertada.getPropietario();
@@ -48,6 +51,7 @@ public class Trato {
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         this.descripcion = descripcion;
+        Juego.consola.imprimir(this.receptor.getNombre() + ", ¿te doy " + propiedadOfertada.getNombre() + " y tú me das " + cantidadRecibida*-1 + "€?");
     }
 
     public Trato(Propiedades propiedadOfertada, double cantidad, Propiedades propiedadRecibida,String descripcion){
@@ -61,6 +65,7 @@ public class Trato {
         this.id = Valor.getTratos();
         Valor.incrementarTratos();
         this.descripcion = descripcion;
+        Juego.consola.imprimir(this.receptor.getNombre() + ", ¿te doy " + propiedadOfertada.getNombre() + " y tú me das " + propiedadRecibida.getNombre() + " y " + cantidad + "€?");
     }
 
     public Trato(Propiedades propiedadOfertada, Propiedades propiedadRecibida, Propiedades propiedadNoAlquiler, int turnos,String descripcion){
@@ -75,8 +80,9 @@ public class Trato {
         Valor.incrementarTratos();
         if(turnos > 0)
             this.turnos = turnos;
-        propiedadNoAlquiler.anhadirJugadorExcluido(this.receptor,this.turnos);
+        propiedadNoAlquiler.anhadirJugadorExcluido(this.ofertor,this.turnos);
         this.descripcion = descripcion;
+        Juego.consola.imprimir(this.receptor.getNombre() + ", ¿te doy " + propiedadOfertada.getNombre() + " y tú me das " + propiedadRecibida.getNombre() + " y no pago alquiler en " + propiedadNoAlquiler.getNombre()  + "?");
     }
 
     public Jugador getOfertor() {
@@ -108,7 +114,9 @@ public class Trato {
        if(this.receptor.getDinero()<cantidad){
            throw new ExcepcionDineroVoluntario("El trato no puede ser aceptado: " + this.receptor.getNombre() + " no dispone de " + -1*cantidad + "€.");
        }
-       Juego.consola.imprimir("trato" + this.getId() + " aceptado");
+       if(this.receptor.getPropiedades().contains(this.propiedadesOfertadas.get(0)))
+           throw new ExcepcionDineroVoluntario("El trato no puede ser aceptado: " + this.propiedadesOfertadas.get(1).getNombre() + " no pertence a " + this.receptor.getNombre());
+       Juego.consola.imprimir("Se ha aceptado trato" + this.getId() + " aceptado:\n" + this.descripcion);
        this.swapPropiedades();
        this.receptor.modificarDinero(cantidad);
        this.ofertor.modificarDinero(-cantidad);
