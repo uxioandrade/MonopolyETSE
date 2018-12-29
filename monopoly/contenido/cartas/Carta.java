@@ -8,9 +8,11 @@ import monopoly.excepciones.restricciones.ExcepcionRestriccionHipotecar;
 import monopoly.plataforma.Tablero;
 
 public abstract class Carta{ //La clase raíz de una jerarquía no se debería instanciar, por eso es abstracta
-    public void Carta(String descripcion){
+
+    public Carta(String descripcion){
         this.descripcion=descripcion;
     }
+
     protected String descripcion;
 
     public void setDescripcion(String descripcion) {

@@ -16,19 +16,19 @@ import monopoly.plataforma.Tablero;
 
 import java.util.Iterator;
 
-public final class CartaMovimiento extends Carta{ //Las clases hoja de una jerarquía deberían ser finales
+public final class CartaMovimientoCaja extends CartaCaja{ //Las clases hoja de una jerarquía deberían ser finales
 
     private int posicion;
     private boolean accionFinanciera;
     private int alquiler; //0 si no hay alquiler, 1 si hay alquiler y 2 si hay que pagar el doble del alquiler
 
-    public CartaMovimiento(int posicion, boolean accionFinanciera, int alquiler, String descripcion){
+    public CartaMovimientoCaja(int posicion, boolean accionFinanciera, int alquiler, String descripcion){
+        super(descripcion);
         if(posicion >= -2 && posicion <= 39)
             this.posicion = posicion;
         this.accionFinanciera = accionFinanciera;
         if(alquiler >= 0 && alquiler <= 2)
             this.alquiler = alquiler;
-        super.Carta(descripcion);
     }
 
     public int getPosicion(){

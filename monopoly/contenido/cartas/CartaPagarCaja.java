@@ -17,15 +17,15 @@ import monopoly.plataforma.Valor;
 
 import java.util.Iterator;
 
-public final class CartaPagar extends Carta{ //Las clases hoja de una jerarquía deberían ser finales
+public final class CartaPagarCaja extends CartaCaja{ //Las clases hoja de una jerarquía deberían ser finales
 
     private double cantidad; //Positivo => Pagar , Negativo => Cobrar
     private boolean banca; //True => Banca, False => Todos los jugadores
 
-    public CartaPagar(double cantidad, boolean banca, String descripcion){
+    public CartaPagarCaja(double cantidad, boolean banca, String descripcion){
+        super(descripcion);
         this.cantidad = cantidad;
         this.banca = banca;
-        super.Carta(descripcion);
     }
 
     public double getCantidad(Jugador jugador, Tablero tablero){
